@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g fill="none" fill-rule="evenodd" stroke="#B0BAC4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="13" r="9.5"/>
+    <path d="M5.5 20.5L3.91886117 22.0811388M7.59813131 2.37254668C6.19252249 2.95539953 4.92755276 3.80899128 3.86827202 4.86827202M20.131728 4.86827202C19.0724472 3.80899128 17.8074775 2.95539953 16.4018687 2.37254668"/>
+    <polyline points="11.5 6.5 11.5 13.5 17.5 13.5"/>
+    <path d="M20.5,20.5 L18.9188612,22.0811388" transform="matrix(-1 0 0 1 39 0)"/>
+  </g>
+</svg>

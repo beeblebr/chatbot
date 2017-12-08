@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        <meta charset="utf-8">
+        <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+        <link rel='stylesheet' href='static/css/site.css' />
+
+        <link rel="shortcut icon" sizes="16x16" href="static/images/app-icon/favicon-myndpool-icon-16.png">
+        <link rel="shortcut icon" sizes="32x32" href="static/images/app-icon/favicon-myndpool-icon-32.png">
+        <link rel="shortcut icon" sizes="96x96" href="static/images/app-icon/android-myndpool-icon-96.png">
+        <link rel="icon" sizes="192x192"  href="static/images/app-icon/android-myndpool-icon-192.png">
+        <link rel="apple-touch-icon" href="/static/images/app-icon/iOS-myndpool-icon-180.png">
+        <link rel="apple-touch-icon" sizes="40x40" href="static/images/app-icon/iOS-myndpool-icon-40.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="static/images/app-icon/iOS-myndpool-icon-60.png">
+        <link rel="apple-touch-icon" sizes="80x80" href="static/images/app-icon/iOS-myndpool-icon-80.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="static/images/app-icon/iOS-myndpool-icon-120.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="static/images/app-icon/iOS-myndpool-icon-180.png">
+        <meta name="apple-touch-fullscreen" content="YES" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="#00A0F5" />
+        <meta name="msapplication-TileColor" content="#00A0F5">
+        <meta name="msapplication-TileImage" content="static/images/app-icon/android-myndpool-icon-144.png">
+        <meta name="theme-color" content="#ffffff">
+
+        <title>Myndpool | Your Collaboration Concierge</title>
+    </head>
+
+    <body id="index"">
+        <div class="main">
+
+        <section class="container">
+            <a href='/signup' class="button primary logout" id="home-logout" style="background: black">Sign Up</a>
+        </section>
+              
+        <section class="container custom">
+            
+            <div class="logo">
+                <img src="static/images/elements/logo-with-tagline-white.svg" />
+            </div>
+            
+            <form>
+                <label>Enter your 8-ID to log in:</label>
+                <div class="eight-id" id="eight-id-elements">
+                    <input type="tel" name="eight-id-1" value="" id="eight-id-1" maxlength="1" required autocomplete="off" />
+                    <input type="tel" name="eight-id-2" value="" id="eight-id-2" maxlength="1" required autocomplete="off"/>
+                    <input type="tel" name="eight-id-3" value="" id="eight-id-3" maxlength="1" required autocomplete="off"/>
+                    <input type="tel" name="eight-id-4" value="" id="eight-id-4" maxlength="1" required autocomplete="off"/>
+                    <input type="tel" name="eight-id-5" value="" id="eight-id-5" maxlength="1" required autocomplete="off"/>
+                    <input type="tel" name="eight-id-6" value="" id="eight-id-6" maxlength="1" required autocomplete="off"/>
+                    <input type="tel" name="eight-id-7" value="" id="eight-id-7" maxlength="1" required autocomplete="off"/>
+                    <input type="tel" name="eight-id-8" value="" id="eight-id-8" maxlength="1" required autocomplete="off"/>
+                </div>
+                <input type="button" class="submit" name="submit" value="Submit" id="eight-id-submit" disabled />
+            </form>
+        </section>
+
+        </div>
+
+        <script src="static/javascripts/jquery.js"></script>
+        <script src="static/javascripts/site.js"></script>
+        <script src="static/javascripts/constants.js"></script>
+        <script src="static/javascripts/api.js"></script>
+        <script src="static/javascripts/vendor/jquery.autogrowtextarea.min.js"></script>
+        <script src="static/javascripts/vendor/particles.min.js"></script>
+        <script src="static/javascripts/vendor/particles-login.json"></script>
+        <script src="static/javascripts/auth.js"></script>
+        <script src="static/javascripts/user.js"></script>
+        <script src="static/javascripts/login.js"></script>
+        <script src="static/javascripts/navigation.js"></script>
+        <script src="static/javascripts/html.js"></script>
+        <script src="static/javascripts/chat.js"></script>
+        <script src="static/javascripts/share.js"></script>
+        <canvas class="particles-js-canvas-el" width="796" height="678" style="width: 100%; height: 100%;"></canvas>
+       <!--  <%= javascript_include_tag "vendor/particles.min.js" %>
+       <%= javascript_include_tag "site" %>
+       <%= javascript_include_tag "constants" %>
+       <%= javascript_include_tag "api" %>
+       <%= javascript_include_tag "auth" %>
+       <%= javascript_include_tag "navigation" %> -->
+            
+      
+         
+    </body>
+</html>

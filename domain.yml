@@ -1,0 +1,40 @@
+intents:
+  - greet
+  - thankyou
+  - goodbye
+  - people_query
+  - suggestion_helped
+  - suggestion_didnt_help
+  - affirm
+
+slots:
+  eight_id:
+    type: text
+
+entities:
+  - query
+  - topic
+  - info
+
+
+templates:
+  utter_greet:
+    - "Hey, there! What are you looking for today?"
+  utter_goodbye:
+    - "Goodbye!"
+  utter_tough_luck:
+    - "Tough luck!"
+  utter_was_it_helpful:
+    - "Was the suggestion helpful?"
+  utter_searching:
+    - "Give me a moment while I look up suggestions for you"
+
+
+actions:
+  - utter_greet
+  - utter_goodbye
+  - utter_tough_luck
+  - utter_was_it_helpful
+  - utter_searching
+  - actions.ActionSearchKnowledgeBase
+  

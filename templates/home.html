@@ -1,0 +1,88 @@
+<html ng-app="MPA">
+<head>
+    <meta charset="UTF-8">
+    <title>Myndpool Login</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/superhero-bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/css/kyc.css">
+    <link rel="stylesheet" href="static/css/site.css">
+    <link rel="shortcut icon" href="static/img/stride-badge-original@2x.png" type="image/x-icon">
+</head>
+
+<body ng-controller="mpa">
+    <nav style='padding: 5px' class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a style='cursor: pointer' class="navbar-brand" href="http://stride.ai"><img src="static/img/nav-logo.png" id="logo" alt="logo" width="100"></a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <!-- <li><h4 class="mg-rt-20 hidden" id="timer">0:00:00</h4></li> -->
+                <!-- <li><a class="btn btn-info mg-rt-20" href="/retrieve">Reset</a></li> -->
+            </ul>
+        </div>
+    </nav>
+    <div class="container hidden" id="loading" align="center">
+        <div class="col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4" id="loadingMessage">
+            <img src="static/img/loading.gif" alt="Loading Stride Logo" class="img loadinggif" width="100">
+            <h3 class="loadingtext">Loading...</h3>
+        </div>
+        <!-- <div class="col-md-6 col-md-offset-3 col-xs-4 col-xs-offset-4 hidden" id="connectionClosed">
+            <h2 class="text-danger text-center"><span><i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span></h2>
+            <br>
+            <h4 class="text-center">Invalid Credentials! Please check the credentials entered.</h4>
+        </div> -->
+    </div>
+    <div class="container" id="retrieval_form">
+        
+<section class="container welcome">
+    <h1 style="font-size: 30">What would you like to do?</h1>
+    <br /><br /><br />
+</section>
+
+<style>
+    .share, .ask {
+        display: inline-block !important;
+        width: 50%;
+        border-radius: 0px;
+    }
+    .share {
+        background: black;
+    }
+    .ask {
+        background: black;   
+    }
+</style>
+
+<section class="container actions">
+    <a href="share" class="button primary share">Share Something</a>
+    <a href="ask" class="button primary ask">Ask a Question</a>
+</section>
+    </div>
+    <div class="modal fade" id="connectionError">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Connection Closed!</h4>
+                </div>
+                <div class="modal-body">
+                    <h2 class="text-danger text-center"><span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></h2>
+                    <h5 class="text-center">Connection from server closed. Please refresh and try again.</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>

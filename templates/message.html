@@ -1,0 +1,109 @@
+<html ng-app="MPA">
+<head>
+    <meta charset="UTF-8">
+    <title>Myndpool Login</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/superhero-bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/css/kyc.css">
+    <link rel="stylesheet" href="static/css/site.css">
+    <link rel="shortcut icon" href="static/img/stride-badge-original@2x.png" type="image/x-icon">
+</head>
+
+<body ng-controller="mpa">
+    <nav style='padding: 5px' class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a style='cursor: pointer' class="navbar-brand" href="http://stride.ai"><img src="static/img/nav-logo.png" id="logo" alt="logo" width="100"></a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <!-- <li><h4 class="mg-rt-20 hidden" id="timer">0:00:00</h4></li> -->
+                <!-- <li><a class="btn btn-info mg-rt-20" href="/retrieve">Reset</a></li> -->
+            </ul>
+        </div>
+    </nav>
+    <div class="container hidden" id="loading" align="center">
+        <div class="col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4" id="loadingMessage">
+            <img src="static/img/loading.gif" alt="Loading Stride Logo" class="img loadinggif" width="100">
+            <h3 class="loadingtext">Loading...</h3>
+        </div>
+        <!-- <div class="col-md-6 col-md-offset-3 col-xs-4 col-xs-offset-4 hidden" id="connectionClosed">
+            <h2 class="text-danger text-center"><span><i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span></h2>
+            <br>
+            <h4 class="text-center">Invalid Credentials! Please check the credentials entered.</h4>
+        </div> -->
+    </div>
+    <style>
+        input.chat {
+            width: 90%;
+            padding: 10px;
+        }
+    </style>
+    <div class="container" id="retrieval_form">
+        {% if action == 'share' %}
+        <h2>Share something</h2>
+        {% else %}
+        <h2>Ask a question</h2>
+        {% endif %}
+        <form id='form'>
+            {% if action == 'share' %}
+                <input class='chat' id='share' type='text' placeholder="Share something">
+            {% else %}
+                <input class='chat' id='ask' type='text' placeholder="Ask a question">
+            {% endif %}
+            <input type='submit' value='Submit' />
+        </form>
+        {% if action == 'ask' %}
+            <h2>Top results</h2>
+        {% endif %}
+        <div id='results'>
+        </div>
+    </div>
+
+    <script src='static/js/jquery-3.1.1.min.js'></script>
+    <script>
+        $('form').submit(function(e) {
+            e.preventDefault();
+            var action = '{{ action }}'
+            if (action == 'share') {
+                $.ajax({
+                    type: 'POST',
+                    url: '/addk',
+                    data: {k: $('#share').val()},
+                    success: function(res) {
+                        alert('Added to knowledge base!')
+                        window.location.replace('/home')
+                    }
+                })
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/similarity',
+                    data: {q: $('#ask').val()},
+                    success: function(results) {
+                        var results = results['most']
+                        $('#results').html(null)
+                        console.log(results)
+                        for (var i = 0; i < results.length; i++) {
+                            var result = results[i]
+                            $('#results').append(
+                                "<div class='result'>" + result + "</div>"
+                            )
+                        }
+                    }
+                })
+            }
+            return false;
+        })
+    </script>
+
+</body>
+
+
+</html>

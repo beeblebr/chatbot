@@ -1,0 +1,287 @@
+{% load static %}
+<html ng-app="MPA" style="display: none;">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/superhero-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/kyc.css' %}">
+    <link rel="stylesheet" href="{% static 'css/annotate.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/stride-badge-original@2x.png' %}" type="image/x-icon">
+    <style> 
+        img.page {
+            width: 80%;
+            float: right;
+        }
+        #pdf h4 {
+            float: right;
+            width: 80%;
+        }
+        #pdf {
+            float: right;
+        }
+        #controls {
+            z-index: 10;
+            width: 350px;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        #reset, #finish {
+            width: 170px;
+        }
+
+        #reset {
+            width: 150px;
+        }
+
+        #page-no {
+            background: #211d21;
+            float: right;
+            width: 80%;
+        }
+
+        #page-no input {
+            background: #211d21 !important;
+            width: 200px;
+            text-align: center;
+            margin: auto auto;
+            border: 1px solid #E5E5E5;
+        }
+
+        .form-group input:focus {
+            border: 1px solid #E5E5E5;   
+        }
+
+        #all-pages {
+            float: right;
+            max-height: 80%;
+            overflow-y: scroll;           
+        }
+        
+        .main {
+            margin-top: 65px;
+        }
+        .text-left {
+            float: left;
+            width: 303px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .candidate-list-item {
+            background: #544605;
+            cursor: pointer;
+        }
+
+        .panel-group {
+            width: 303px;
+        }
+    </style>
+</head>
+
+<body ng-controller="mpa">
+    <nav style='padding: 5px' class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a style='cursor: pointer' class="navbar-brand" href="http://stride.ai"><img src="{% static 'img/nav-logo.png' %}" id="logo" alt="logo" width="100"></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid main">
+
+        <div id="temp" style="display: none"></div>
+
+        <div class="row">
+
+            <div class="col-md-1 affix" id="controls">
+                    <h4>All Data Points</h4>
+                    <small style="display: block;margin-bottom: 20px;width:300px">Select a datapoint below to view the predicted values. Choose the correct value for improved results next time.</small>
+                    
+                    <!-- <div class="panel-group">
+                        {% for dp in dpoints %}
+                            <div class="panel panel-default">
+                               
+                                <div class="list-group-item text-left panel-heading" data-dp="{{ dp.data_point }}" data-toggle="collapse" href="#collapse1">
+                                    {{ dp.data_point }}
+                                    <span class="pull-right">
+                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                               
+                               <div id="collapse1" class="panel-collapse collapse">
+                                  <ul class="list-group">
+                                     <li class="list-group-item">One</li>
+                                     <li class="list-group-item">Two</li>
+                                     <li class="list-group-item">Three</li>
+                                  </ul>
+                                  <div class="panel-footer">Footer</div>
+                               </div>
+                               
+                            </div>
+                        {% endfor %}
+                    </div> -->
+                    <div class="panel-group">
+                        {% for dp, candidates in result_candidates.items %}
+                        <div class="panel panel-default">
+                          <div class="panel-heading candidate-item" data-toggle="collapse" href="#collapse{{ forloop.counter }}">
+                            <h4 class="panel-title" data-data-point="{{ dp }}">
+                              {{ dp }}
+                              <span class="pull-right">
+                                  <i class="fa fa-angle-right" aria-hidden="true"></i>
+                              </span>
+                            </h4>
+                          </div>
+                          <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                            <ul class="list-group">
+                            {% for candidate in candidates %}
+                                {{ candidate | safe }}
+                            {% endfor %}
+                            </ul>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+
+                    <button class="btn btn-danger" data-toggle="modal" id='value-not-found'>Value not here</button>
+                    <button class="btn btn-primary" data-toggle="modal" id='finish'>Finish</button>
+                    <!-- <button class="btn btn-primary" data-toggle="modal" href='#newProcess'>New Process</button> -->
+            </div>
+
+            <div class="col-md-11" id="pdf">
+                <div class="form-group" id="page-no">
+                    <input type="text" id="page_no" ng-model="page_no" class="form-control" placeholder="1 of 64" readonly>
+                </div>
+                <div id='all-pages'>
+                </div>
+             </div>
+
+        </div>
+    </div>
+
+ 
+</body>
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.lazyload.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        correctAnswers = {}
+
+        function htmlDecode(input){
+          var e = document.createElement('div');
+          e.innerHTML = input;
+          // handle case of empty input
+          return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+        }
+
+        /* Handle click on data point */
+        $('.candidate-item').click(function() {
+            var i = $(this).find('i')
+            $(i).toggleClass('fa-angle-right');
+            $(i).toggleClass('fa-angle-down');
+        })
+
+        pdf = "{{ fname }}".split('/').reverse()[0]
+
+        $('.candidate-list-item').click(function() {
+            var page_no = $(this).attr('data-page-no')
+            $('#all-pages').animate({
+                scrollTop: $("#0").offset().top
+            }, 0, function() { $('#all-pages').animate({
+                scrollTop: $("#" + FILES[page_no].split('.')[0]).offset().top
+             })});
+
+            $('.candidate-list-item').css('background', '#544605')
+            $(this).css('background', 'green')
+            
+            var data_point = $(this).attr('data-data-point')
+            console.log($(this).parents('.panel')[0])
+        })
+
+        $('#finish').click(function() {
+            $.post({
+                url: '/result/',
+
+            })
+        })
+
+        $('#value-not-found').click(function() {
+            alert('Feature not yet supported')
+        })
+
+        /* Fetch list of JPG images of PDF */
+        $.get('/pages/?pdf=' + pdf, function(result) {
+            FILES = result['files']
+            $('#page_no').attr('placeholder', '1 of ' + FILES.length)
+            for (var i = 0; i < FILES.length; i++) {
+                var imageUrl = "{% static 'img/annotated' %}/" + pdf + "/" + FILES[i]
+                $('#all-pages').append('<img class="page lazy" id="' + FILES[i].split('.')[0] + '" src="' + imageUrl + '" />')
+            }
+
+            /* Handle click on data point */
+            $('.list-group-item').click(function() {
+                         
+            })
+
+            /* Change page number on scroll */
+            $('#all-pages').scroll(function() {
+                var offset = $(this).scrollTop();
+                var img_height = document.getElementsByClassName('page')[0].clientHeight;
+                var page_no = offset / img_height;
+                $('#page_no').attr('placeholder', parseInt(page_no + 1) + ' of ' + FILES.length)
+            })
+        })
+        
+    })
+
+    var app = angular.module('MPA', []);
+    app.controller('mpa', ['$scope', '$http', function($scope, $http) {
+
+        angular.element(document).ready(function () {
+            $('#fillall').hide();
+            $('html').css('display', 'block');
+        });
+
+        $('#file-path').change(function() {
+            $('#file-text').val($('#file-path')[0].files[0].name);
+        });
+
+        angular.element('form').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+            formData.append('file', $('#file-path')[0].files[0], $('#file-path')[0].files[0].name);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.post({
+                url: '',
+                data: formData,
+                cache: false,
+                contentType: false,
+                mimeType: 'multipart/form-data',
+                processData: false,
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(e){
+                    console.error(e);
+                }
+            })
+            
+        })
+
+    }]);
+</script>
+</html>
+
