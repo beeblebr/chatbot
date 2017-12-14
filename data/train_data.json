@@ -703,6 +703,16 @@
         "entities": []
       },
       {
+        "text": "hello",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "Hello!",
+        "intent": "greet",
+        "entities": []
+      }
+      {
         "text": "howdy",
         "intent": "greet",
         "entities": []

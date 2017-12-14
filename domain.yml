@@ -7,9 +7,14 @@ intents:
   - suggestion_didnt_help
   - affirm
 
+
 slots:
   eight_id:
     type: text
+
+  search_results:
+    type: unfeaturized
+
 
 entities:
   - query
@@ -20,14 +25,19 @@ entities:
 templates:
   utter_greet:
     - "Hey, there! What are you looking for today?"
+    - "Hi, how can I help you today?"
   utter_goodbye:
     - "Goodbye!"
+    - "See you around!"
+    - "Bye!"
   utter_tough_luck:
     - "Tough luck!"
   utter_was_it_helpful:
     - "Was the suggestion helpful?"
   utter_searching:
-    - "Give me a moment while I look up suggestions for you"
+    - "Give me a moment while I look up suggestions for you."
+  utter_can_help_you_with_that:
+    - "{name} can help you with that."
 
 
 actions:
@@ -36,5 +46,6 @@ actions:
   - utter_tough_luck
   - utter_was_it_helpful
   - utter_searching
+  - utter_can_help_you_with_that
   - actions.ActionSearchKnowledgeBase
   

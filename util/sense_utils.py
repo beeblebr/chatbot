@@ -2,12 +2,10 @@ import requests
 import json
 import re
 import spacy
-
+from pprint import pprint
+import numpy as np
 import warnings
 warnings.simplefilter("ignore", category=DeprecationWarning)
-
-SENSE_SERVER = 'http://c70c1fcc.ngrok.io'
-SENSE_SERVER_PORT = 8009
 
 LABELS = {
     'ENT': 'ENT',
@@ -34,20 +32,21 @@ LABELS = {
 nlp = spacy.load('en')
 
 
-def _represent_word(word):
+def _represent_word(word, maintain_case):
     if word.like_url:
         return '%%URL|X'
     text = re.sub(r'\s', '_', word.text)
     tag = LABELS.get(word.ent_type_, word.pos_)
     if not tag:
         tag = '?'
-    return text + '|' + tag
+
+    return (text if maintain_case else text.lower()) + '|' + tag
 
 
-def _transform_doc(doc):
+def _transform_doc(doc, maintain_case=False):
     doc = nlp(unicode(doc))
     for ent in doc.ents:
-        ent.merge(ent.root.tag_, ent.text, LABELS[ent.label_])
+        ent.merge(unicode(ent.root.tag_), unicode(ent.text), unicode(LABELS[ent.label_]))
     for np in doc.noun_chunks:
         while len(np) > 1 and np[0].dep_ not in ('advmod', 'amod', 'compound'):
             np = np[1:]
@@ -55,7 +54,7 @@ def _transform_doc(doc):
     strings = []
     for sent in doc.sents:
         if sent.text.strip():
-            strings.append(' '.join(_represent_word(w) for w in sent if not w.is_space))
+            strings.append(' '.join(_represent_word(w, maintain_case) for w in sent if not w.is_space))
     if strings:
         return '\n'.join(strings) + '\n'
     else:
@@ -63,38 +62,50 @@ def _transform_doc(doc):
 
 
 def transform_topics(nlu_topics):
-    transformed_topics = []
-    for t in nlu_topics:
-        transformed_topics.extend(_transform_doc(unicode(t)).split())
-
-    def correct_case(t):
-        pre, post = t.split('|')
-        return pre.lower() + '|' + post.upper()
-
-    return map(correct_case, transformed_topics)
+    def transform(topic):
+        return topic.lower().replace(' ', '_') + '|NOUN'
+    return map(transform, nlu_topics)
 
 
-def _sense_similarity(a, b):
-    try:
-        print('calling request')
-        url = '{3}?a={1}&b={2}'.format(SENSE_SERVER_PORT, a, b, SENSE_SERVER)
-        print(url)
-        result = requests.get(url).text
-        print(result)
-        return float(json.loads(result)['sim'])
-    except Exception as e:
-        print(e)
-        return 0
+
+SENSE_SERVER_URL = 'http://4c860dd8.ngrok.io'
+
+def perform_batch_call(calls):
+    print('Performing batch call')
+    calls = {'calls': calls}
+    headers = {'content-type': 'application/json'}
+    url = SENSE_SERVER_URL
+    result = requests.post(url, data=json.dumps(calls), headers=headers).text
+    res = json.loads(json.loads(result)['result'])
+    return res
 
 
-def sense_topic_similarity(topics1, topics2):
-    score = 0
-    similarities = []
-    print('called')
-    print(topics1)
-    for i in topics1:
-        print(i)
-        most_similar = max([0] + map(lambda x : _sense_similarity(i, x), topics2))
-        similarities.append(most_similar)
+def assemble_topic_wise_rankings(similarity_map, corpus):
+    """Assemble separate rankings for each topic"""
+    assert similarity_map
+    valid_variants = map(lambda x : x['topic'], similarity_map[0])
 
-    return sum(similarities) / max(float(len(similarities)), 1.0)
+    topic_wise_ranking = {}
+    for topic in valid_variants:
+        ranking = []
+        for i in range(len(corpus)):
+            item = corpus[i].copy()
+            try:
+                current_topic = [x for x in similarity_map[i] if x['topic'] == topic][0]
+                score = float(current_topic['score'])
+                rank = float(current_topic['rank'])
+                matched_variant = current_topic['matched_variant']
+            except Exception as e:
+                score = 0
+                rank = float('inf')
+                matched_variant = None
+            item.update(score=score)
+            item.update(rank=rank)
+            item.update(matched_variant=matched_variant)
+            ranking.append(item)
+        topic_wise_ranking[topic] = ranking
+
+    for topic in topic_wise_ranking:
+        topic_wise_ranking[topic].sort(key=lambda x : x['score'], reverse=True)
+
+    return topic_wise_ranking

@@ -6,7 +6,6 @@ from unidecode import unidecode
 
 import categorize
 
-from flask_pymongo import PyMongo
 from pymongo import MongoClient
 
 app = Flask(__name__, static_url_path='/static')
@@ -88,7 +87,7 @@ def get_user_knowledge(eight_id):
 
 from rasa_core.interpreter import RasaNLUInterpreter
 from rasa_core.agent import Agent
-from util.chat_utils import get_all_topics_plain
+from util.chat_utils import get_all_topics
 
 agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/default/current"))
 
@@ -97,7 +96,7 @@ agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/def
 def add_to_k():
     k = request.get_json()
 
-    all_topics = get_all_topics_plain(k['text'])
+    all_topics = get_all_topics(k['text'])
 
     k['timestamp'] = datetime.now()
     k['text'] = k['text']
@@ -115,13 +114,10 @@ from pprint import pprint
 def query():
     q = request.args.get('text')
 
-    print(agent.handle_message(unicode(q)))
+    response = agent.handle_message(unicode(q))[0]
+    eight_id = response.split()[0]
 
-    pprint(agent.tracker_store.retrieve('eight_id'))
-    pprint(dir(agent.domain))
-    pprint(agent.domain.slots)
-
-    return jsonify({'match': {'user_id': '00000000'}})
+    return jsonify({'match': {'user_id': eight_id}})
 
 
 app.run('0.0.0.0', port=8000, threaded=True, debug=True)

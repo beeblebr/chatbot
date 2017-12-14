@@ -8,5 +8,5 @@ if __name__ == '__main__':
 	while True:
 		msg = raw_input('>> ')
 		print('You said', msg)
-		print(agent.handle_message(unicode(msg)))
-
+		agent.handle_message(unicode(msg))
+		

@@ -82,7 +82,6 @@ function AskChat (parseContentToHtml) {
     }
 
     this.handleGetUserApiSucess = function (response) {
-        
         chat.addCard(
             getUserFoundText(response.name),
             response
