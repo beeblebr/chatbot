@@ -68,7 +68,7 @@ def transform_topics(nlu_topics):
 
 
 
-SENSE_SERVER_URL = 'http://4c860dd8.ngrok.io'
+SENSE_SERVER_URL = 'https://d1e33273.ngrok.io'
 
 def perform_batch_call(calls):
     print('Performing batch call')
@@ -80,32 +80,3 @@ def perform_batch_call(calls):
     return res
 
 
-def assemble_topic_wise_rankings(similarity_map, corpus):
-    """Assemble separate rankings for each topic"""
-    assert similarity_map
-    valid_variants = map(lambda x : x['topic'], similarity_map[0])
-
-    topic_wise_ranking = {}
-    for topic in valid_variants:
-        ranking = []
-        for i in range(len(corpus)):
-            item = corpus[i].copy()
-            try:
-                current_topic = [x for x in similarity_map[i] if x['topic'] == topic][0]
-                score = float(current_topic['score'])
-                rank = float(current_topic['rank'])
-                matched_variant = current_topic['matched_variant']
-            except Exception as e:
-                score = 0
-                rank = float('inf')
-                matched_variant = None
-            item.update(score=score)
-            item.update(rank=rank)
-            item.update(matched_variant=matched_variant)
-            ranking.append(item)
-        topic_wise_ranking[topic] = ranking
-
-    for topic in topic_wise_ranking:
-        topic_wise_ranking[topic].sort(key=lambda x : x['score'], reverse=True)
-
-    return topic_wise_ranking

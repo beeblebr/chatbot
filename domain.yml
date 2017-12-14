@@ -38,6 +38,8 @@ templates:
     - "Give me a moment while I look up suggestions for you."
   utter_can_help_you_with_that:
     - "{name} can help you with that."
+  utter_compromise:
+    - "I did not find people satisfying all the tags. However, I found that {present_tags} is relatively rarer and I prioritized that over {absent_tags}."
 
 
 actions:
@@ -47,5 +49,6 @@ actions:
   - utter_was_it_helpful
   - utter_searching
   - utter_can_help_you_with_that
+  - utter_compromise
   - actions.ActionSearchKnowledgeBase
   

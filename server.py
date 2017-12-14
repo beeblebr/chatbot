@@ -114,7 +114,7 @@ from pprint import pprint
 def query():
     q = request.args.get('text')
 
-    response = agent.handle_message(unicode(q))[0]
+    responses = agent.handle_message(unicode(q))[0]
     eight_id = response.split()[0]
 
     return jsonify({'match': {'user_id': eight_id}})

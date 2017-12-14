@@ -1,6 +1,6 @@
 from nltk.corpus import stopwords
 
-from util.topic_utils import get_top_categories, clean_text
+from util.topic_utils import get_top_categories
 from util.sense_utils import transform_topics, _transform_doc
 
 
@@ -17,7 +17,7 @@ def get_all_topics(message):
     nlu_topics = filter(lambda x : x.split('|')[0] not in stop, nlu_topics)
 
     # Word2Vec fallback topic extraction
-    fallback_topics = get_top_categories(clean_text(message_text))
+    fallback_topics = get_top_categories(message_text)
 
     return {'nlu_topics': nlu_topics, 'fallback_topics': fallback_topics}
 
@@ -30,6 +30,6 @@ def get_all_topics_plain(message_text):
     nlu_topics = filter(lambda x : x.split('|')[0] not in stop, nlu_topics)
 
     # Word2Vec fallback topic extraction
-    fallback_topics = get_top_categories(clean_text(message_text))
+    fallback_topics = get_top_categories(message_text)
 
     return {'nlu_topics': nlu_topics, 'fallback_topics': fallback_topics}
