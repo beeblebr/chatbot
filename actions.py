@@ -21,7 +21,7 @@ from util.db_utils import *
 
 
 class ActionSearchKnowledgeBase(Action):
-    """Handles intent to search query knowledge base"""
+    """Handles intent to query knowledge base"""
 
     def name(self):
         return 'action_search_knowledge_base'
@@ -39,13 +39,6 @@ class ActionSearchKnowledgeBase(Action):
             server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
         # Perform network request
         similarity_map = perform_batch_call(server_calls)
-
-        topics = []
-        for topic in similarity_map[0]:
-            topic = topic.copy()
-            topic.pop('matched_variant')
-            topic.pop('score')
-            topics.append(topic)
         
         try:
             # Get topic wise ranking
@@ -55,27 +48,35 @@ class ActionSearchKnowledgeBase(Action):
             aggregate_ranking = get_aggregate_scores(topic_wise_ranking, corpus)
             aggregate_ranking.sort(key=lambda x : x['avg_score'], reverse=True)
 
-            # Topic-wise sorting is done after aggregate merging to preserve order until then
+            # Topic-wise sorting is deferred until aggregate merging to preserve order
             for topic in topic_wise_ranking:
                 topic_wise_ranking[topic].sort(key=lambda x : x['score'], reverse=True)
-                # Keep only items that have a similarity score greater than 0.55
+                # Keep only items that have a similarity score greater than 55%
                 topic_wise_ranking[topic] = filter(lambda x : x['score'] > 0.55, topic_wise_ranking[topic])
                 print(topic + ' has ' + str(len(topic_wise_ranking[topic])) + ' entries')
         except Exception as e:
             print(e)
 
 
-        # Find the largest, non-empty intersection of topics
+        # Get the list of topics along with their ranks (from the server response)
+        topics = []
+        for topic in similarity_map[0]:
+            topic = topic.copy()
+            topic.pop('matched_variant')
+            topic.pop('score')
+            topics.append(topic)
+
         try:
             # Find the intersection of the most number of topics, and prioritize the combination with most rarity (within the given number of topics)
             common_items = []
             for size in range(len(topics), 0, -1):
+                # Get all combinations of topics of length `size` 
                 n_sized_combinations = map(list, list(itertools.combinations(topics, size)))
-                print(n_sized_combinations)
+                # The metric to judge rarity is the sum of Sense2Vec ranks of all topics in the combination
                 n_sized_combinations.sort(key=lambda comb : sum([x['rank'] for x in comb]))
-                # Iterate in increasing order of frequency score
+
+                # Iterate in decreasing order of rarity
                 for combination in n_sized_combinations:
-                    print(combination)
                     combination_names = map(lambda x : x['topic'], combination)
                     common_items = find_topic_intersection(combination_names, topic_wise_ranking)
                     if common_items:
@@ -84,7 +85,7 @@ class ActionSearchKnowledgeBase(Action):
                         print(combination_names)
                         break
                 else:
-                    # Nothing found
+                    # Reduce combination size by 1 and continue
                     continue
                 break
             else:
@@ -93,10 +94,13 @@ class ActionSearchKnowledgeBase(Action):
             
             prettify_tag = lambda x : '"' + ' '.join(x.split('|')[0].split('_')) + '"'
             if common_items:
+                # Extract topic names from the dicts containing ranks
                 combination = map(lambda x : x['topic'], combination)
                 topics = map(lambda x : x['topic'], topics)
+
                 present_tags = map(prettify_tag, combination)
                 absent_tags = map(prettify_tag, list(set(topics) - set(combination)))
+
                 dispatcher.utter_template('utter_compromise', present_tags=', '.join(present_tags), absent_tags=', '.join(absent_tags))
                 dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(common_items[0]['eight_id']))
 
