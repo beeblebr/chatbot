@@ -9,10 +9,7 @@ intents:
 
 
 slots:
-  eight_id:
-    type: text
-
-  search_results:
+  response_metadata:
     type: unfeaturized
 
 
@@ -37,10 +34,12 @@ templates:
   utter_searching:
     - "Give me a moment while I look up suggestions for you."
   utter_can_help_you_with_that:
-    - "{name} can help you with that."
+    - text: "{name} can help you with that."
   utter_compromise:
     - "I did not find people satisfying all the tags. However, I found that {present_tags} is relatively rarer and I prioritized that over {absent_tags}."
-
+  utter_nothing_found:
+    - "Sorry, I could not find anything that matches that."
+    - "I cannot find any matches for this."
 
 actions:
   - utter_greet

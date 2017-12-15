@@ -114,10 +114,19 @@ from pprint import pprint
 def query():
     q = request.args.get('text')
 
-    responses = agent.handle_message(unicode(q))[0]
-    eight_id = response.split()[0]
+    response = agent.handle_message(unicode(q))
+    tracker = agent.tracker_store.get_or_create_tracker('default')
+    print(tracker.slots)
+    info = tracker.slots['response_metadata'].value
 
-    return jsonify({'match': {'user_id': eight_id}})
+    if info['type'] == 'compromise':
+        eight_id = info['top_matches'][0]['eight_id']
+        return jsonify({'type': info['type'], 'before_message': response[0], 'match': {'user_id': eight_id}})
+    elif info['type'] == 'found':
+        eight_id = info['top_matches'][0]['eight_id']
+        return jsonify({'type': info['type'], 'match': {'user_id': eight_id}})
+
+    return jsonify({'type': 'unknown'})
 
 
 app.run('0.0.0.0', port=8000, threaded=True, debug=True)

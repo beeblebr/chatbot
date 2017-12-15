@@ -64,11 +64,24 @@ function AskChat (parseContentToHtml) {
     }
 
     this.handleUserInputApiSuccess = function (response) {
-        if (!!response.match) {
+        switch(response.type) {
+        case 'compromise':
+            console.log(response.before_message);
+            chat.addBotMessage(response.before_message);
+            that.getUserFromApi(response.match.user_id);
+            break;
+        case 'found':
+            that.getUserFromApi(response.match.user_id);
+            break;
+        case 'specify':
+            that.specifyRequest(response.specify);
+            break;
+        }
+        /*if (!!response.match) {
             that.getUserFromApi(response.match.user_id);
         } else {
             that.specifyRequest(response.specify);
-        }
+        }*/
     }
 
     this.handleUserInputApiFailure = function (response) {

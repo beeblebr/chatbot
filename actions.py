@@ -33,12 +33,17 @@ class ActionSearchKnowledgeBase(Action):
         corpus = list(get_knowledge_corpus())
         server_calls = [] # for batching network requests
         
-        for index, k in enumerate(corpus):
-            k_nlu_topics = get_all_topics_plain(k['text'])['nlu_topics']
-            # Batch(v.) server calls
-            server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
         # Perform network request
-        similarity_map = perform_batch_call(server_calls)
+        import os
+        if os.path.exists('similarity_map') and False:
+            similarity_map = pickle.load(open('similarity_map', 'rb'))
+        else:
+            for index, k in enumerate(corpus):
+                k_nlu_topics = get_all_topics_plain(k['text'])['nlu_topics']
+                # Batch(v.) server calls
+                server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
+            similarity_map = perform_batch_call(server_calls)
+            pickle.dump(similarity_map, open('similarity_map', 'wb'))
         
         try:
             # Get topic wise ranking
@@ -89,8 +94,8 @@ class ActionSearchKnowledgeBase(Action):
                     continue
                 break
             else:
-                print('No common ground found')
-                # TODO Handle this case
+                dispatcher.utter_template('utter_nothing_found')
+                return []
             
             prettify_tag = lambda x : '"' + ' '.join(x.split('|')[0].split('_')) + '"'
             if common_items:
@@ -101,8 +106,16 @@ class ActionSearchKnowledgeBase(Action):
                 present_tags = map(prettify_tag, combination)
                 absent_tags = map(prettify_tag, list(set(topics) - set(combination)))
 
+                if not absent_tags:
+                    dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(common_items[0]['eight_id']))
+                    response = {'type': 'found', 'top_matches': common_items}
+
                 dispatcher.utter_template('utter_compromise', present_tags=', '.join(present_tags), absent_tags=', '.join(absent_tags))
                 dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(common_items[0]['eight_id']))
+
+                response = {'type': 'compromise', 'top_matches': common_items}
+
+                return [SlotSet('response_metadata', response)]
 
         except Exception as e:
             print(e)
