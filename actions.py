@@ -144,17 +144,10 @@ class ActionInsertKnowledge(Action):
     def run(self, dispatcher, tracker, domain):
         message = tracker.latest_message
         text = message.text
-        entities = message.entities
-        info = filter(lambda x : x['entity'] == 'info', entities)
-        
-        all_topics = get_all_topics(message)
 
         k = dict()
         k['timestamp'] = datetime.now()
         k['text'] = text
-        k['info'] = info
-        k['nlu_topics'] = all_topics['nlu_topics']
-        k['fallback_topics'] = all_topics['fallback_topics']
 
         insert_knowledge(k)
         

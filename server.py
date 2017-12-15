@@ -96,13 +96,8 @@ agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/def
 def add_to_k():
     k = request.get_json()
 
-    all_topics = get_all_topics(k['text'])
-
     k['timestamp'] = datetime.now()
     k['text'] = k['text']
-    k['top_cats'] = all_topics['fallback_topics']
-    k['nlu_topics'] = all_topics['nlu_topics']
-    k['fallback_topics'] = all_topics['fallback_topics']
     k['type'] = 'text'
     db.knowledge.insert_one(k)
     return jsonify({'success': True})
