@@ -124,4 +124,4 @@ def query():
     return jsonify({'type': 'unknown'})
 
 
-app.run('0.0.0.0', port=8000, threaded=True, debug=True)
+app.run('0.0.0.0', port=8001, threaded=True, debug=True)
