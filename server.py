@@ -13,8 +13,8 @@ app.config['SECRET_KEY'] = 'super-secrfeet'
 
 
 #client = MongoClient(username='mongoadmin', password='3aw#Aq')
-#client = MongoClient()
-client = MongoClient(username='mongoadmin', password='3aw#Aq')
+client = MongoClient()
+#client = MongoClient(username='mongoadmin', password='3aw#Aq')
 db = client.get_database('main')
 
 

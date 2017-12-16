@@ -33,18 +33,23 @@ class ActionSearchKnowledgeBase(Action):
         corpus = list(get_knowledge_corpus())
         server_calls = [] # for batching network requests
         
-        # Perform network request
-        import os
-        if os.path.exists('similarity_map') and False:
-            similarity_map = pickle.load(open('similarity_map', 'rb'))
-        else:
-            for index, k in enumerate(corpus):
-                k_nlu_topics = get_all_topics_plain(k['text'])['nlu_topics']
-                # Batch(v.) server calls
-                server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
-            similarity_map = perform_batch_call(server_calls)
-            pickle.dump(similarity_map, open('similarity_map', 'wb'))
-        
+        try:        
+            # Perform network request
+            import os
+            if os.path.exists('similarity_map') and False:
+                similarity_map = pickle.load(open('similarity_map', 'rb'))
+            else:
+                for index, k in enumerate(corpus):
+                    k_nlu_topics = get_all_topics_plain(k['text'])['nlu_topics']
+                    # Batch(v.) server calls
+                    server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
+                similarity_map = perform_batch_call(server_calls)
+                pprint(similarity_map)
+                pickle.dump(similarity_map, open('similarity_map', 'wb'))
+        except Exception as e:
+            print(e)
+            raw_input('www>>')
+
         try:
             # Get topic wise ranking
             topic_wise_ranking = assemble_topic_wise_rankings(similarity_map, corpus)
