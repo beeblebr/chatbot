@@ -16,8 +16,8 @@ WORD2VEC_MODEL_PATH = '../web/model.pickle'
 TEXT_RAZOR_TOPICS_PATH = '../topics3'
 
 sense_vec_model = sense2vec.load()
-word_vec_model = pickle.load(open(WORD2VEC_MODEL_PATH, 'rb'))
-topic_corpus = pickle.load(open(TEXT_RAZOR_TOPICS_PATH, 'rb'))
+word_vec_model = dict() #pickle.load(open(WORD2VEC_MODEL_PATH, 'rb'))
+topic_corpus = [] #pickle.load(open(TEXT_RAZOR_TOPICS_PATH, 'rb'))
 
 
 def generate_variants(topic):

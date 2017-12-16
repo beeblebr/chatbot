@@ -68,7 +68,7 @@ def transform_topics(nlu_topics):
 
 
 
-SENSE_SERVER_URL = 'http://9ffc81e1.ngrok.io'
+SENSE_SERVER_URL = 'http://1d9302f3.ngrok.io'
 #SENSE_SERVER_URL = 'http://localhost:8009'
 
 def perform_batch_call(calls):

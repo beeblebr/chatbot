@@ -2,9 +2,6 @@ from flask import *
 from datetime import datetime
 
 import requests
-from unidecode import unidecode
-
-import categorize
 
 from pymongo import MongoClient
 
@@ -126,4 +123,4 @@ def query():
     return jsonify({'type': 'unknown'})
 
 
-app.run('0.0.0.0', port=8001, threaded=True, debug=True)
+app.run('localhost', port=8001, threaded=True, debug=True)

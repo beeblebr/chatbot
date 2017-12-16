@@ -48,7 +48,6 @@ class ActionSearchKnowledgeBase(Action):
                 pickle.dump(similarity_map, open('similarity_map', 'wb'))
         except Exception as e:
             print(e)
-            raw_input('www>>')
 
         try:
             # Get topic wise ranking

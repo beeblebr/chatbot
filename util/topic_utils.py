@@ -7,7 +7,6 @@ import functools
 import cPickle as pickle
 
 from sklearn.metrics.pairwise import cosine_similarity
-from fuzzywuzzy import fuzz, process
 
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
