@@ -111,7 +111,6 @@ def query():
 
     response = agent.handle_message(unicode(q))
     tracker = agent.tracker_store.get_or_create_tracker('default')
-    print(tracker.slots)
     info = tracker.slots['response_metadata'].value
 
     if info['type'] == 'compromise':
@@ -120,6 +119,8 @@ def query():
     elif info['type'] == 'found':
         eight_id = info['top_matches'][0]['eight_id']
         return jsonify({'type': info['type'], 'match': {'user_id': eight_id}})
+    elif info['type'] == 'not_found':
+        return jsonify({'type': info['type'], 'before_message': 'Nothing found'})
 
     return jsonify({'type': 'unknown'})
 

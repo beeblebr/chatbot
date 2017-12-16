@@ -68,7 +68,7 @@ def transform_topics(nlu_topics):
 
 
 
-SENSE_SERVER_URL = 'http://91d85345.ngrok.io'
+SENSE_SERVER_URL = 'http://35542b5a.ngrok.io'
 
 def perform_batch_call(calls):
     print('Performing batch call')

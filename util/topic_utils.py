@@ -66,8 +66,9 @@ def assemble_topic_wise_rankings(similarity_map, corpus):
             item.update(rank=rank)
             item.update(matched_variant=matched_variant)
             ranking.append(item)
-        topic_wise_ranking[topic] = ranking
 
+        from pprint import pprint
+        topic_wise_ranking[topic] = ranking
 
     return topic_wise_ranking
 
@@ -92,11 +93,17 @@ def get_aggregate_scores(topic_wise_ranking, corpus):
     return aggregate_ranking
 
 
+class hashabledict(dict):
+    def __hash__(self):
+        return hash(tuple(sorted(self.items())))
+
 def find_topic_intersection(combination, topic_wise_ranking):
     """Finds the knowledge items tagged with all these topics"""
-    ids = [map(lambda x : x['_id'], topic_wise_ranking[topic]) for topic in combination]
-    common_item_ids = functools.reduce(operator.and_, map(set, ids))
-    common_items = []
-    if common_item_ids:
-        common_items = list(db.knowledge.find({'$or': [{'_id': id} for id in common_item_ids]}))
+    ids = [map(hashabledict, topic_wise_ranking[topic]) for topic in combination]
+    common_items = list(functools.reduce(operator.and_, map(set, ids)))
+    
+    # common_items = map(set, common_items)
+    # common_items = []
+    # if common_item_ids:
+    #     common_items = list(db.knowledge.find({'$or': [{'_id': id} for id in common_item_ids]}))
     return common_items

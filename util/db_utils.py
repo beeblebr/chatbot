@@ -1,9 +1,7 @@
 from pymongo import MongoClient
 
-
 client = MongoClient()
 db = client.get_database('main')
-
 
 def get_knowledge_corpus():
 	k = db.knowledge.find()

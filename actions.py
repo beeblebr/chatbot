@@ -15,7 +15,7 @@ from rasa_config import *
 
 from util.sense_utils import transform_topics, perform_batch_call, _transform_doc
 from util.chat_utils import get_all_topics, get_all_topics_plain
-from util.topic_utils import get_top_categories, assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection
+from util.topic_utils import get_top_categories, assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict
 from util.db_utils import *
 
 
@@ -67,8 +67,6 @@ class ActionSearchKnowledgeBase(Action):
         topics = []
         for topic in similarity_map[0]:
             topic = topic.copy()
-            topic.pop('matched_variant')
-            topic.pop('score')
             topics.append(topic)
 
         try:
@@ -77,17 +75,22 @@ class ActionSearchKnowledgeBase(Action):
             for size in range(len(topics), 0, -1):
                 # Get all combinations of topics of length `size` 
                 n_sized_combinations = map(list, list(itertools.combinations(topics, size)))
-                # The metric to judge rarity is the sum of Sense2Vec ranks of all topics in the combination
+                # The metric for rarity is the sum of Sense2Vec ranks of all topics in the combination
                 n_sized_combinations.sort(key=lambda comb : sum([x['rank'] for x in comb]))
 
                 # Iterate in decreasing order of rarity
                 for combination in n_sized_combinations:
                     combination_names = map(lambda x : x['topic'], combination)
                     common_items = find_topic_intersection(combination_names, topic_wise_ranking)
+                    common_items.sort(key=lambda x : x['score'], reverse=True)
                     if common_items:
-                        print(common_items)
-                        print('arising out of')
-                        print(combination_names)
+                        # print(combination)
+                        # raw_input('>>>1')
+                        # print('\n')
+                        # pprint(common_items[0])
+                        # print('arising out of')
+                        # print(combination_names)
+                        # print('\n')
                         break
                 else:
                     # Reduce combination size by 1 and continue
@@ -95,7 +98,8 @@ class ActionSearchKnowledgeBase(Action):
                 break
             else:
                 dispatcher.utter_template('utter_nothing_found')
-                return []
+                response = {'type': 'nothing_found'}
+                return [SlotSet('response_metadata', response)]
             
             prettify_tag = lambda x : '"' + ' '.join(x.split('|')[0].split('_')) + '"'
             if common_items:
