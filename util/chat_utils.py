@@ -30,6 +30,13 @@ def get_all_topics_plain(message_text):
     nlu_topics = filter(lambda x : x.split('|')[0] not in stop, nlu_topics)
 
     # Word2Vec fallback topic extraction
-    fallback_topics = get_top_categories(message_text)
+    #fallback_topics = get_top_categories(message_text)
 
-    return {'nlu_topics': nlu_topics, 'fallback_topics': fallback_topics}
+    return {'nlu_topics': nlu_topics}
+
+
+def get_topics_from_transformed_text(transformed_text):
+    pos = transformed_text.split()
+    nlu_topics = filter(lambda x : x.split('|')[1] == 'NOUN', pos)
+    nlu_topics = filter(lambda x : x.split('|')[0] not in stop, nlu_topics)
+    return {'nlu_topics': nlu_topics}

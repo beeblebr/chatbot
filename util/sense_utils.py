@@ -68,7 +68,7 @@ def transform_topics(nlu_topics):
 
 
 
-SENSE_SERVER_URL = 'http://1d9302f3.ngrok.io'
+SENSE_SERVER_URL = 'http://myndpool.stride.ai:8010'
 #SENSE_SERVER_URL = 'http://localhost:8009'
 
 def perform_batch_call(calls):
@@ -79,5 +79,4 @@ def perform_batch_call(calls):
     result = requests.post(url, data=json.dumps(calls), headers=headers).text
     res = json.loads(json.loads(result)['result'])
     return res
-
 

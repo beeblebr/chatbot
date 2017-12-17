@@ -14,7 +14,7 @@ from rasa_core.events import SlotSet
 from rasa_config import *
 
 from util.sense_utils import transform_topics, perform_batch_call, _transform_doc
-from util.chat_utils import get_all_topics, get_all_topics_plain
+from util.chat_utils import get_all_topics, get_all_topics_plain, get_topics_from_transformed_text
 from util.topic_utils import get_top_categories, assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict
 from util.db_utils import *
 
@@ -34,18 +34,12 @@ class ActionSearchKnowledgeBase(Action):
         server_calls = [] # for batching network requests
         
         try:        
+            for index, k in enumerate(corpus):
+                k_nlu_topics = get_topics_from_transformed_text(k['transformed_text'])['nlu_topics']
+                server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
+            print('finished')
             # Perform network request
-            import os
-            if os.path.exists('similarity_map') and False:
-                similarity_map = pickle.load(open('similarity_map', 'rb'))
-            else:
-                for index, k in enumerate(corpus):
-                    k_nlu_topics = get_all_topics_plain(k['text'])['nlu_topics']
-                    # Batch(v.) server calls
-                    server_calls.append({'topics1': nlu_topics, 'topics2': k_nlu_topics})
-                similarity_map = perform_batch_call(server_calls)
-                pprint(similarity_map)
-                pickle.dump(similarity_map, open('similarity_map', 'wb'))
+            similarity_map = perform_batch_call(server_calls)
         except Exception as e:
             print(e)
 
@@ -68,10 +62,11 @@ class ActionSearchKnowledgeBase(Action):
 
 
         # Get the list of topics along with their ranks (from the server response)
-        topics = []
-        for topic in similarity_map[0]:
-            topic = topic.copy()
-            topics.append(topic)
+        topics = [topic.copy() for topic in similarity_map[0]]
+
+        for topic in topic_wise_ranking:
+            print(topic_wise_ranking[topic][0]['score'])
+            print(topic_wise_ranking[topic][0]['text'])
 
         try:
             # Find the intersection of the most number of topics, and prioritize the combination with most rarity (within the given number of topics)
@@ -88,13 +83,6 @@ class ActionSearchKnowledgeBase(Action):
                     common_items = find_topic_intersection(combination_names, topic_wise_ranking)
                     common_items.sort(key=lambda x : x['score'], reverse=True)
                     if common_items:
-                        # print(combination)
-                        # raw_input('>>>1')
-                        # print('\n')
-                        # pprint(common_items[0])
-                        # print('arising out of')
-                        # print(combination_names)
-                        # print('\n')
                         break
                 else:
                     # Reduce combination size by 1 and continue
@@ -117,11 +105,10 @@ class ActionSearchKnowledgeBase(Action):
                 if not absent_tags:
                     dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(common_items[0]['eight_id']))
                     response = {'type': 'found', 'top_matches': common_items}
-
-                dispatcher.utter_template('utter_compromise', present_tags=', '.join(present_tags), absent_tags=', '.join(absent_tags))
-                dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(common_items[0]['eight_id']))
-
-                response = {'type': 'compromise', 'top_matches': common_items}
+                else:
+                    dispatcher.utter_template('utter_compromise', present_tags=', '.join(present_tags), absent_tags=', '.join(absent_tags))
+                    dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(common_items[0]['eight_id']))
+                    response = {'type': 'compromise', 'top_matches': common_items}
 
                 return [SlotSet('response_metadata', response)]
 

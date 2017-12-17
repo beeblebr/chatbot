@@ -12,8 +12,8 @@ k = pickle.load(open('k', 'rb'))
 # q = pickle.load(open('q_processed', 'rb'))
 
 N = len(k)
-
-client = MongoClient('35.197.133.233', username='mongoadmin', password='3aw#Aq')
+client = MongoClient()
+#client = MongoClient('35.197.133.233', username='mongoadmin', password='3aw#Aq')
 #client = MongoClient('35.185.96.31')
 db = client.main
 
@@ -43,5 +43,23 @@ def store_knowledge():
 	for i in knowledge:
 		db.knowledge.insert_one(i)
 
-create_users()
-store_knowledge()
+
+def cache_transformation_of_knowledge_items():
+
+	from util.sense_utils import _transform_doc
+
+	corpus = list(db.knowledge.find())
+
+	for k in corpus:
+		try:
+			print(k['_id'])
+			transformed_text = _transform_doc(k['text'])
+			db.knowledge.update_one({'_id': k['_id']}, {'$set': {'transformed_text': transformed_text}})
+		except Exception as e:
+			print(e)
+			raw_input('>>')
+
+cache_transformation_of_knowledge_items()
+
+#create_users()
+#store_knowledge()
