@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 
 client = MongoClient()
-#client = MongoClient(username='mongoadmin', password='3aw#Aq')
+
 db = client.get_database('main')
 
 def get_knowledge_corpus():

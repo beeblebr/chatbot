@@ -55,7 +55,6 @@ def signup():
         
         return redirect('/')
 
-        
 
 """API Endpoints"""
 @app.route('/api/users/<eight_id>')
