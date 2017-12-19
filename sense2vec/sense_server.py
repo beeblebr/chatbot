@@ -52,8 +52,8 @@ def topic_similarity_map(topics1, topics2):
         topics2_variants = []
         for t in topics2:
             if t not in sense_vec_model:
-                topics2_variants.append(get_most_relevant_variant(generate_variants(t)))
-                # topics2_variants.extend(get_longest_variants(generate_variants(t)))
+                # topics2_variants.append(get_most_relevant_variant(generate_variants(t)))
+                topics2_variants.extend(get_longest_variants(generate_variants(t)))
             else:
                 topics2_variants.append(t)
 

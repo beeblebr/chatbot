@@ -85,6 +85,7 @@ def add_to_k():
     k = request.get_json()
 
     k['timestamp'] = datetime.now()
+
     k['text'] = k['text']
     k['type'] = 'text'
     insert_knowledge(k)
@@ -96,6 +97,10 @@ from pprint import pprint
 @app.route('/api/query')
 def query():
     q = request.args.get('text')
+    user_id = request.args.get('user_id')
+
+    # Store question in DB
+    add_question_to_user_history(user_id, q)
 
     response = agent.handle_message(unicode(q))
     tracker = agent.tracker_store.get_or_create_tracker('default')

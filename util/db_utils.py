@@ -1,7 +1,10 @@
 from pymongo import MongoClient
+from datetime import datetime
 
-client = MongoClient()
+import conf
 
+client = MongoClient(username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
+#client = MongoClient(username='mongoadmin', password='3aw#Aq')
 db = client.get_database('main')
 
 def get_knowledge_corpus():
@@ -45,3 +48,18 @@ def add_user(eight_id, **kwargs):
 	user_details.update(eight_id=eight_id)
 	db.users.insert_one(user_details)
 	
+
+def add_question_to_user_history(eight_id, question_text):
+	question = {
+		'text': question_text,
+		'timestamp': datetime.now()
+	}
+	db.users.update({'eight_id': eight_id}, {'$push': {'questions': question}})
+
+
+def clear_questions_history_for_user(eight_id):
+	db.users.update({'eight_id': eight_id}, {'$unset': {'questions': 1}}, multi=True, upsert=True)
+
+
+def clear_questions_history():
+	db.users.update({}, {'$unset': {'questions': 1}}, multi=True, upsert=True)	

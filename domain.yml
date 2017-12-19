@@ -11,6 +11,8 @@ intents:
 slots:
   response_metadata:
     type: unfeaturized
+  user_id:
+    type: text
 
 
 entities:
