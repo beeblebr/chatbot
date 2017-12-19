@@ -12,8 +12,8 @@ k = pickle.load(open('k', 'rb'))
 # q = pickle.load(open('q_processed', 'rb'))
 
 N = len(k)
-client = MongoClient()
-#client = MongoClient('35.197.133.233', username='mongoadmin', password='3aw#Aq')
+#client = MongoClient()
+client = MongoClient('35.197.133.233', username='mongoadmin', password='3aw#Aq')
 #client = MongoClient('35.185.96.31')
 db = client.main
 

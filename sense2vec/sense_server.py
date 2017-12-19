@@ -35,6 +35,12 @@ def get_longest_variants(variants):
     return longest_variants
 
 
+def get_most_relevant_variant(variants):
+    variants = filter(lambda x : x in sense_vec_model, list(variants))
+    variants.sort(key=lambda variant : sense_vec_model[variant][0])
+    return variants[0]
+
+
 def topic_similarity_map(topics1, topics2):
     Comparison = namedtuple('Comparison', ['score', 'matched_topic', 'matched_variant'])
     Importance = namedtuple('Importance', ['topic', 'importance'])
@@ -46,7 +52,8 @@ def topic_similarity_map(topics1, topics2):
         topics2_variants = []
         for t in topics2:
             if t not in sense_vec_model:
-                topics2_variants.extend(get_longest_variants(generate_variants(t)))
+                topics2_variants.append(get_most_relevant_variant(generate_variants(t)))
+                # topics2_variants.extend(get_longest_variants(generate_variants(t)))
             else:
                 topics2_variants.append(t)
 
