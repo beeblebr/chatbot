@@ -13,7 +13,7 @@ from rasa_core.actions.action import Action
 from rasa_core.events import SlotSet
 from rasa_config import *
 
-from util.sense_utils import transform_topics, perform_batch_call, _transform_doc
+from util.sense_utils import perform_batch_call, _transform_doc
 from util.chat_utils import get_all_topics, get_all_topics_plain, get_topics_from_transformed_text
 from util.topic_utils import get_top_categories, assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict
 from util.db_utils import *
@@ -109,6 +109,9 @@ class ActionSearchKnowledgeBase(Action):
             prettify_tag = lambda x: '"' + \
                 ' '.join(x.split('|')[0].split('_')) + '"'
             if common_items:
+                # Remove current user from suggestions
+                # common_items = filter(lambda x : )
+
                 # Extract topic names from the dicts containing ranks
                 combination = map(lambda x: x['topic'], combination)
                 topics = map(lambda x: x['topic'], topics)

@@ -29,6 +29,10 @@ def generate_variants(topic):
     return variants
 
 
+def generate_case_variants(topic):
+    tokens = topic.split('|')[0].split('_')
+    
+
 def get_longest_variants(variants):
     lengths = map(lambda x : len(x.split('|')[0].split('_')), variants)
     longest_variants = filter(lambda x : len(x.split('|')[0].split('_')) == max(lengths), variants)

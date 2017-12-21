@@ -5,6 +5,7 @@ import spacy
 from pprint import pprint
 import numpy as np
 import warnings
+import conf
 warnings.simplefilter("ignore", category=DeprecationWarning)
 
 LABELS = {
@@ -43,7 +44,7 @@ def _represent_word(word, maintain_case):
     return (text if maintain_case else text.lower()) + '|' + tag
 
 
-def _transform_doc(doc, maintain_case=False):
+def _transform_doc(doc, maintain_case=True):
     doc = nlp(unicode(doc))
     for ent in doc.ents:
         ent.merge(unicode(ent.root.tag_), unicode(
@@ -63,21 +64,12 @@ def _transform_doc(doc, maintain_case=False):
         return ''
 
 
-def transform_topics(nlu_topics):
-    def transform(topic):
-        return topic.lower().replace(' ', '_') + '|NOUN'
-    return map(transform, nlu_topics)
-
-
-SENSE_SERVER_URL = 'http://myndpool.stride.ai:8010'
-#SENSE_SERVER_URL = 'http://localhost:8010'
-
 
 def perform_batch_call(calls):
     print('Performing batch call')
     calls = {'calls': calls}
     headers = {'content-type': 'application/json'}
-    url = SENSE_SERVER_URL
+    url = conf.SENSE_SERVER_URL
     result = requests.post(url, data=json.dumps(calls), headers=headers).text
     res = json.loads(json.loads(result)['result'])
     return res
