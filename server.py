@@ -75,6 +75,7 @@ def get_user_knowledge(eight_id):
 
 from rasa_core.interpreter import RasaNLUInterpreter
 from rasa_core.agent import Agent
+from rasa_core.events import SlotSet
 from util.chat_utils import get_all_topics
 
 agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/default/current"))
@@ -99,11 +100,14 @@ def query():
     q = request.args.get('text')
     user_id = request.args.get('user_id')
 
-    # Store question in DB
-    add_question_to_user_history(user_id, q)
+    # Insert user_id to the bot's slots
+    tracker = agent.tracker_store.get_or_create_tracker(user_id)
+    tracker.update(SlotSet('user_id', user_id))
+    agent.tracker_store.save(tracker)
 
-    response = agent.handle_message(unicode(q))
-    tracker = agent.tracker_store.get_or_create_tracker('default')
+    # Send message to bot, and retrieve response_metadata
+    response = agent.handle_message(unicode(q), sender_id=user_id)
+    tracker = agent.tracker_store.get_or_create_tracker(user_id)
     info = tracker.slots['response_metadata'].value
 
     try:

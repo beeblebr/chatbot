@@ -1,7 +1,7 @@
 from nltk.corpus import stopwords
 
 from util.topic_utils import get_top_categories
-from util.sense_utils import transform_topics, _transform_doc
+from util.sense_utils import _transform_doc
 
 
 stop = map(unicode, set(stopwords.words('english')))

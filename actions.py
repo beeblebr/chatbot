@@ -31,6 +31,10 @@ class ActionSearchKnowledgeBase(Action):
         corpus = list(get_knowledge_corpus())
         server_calls = []  # for batching network requests
 
+        user_id = tracker.slots['user_id']
+
+        # Store question in DB
+        add_question_to_user_history(user_id, q)
 
         try:
             for index, k in enumerate(corpus):

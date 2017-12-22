@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo 'Beginning installation...'
 
@@ -10,6 +10,7 @@ source myndpool_main/bin/activate
 # Install requirements.txt
 echo 'Installing Python packages...'
 pip install -r requirements.txt
+python -m spacy download en
 
 # Train Rasa.AI chatbot
 echo 'Training Rasa chatbot...'
