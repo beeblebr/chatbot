@@ -2,6 +2,7 @@ import json
 import pickle
 
 from collections import namedtuple
+from itertools import product
 
 from flask import Flask, request
 from sklearn.metrics.pairwise import cosine_similarity
@@ -23,14 +24,30 @@ topic_corpus = [] #pickle.load(open(TEXT_RAZOR_TOPICS_PATH, 'rb'))
 def generate_variants(topic):
     tokens = topic.split('|')[0].split('_')
     variants = set([topic])
+    variants.update(generate_case_variants(topic))
     for i in range(1, len(tokens)):
         variants.add('_'.join(tokens[i:]) + '|NOUN')
         variants.add('_'.join(tokens[:-i]) + '|NOUN')
+        variants.update(generate_case_variants('_'.join(tokens[i:]) + '|NOUN'))
+        variants.update(generate_case_variants('_'.join(tokens[:-i]) + '|NOUN'))
+    print(variants)
     return variants
 
 
+def binary_string_to_lowercase(text, binary_string):
+    text = text.split('|')[0]
+    assert(len(text.split('_')) == len(binary_string))
+    tokens = text.split('_')
+    transformed = [tokens[i].lower() if binary_string[i] else tokens[i] for i in range(len(binary_string))]
+    return '_'.join(transformed) + '|NOUN'
+
+
 def generate_case_variants(topic):
-    tokens = topic.split('|')[0].split('_')
+    n_tokens = len(topic.split('|')[0].split('_'))
+    variants = []
+    for binary_string in product(*([[1, 0]] * n_tokens)):
+        variants.append(binary_string_to_lowercase(topic, binary_string))
+    return variants
     
 
 def get_longest_variants(variants):
@@ -45,12 +62,21 @@ def get_most_relevant_variant(variants):
     return variants[0]
 
 
+def get_index_in_rankings(token, search_term, n=100000):
+    token = sense_vec_model[unicode(token)][1]
+    try:
+        index = sense_vec_model.most_similar(token, n)[0].index(unicode(search_term))
+        return index
+    except ValueError as e:
+        return float('inf')
+
+
 def topic_similarity_map(topics1, topics2):
     Comparison = namedtuple('Comparison', ['score', 'matched_topic', 'matched_variant'])
     Importance = namedtuple('Importance', ['topic', 'importance'])
     try:
         if not topics1 or not topics2:
-            return [{'topic': t, 'score': '0'} for t in topics1]
+            return [{'topic': t, 'score': '0', 'rank1': 0, 'rank2': 0} for t in topics1]
             
         # Generate all variants for both sets of topics
         topics2_variants = []
@@ -67,6 +93,7 @@ def topic_similarity_map(topics1, topics2):
                 variants = filter(lambda x : x in sense_vec_model, generate_variants(t))
                 longest_variants = get_longest_variants(variants)
                 most_relevant_variant = sorted(longest_variants, key=lambda x : sense_vec_model[x][0])[0]
+                print(most_relevant_variant)
                 topics1_variants.append(most_relevant_variant)
             else:
                 topics1_variants.append(t)
@@ -78,7 +105,7 @@ def topic_similarity_map(topics1, topics2):
             for j in topics2_variants:
                 current_topic_sims.append(Comparison(score=sense_vec_model_similarity(i, j), matched_topic=i, matched_variant=j))
             most_similar = sorted(current_topic_sims, key=lambda x : x.score, reverse=True)[0]
-            similarity_map.append({'topic': i, 'score': str(most_similar.score.similarity), 'rank': most_similar.score.rank, 'matched_variant': most_similar.matched_variant})
+            similarity_map.append({'topic': i, 'score': str(most_similar.score.similarity), 'rank1': most_similar.score.rank1, 'rank2': most_similar.score.rank2, 'matched_variant': most_similar.matched_variant})
 
         # Average sum of similarities over number of topics in topics1
         # avg = sum(map(lambda x : x['score'], similarities)) / float(len(topics1))
@@ -87,11 +114,11 @@ def topic_similarity_map(topics1, topics2):
         return similarity_map
     except Exception as e:
         print(e)
-        return [{'topic': t, 'score': '0'} for t in topics1]
+        return [{'topic': t, 'score': '0', 'rank1': 0, 'rank2': 0} for t in topics1]
 
 
 def sense_vec_model_similarity(a, b):
-    SimilarityAndRank = namedtuple('SimilarityAndRank', ['similarity', 'rank'])
+    SimilarityAndRank = namedtuple('SimilarityAndRank', ['similarity', 'rank1', 'rank2'])
     try:
         f1, v1 = sense_vec_model[unicode(a)]
         f2, v2 = sense_vec_model[unicode(b)]
@@ -99,10 +126,10 @@ def sense_vec_model_similarity(a, b):
         v2 = v2.reshape(1, -1)
         sim = cosine_similarity(v1, v2)[0][0]
         print a, 'vs', b, '=', sim
-        return SimilarityAndRank(similarity=sim, rank=float(f1))
+        return SimilarityAndRank(similarity=round(sim * 100) / 100, rank1=float(f1), rank2=float(f2))
     except Exception as e:
         print(e)
-        return SimilarityAndRank(similarity=0, rank=float('inf'))
+        return SimilarityAndRank(similarity=0, rank1=float('inf'), rank2=float('inf'))
 
 
 def word_vec_similarity(a, b):
@@ -153,10 +180,6 @@ def index():
         try:
             topics1 = c['topics1']
             topics2 = c['topics2']
-            # If cannot resolve topic1, return list of topic suggestions obtained from variants
-            # for topic in topics1:
-            #     if topic not in sense_vec_model:
-            #         disambiguate_topic(topic)
 
             similarity_map = topic_similarity_map(topics1, topics2)
             results.append(similarity_map)

@@ -46,7 +46,8 @@ function ContentToHTMLParser () {
                     var selected = option.selected ? 'selected' : '';
                     return '<li class="' + selected + '" ' + disabledClass + '>' + capitalizeFirstLetter(option.text) + '</li>';
                 }).join('')
-            + '</ul>';
+            + '</ul>'
+            + '<button class="done">Done</button><br /><br />';
         } else {
             return ''
         }

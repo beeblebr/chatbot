@@ -55,14 +55,16 @@ def assemble_topic_wise_rankings(similarity_map, corpus):
             try:
                 current_topic = [x for x in similarity_map[i] if x['topic'] == topic][0]
                 score = float(current_topic['score'])
-                rank = float(current_topic['rank'])
+                rank1 = float(current_topic['rank1'])
+                rank2 = float(current_topic['rank2'])
                 matched_variant = current_topic['matched_variant']
             except Exception as e:
                 score = 0
                 rank = float('inf')
                 matched_variant = None
             item.update(score=score)
-            item.update(rank=rank)
+            item.update(rank1=rank1)
+            item.update(rank2=rank2)
             item.update(matched_variant=matched_variant)
             ranking.append(item)
 
@@ -74,10 +76,10 @@ def assemble_topic_wise_rankings(similarity_map, corpus):
 
 def get_aggregate_scores(topic_wise_ranking, corpus):
     """Averages scores from topic wise rankings"""
+    topics = topic_wise_ranking.keys()
     aggregate_ranking = []
-
+    
     for i in range(len(corpus)):
-        topics = topic_wise_ranking.keys()
         # Get similarity scores for same knowledge item from the perspective of all topics
         scores = [topic_wise_ranking[topic][i]['score'] for topic in topics]
         matched_variants = [topic_wise_ranking[topic][i]['matched_variant'] for topic in topics]

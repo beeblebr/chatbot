@@ -28,14 +28,15 @@ class ActionSearchKnowledgeBase(Action):
     def run(self, dispatcher, tracker, domain):
         message = tracker.latest_message
         nlu_topics = get_all_topics(message)['nlu_topics']
-        corpus = list(get_knowledge_corpus())
-        server_calls = []  # for batching network requests
-
+        # Retrieve user_id from populated slot
         user_id = tracker.slots['user_id'].value
+        # Get all knowledge items except ones entered by user
+        corpus = list(get_knowledge_corpus(user_id))
 
         # Store question in DB
         add_question_to_user_history(user_id, message.text)
 
+        server_calls = []  # for batching network requests
         try:
             for index, k in enumerate(corpus):
                 k_nlu_topics = get_topics_from_transformed_text(
@@ -48,115 +49,98 @@ class ActionSearchKnowledgeBase(Action):
         except Exception as e:
             print(e)
 
-        try:
-            # Get topic wise ranking
-            topic_wise_ranking = assemble_topic_wise_rankings(
-                similarity_map, corpus)
+        # Get topic wise ranking
+        topic_wise_ranking = assemble_topic_wise_rankings(
+            similarity_map, corpus)
+        # Calculate average similarity scores over all topic perspectives
+        aggregate_ranking = get_aggregate_scores(
+            topic_wise_ranking, corpus)
+        aggregate_ranking.sort(key=lambda x: x['avg_score'], reverse=True)
 
-            # Calculate average similarity scores over all topic perspectives
-            aggregate_ranking = get_aggregate_scores(
-                topic_wise_ranking, corpus)
-            aggregate_ranking.sort(key=lambda x: x['avg_score'], reverse=True)
-
-            # Topic-wise sorting is deferred until aggregate merging to
-            # preserve order
-            for topic in topic_wise_ranking:
-                topic_wise_ranking[topic].sort(
-                    key=lambda x: x['score'], reverse=True)
-                # Keep only items that have a similarity score greater than 55%
-                topic_wise_ranking[topic] = filter(
-                    lambda x: x['score'] > 0.55, topic_wise_ranking[topic])
-                print(topic + ' has ' +
-                      str(len(topic_wise_ranking[topic])) + ' entries')
-        except Exception as e:
-            print(e)
+        # Topic-wise sorting was deferred until aggregate merging to
+        # preserve order
+        for topic in topic_wise_ranking:
+            topic_wise_ranking[topic].sort(
+                key=lambda x: x['score'], reverse=True)
+            # Keep only items that have a similarity score greater than 60%
+            topic_wise_ranking[topic] = filter(
+                lambda x: x['score'] > 0.6, topic_wise_ranking[topic])
+            print(topic + ' has ' +
+                  str(len(topic_wise_ranking[topic])) + ' entries')
+    
 
         # Get the list of topics along with their ranks (from the server
         # response)
         topics = [topic.copy() for topic in similarity_map[0]]
 
-        for topic in topic_wise_ranking:
-            print(topic_wise_ranking[topic][0]['score'])
-            print(topic_wise_ranking[topic][0]['text'])
+        # Find the intersection of the most number of topics, and
+        # prioritize the combination with most rarity (within the given
+        # number of topics)
+        common_items = []
+        for size in range(len(topics), 0, -1):
+            # Get all combinations of topics of length `size`
+            n_sized_combinations = map(list, list(
+                itertools.combinations(topics, size)))
+            # The metric for rarity is the sum of Sense2Vec ranks of all
+            # topics in the combination
+            n_sized_combinations.sort(
+                key=lambda comb: sum([x['rank1'] for x in comb]))
 
-        try:
-            # Find the intersection of the most number of topics, and
-            # prioritize the combination with most rarity (within the given
-            # number of topics)
-            common_items = []
-            for size in range(len(topics), 0, -1):
-                # Get all combinations of topics of length `size`
-                n_sized_combinations = map(list, list(
-                    itertools.combinations(topics, size)))
-                # The metric for rarity is the sum of Sense2Vec ranks of all
-                # topics in the combination
-                n_sized_combinations.sort(
-                    key=lambda comb: sum([x['rank'] for x in comb]))
-
-                # Iterate in decreasing order of rarity
-                for combination in n_sized_combinations:
-                    combination_names = map(lambda x: x['topic'], combination)
-                    common_items = find_topic_intersection(
-                        combination_names, topic_wise_ranking)
-                    common_items.sort(key=lambda x: x['score'], reverse=True)
-                    if common_items:
-                        break
-                else:
-                    # Reduce combination size by 1 and continue
-                    continue
-                break
+            # Iterate in decreasing order of rarity
+            for combination in n_sized_combinations:
+                combination_names = map(lambda x: x['topic'], combination)
+                common_items = find_topic_intersection(
+                    combination_names, topic_wise_ranking)
+                common_items.sort(key=lambda x: x['score'], reverse=True)
+                if common_items:
+                    print('{0} common items'.format(len(common_items)))
+                    pprint(common_items)
+                    print('\n')
+                    break
             else:
-                dispatcher.utter_template('utter_nothing_found')
-                response = {'type': 'nothing_found'}
-                return [SlotSet('response_metadata', response)]
-
-            prettify_tag = lambda x: '"' + \
-                ' '.join(x.split('|')[0].split('_')) + '"'
+                # Reduce combination size by 1 and continue
+                continue
             if common_items:
-                # Remove current user from suggestions
-                # common_items = filter(lambda x : )
+                break
+        else:
+            print('Nothing found')
+            dispatcher.utter_template('utter_nothing_found')
+            response = {'type': 'nothing_found'}
+            return [SlotSet('response_metadata', response)]
 
-                # Extract topic names from the dicts containing ranks
-                combination = map(lambda x: x['topic'], combination)
-                topics = map(lambda x: x['topic'], topics)
 
-                present_tags = map(prettify_tag, combination)
-                absent_tags = map(prettify_tag, list(
-                    set(topics) - set(combination)))
+        prettify_variant = lambda x: ' '.join(x['matched_variant'].split('|')[0].split('_'))
+        # matched_variants = list(set(map(prettify_variant, common_items)))
+        matched_variants = list(set(sorted(common_items, key=lambda x : x['rank2'], reverse=True)))
+        print(map(lambda x : (x['matched_variant'], x['rank2']), matched_variants))
+        # from sklearn.cluster import KMeans
+        # y_pred = KMeans(n_clusters=min(len(matched_variants), 6), random_state=170).fit_predict(X)
 
-                if not absent_tags:
-                    dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
-                        common_items[0]['eight_id']))
-                    response = {'type': 'found', 'top_matches': common_items}
-                else:
-                    dispatcher.utter_template('utter_compromise', present_tags=', '.join(
-                        present_tags), absent_tags=', '.join(absent_tags))
-                    dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
-                        common_items[0]['eight_id']))
-                    response = {'type': 'compromise',
-                                'top_matches': common_items}
 
-                return [SlotSet('response_metadata', response)]
 
-        except Exception as e:
-            print(e)
+        prettify_tag = lambda x: '"' + \
+            ' '.join(x.split('|')[0].split('_')) + '"'
 
-        # Find what topics it matched against so that bot can pose secondary
-        # questions back to the user
-        matched_variants_count = defaultdict(int)
-        for topic in topic_wise_ranking:
-            for variant in map(lambda x: x['matched_variant'], relevant):
-                matched_variants_count[variant] += 1
+        # Extract topic names from the dicts containing ranks
+        combination = map(lambda x: x['topic'], combination)
+        topics = map(lambda x: x['topic'], topics)
 
-        sorted_variant_count = sorted(
-            matched_variants_count.items(), key=operator.itemgetter(1), reverse=True)
-        pprint(sorted_variant_count)
-        pickle.dump(sorted_variant_count, open('cluster', 'wb'))
+        present_tags = map(prettify_tag, combination)
+        absent_tags = map(prettify_tag, list(
+            set(topics) - set(combination)))
 
-        dispatcher.utter_template(
-            'utter_can_help_you_with_that', name=get_name_from_id(top_match['eight_id']))
-
-        return [SlotSet('search_results', ranked)]
+        if not absent_tags:
+            dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
+                common_items[0]['eight_id']))
+            response = {'type': 'found', 'top_matches': common_items}
+        else:
+            dispatcher.utter_template('utter_compromise', present_tags=', '.join(
+                present_tags), absent_tags=', '.join(absent_tags))
+            dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
+                common_items[0]['eight_id']))
+            response = {'type': 'compromise',
+                        'top_matches': common_items}
+        return [SlotSet('response_metadata', response)]
 
 
 class ActionInsertKnowledge(Action):

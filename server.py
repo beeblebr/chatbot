@@ -72,21 +72,12 @@ def get_user_knowledge(eight_id):
     return jsonify({'text': knowledge['text']})
 
 
-
-from rasa_core.interpreter import RasaNLUInterpreter
-from rasa_core.agent import Agent
-from rasa_core.events import SlotSet
-from util.chat_utils import get_all_topics
-
-agent = Agent.load("models/dialogue", interpreter=RasaNLUInterpreter("models/default/current"))
-
+from bot_wrapper import handle_message
 
 @app.route('/api/knowledges/', methods=['POST'])
 def add_to_k():
     k = request.get_json()
-
     k['timestamp'] = datetime.now()
-
     k['text'] = k['text']
     k['type'] = 'text'
     insert_knowledge(k)
@@ -99,16 +90,10 @@ from pprint import pprint
 def query():
     q = request.args.get('text')
     user_id = request.args.get('user_id')
-
-    # Insert user_id to the bot's slots
-    tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    tracker.update(SlotSet('user_id', user_id))
-    agent.tracker_store.save(tracker)
-
+    
     # Send message to bot, and retrieve response_metadata
-    response = agent.handle_message(unicode(q), sender_id=user_id)
-    tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    info = tracker.slots['response_metadata'].value
+    response, slots = handle_message(user_id, unicode(q))
+    info = slots['response_metadata'].value
 
     try:
         if info['type'] == 'compromise':
@@ -117,8 +102,10 @@ def query():
         elif info['type'] == 'found':
             eight_id = info['top_matches'][0]['eight_id']
             return jsonify({'type': info['type'], 'match': {'user_id': eight_id}})
-        elif info['type'] == 'not_found':
+        elif info['type'] == 'nothing_found':
             return jsonify({'type': info['type'], 'before_message': 'Nothing found'})
+        elif info['type'] == 'clarify_case':
+            return jsonify({'type': info['type'], 'specify': info['case_conflicts']})
     except Exception as e:
         print(e)
 

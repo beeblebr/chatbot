@@ -6,6 +6,9 @@ from pprint import pprint
 import numpy as np
 import warnings
 import conf
+
+from nltk import pos_tag
+
 warnings.simplefilter("ignore", category=DeprecationWarning)
 
 LABELS = {
@@ -40,11 +43,28 @@ def _represent_word(word, maintain_case):
     tag = LABELS.get(word.ent_type_, word.pos_)
     if not tag:
         tag = '?'
-
     return (text if maintain_case else text.lower()) + '|' + tag
 
 
-def _transform_doc(doc, maintain_case=True):
+def _transform_doc_nltk(doc, maintain_case=False):
+    doc = re.sub(r'[^\w\s]', '', doc)
+    tagged = pos_tag(doc.split())
+    # Chain noun tags
+    noun_phrases = []
+    i = 0
+    while i < len(tagged):
+        noun_phrase = []    
+        while i < len(tagged) and tagged[i][1][0] == 'N':
+            noun_phrase.append(tagged[i][0])
+            i += 1
+        if noun_phrase:
+            noun_phrases.append('_'.join(noun_phrase) + '|NOUN')
+        i += 1
+    print(noun_phrases)
+    return ' '.join(noun_phrases)
+
+
+def _transform_doc(doc, maintain_case=False):
     doc = nlp(unicode(doc))
     for ent in doc.ents:
         ent.merge(unicode(ent.root.tag_), unicode(

@@ -324,6 +324,17 @@ header nav h1 {
   display: block;
   width: 100%;
 }
+button.done {
+  background: #01a0f5;
+  color: white;
+  border: none;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  float: left;
+  width: 100px;
+  margin-bottom: 16px;
+}
 .button.primary {
   background: #5A6C83;
   height: 80px;

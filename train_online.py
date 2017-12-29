@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def run_chatbot_online(input_channel, interpreter,
                           domain_file="domain.yml",
-                          training_data_file='stories.md'):
+                          training_data_file='data/stories.md'):
     agent = Agent(domain_file,
                   policies=[MemoizationPolicy(), KerasPolicy()],
                   interpreter=interpreter)
@@ -33,4 +33,4 @@ def run_chatbot_online(input_channel, interpreter,
 
 if __name__ == '__main__':
     logging.basicConfig(level="INFO")
-    run_chatbot_online(ConsoleInputChannel(), 'projects/default/current')
+    run_chatbot_online(ConsoleInputChannel(), 'models/default/current')

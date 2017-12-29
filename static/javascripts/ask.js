@@ -8,6 +8,7 @@ function AskChat (parseContentToHtml) {
         ChatUI.addChatInputKeyListener(that.listenChatInputKeyup);
         ChatUI.addSubmitButtonOnClickHandler(that.handleSubmit);
         ChatUI.addOptionsHandler(that.handleSpecifyOptionSelect);
+        // ChatUI.addOptionsSubmitHandler(that.handleOptionsSubmit);
 
         that.startConversation();
     }
@@ -36,24 +37,32 @@ function AskChat (parseContentToHtml) {
         that.sendQueryToApi(message);
     }
 
+    this.handleOptionsSubmit = function () {
+        var lastMessageOptions = chat.chatContent.getLastMessage().options;
+
+        var selected = []
+        for (var i = 0; i < lastMessageOptions.optionsList.length; i++) {
+            var messageOption = lastMessageOptions.optionsList[i]
+            if (messageOption.selected) {
+                selected.push(messageOption.text)
+            }
+        }
+
+        that.sendQueryToApi(selected.join(','))
+        // that.sendQueryToApi($(this).context.innerHTML);
+
+        lastMessageOptions.active = false;
+        ChatUI.enableChatInput();
+    }
+
     this.handleSpecifyOptionSelect = function () {
         
         var lastMessageOptions = chat.chatContent.getLastMessage().options;
 
-        lastMessageOptions.optionsList.map(function(option) {
-            return option.selected = false;
-        })
-        lastMessageOptions.optionsList[$(this).index()].selected = true;
-
-        lastMessageOptions.active = false;
+        lastMessageOptions.optionsList[$(this).index()].selected = !lastMessageOptions.optionsList[$(this).index()].selected;
 
         chat.updateHtmlState();
 
-        if ($(this).index() === lastMessageOptions.optionsList.length - 1) {
-            chat.addBotMessage('Could you be more specific?');
-        } else {
-            that.sendQueryToApi($(this).context.innerHTML);
-        }
     }
 
     this.sendQueryToApi = function (message) {
@@ -73,9 +82,13 @@ function AskChat (parseContentToHtml) {
         case 'found':
             that.getUserFromApi(response.match.user_id);
             break;
-        case 'specify':
-            that.specifyRequest(response.specify);
+        case 'nothing_found':
+            chat.addBotMessage(getDidNotFindText());
             break;
+        /*case 'clarify_case':
+            ChatUI.disableChatInput();
+            that.specifyRequest(response.specify, getClarifyCaseQuestion);
+            break;*/
         }
         /*if (!!response.match) {
             that.getUserFromApi(response.match.user_id);
@@ -105,15 +118,15 @@ function AskChat (parseContentToHtml) {
         console.log('Failed to ask user data from server!', response)
     }
 
-    this.specifyRequest = function(specificationOptions) {
+    this.specifyRequest = function(specificationOptions, clarificationFn) {
         if (areSpecificationOptionsProvidedFromResponse(specificationOptions)) {
-            addOtherToSpecificationOptions(specificationOptions)
             chat.addOptions(
-                getSpecifyQuestion(),
+                clarificationFn(),
                 specificationOptions);            
         } else {
             chat.addBotMessage(
-                getDidNotFindText()
+                'No options provided'
+                //getDidNotFindText()
             );
         }
     }
@@ -138,6 +151,12 @@ function getSpecifyQuestion () {
         'Could you tell me more details?',
         'In which context do you mean it?',
         'Could you give me more information?'])
+}
+
+function getClarifyCaseQuestion() {
+    return getRandomText([
+        'I noticed that some of the words have been capitalized, but they do not seem to be proper nouns. Which of these did you really mean to capitalize?'
+    ])
 }
 
 function getUserFoundText (name) {

@@ -7,8 +7,11 @@ client = MongoClient(username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
 #client = MongoClient(username='mongoadmin', password='3aw#Aq')
 db = client.get_database('main')
 
-def get_knowledge_corpus():
-	k = db.knowledge.find()
+def get_knowledge_corpus(exclude_user=None):
+	filter = {}
+	if exclude_user:
+		filter = {'eight_id': {'$ne': exclude_user}}
+	k = db.knowledge.find(filter)
 	return k
 
 

@@ -52,4 +52,3 @@ actions:
   - utter_can_help_you_with_that
   - utter_compromise
   - actions.ActionSearchKnowledgeBase
-  

@@ -160,6 +160,10 @@ ChatUI.addOptionsHandler = function (handler) {
     $('div.content').on('click', '#active-specify-list li', handler);
 }
 
+ChatUI.addOptionsSubmitHandler = function(handler) {
+    $('div.content').on('click', 'button.done', handler);
+}
+
 ChatUI.isChatInputEmpty = function () {
     return ChatUI.getChatInput() === ''
 }
@@ -170,6 +174,14 @@ ChatUI.getChatInput = function () {
 
 ChatUI.clearChatInput = function () {
     $('#chat-input').val('');
+}
+
+ChatUI.disableChatInput = function() {
+    $("#chat-input").prop('disabled', true);
+}
+
+ChatUI.enableChatInput = function() {
+    $("#chat-input").prop('disabled', false);
 }
 
 ChatUI.showSendTextButton = function () {
