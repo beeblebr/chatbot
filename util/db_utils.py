@@ -3,7 +3,7 @@ from datetime import datetime
 
 import conf
 
-client = MongoClient(username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
+client = MongoClient('mongodb://mongo:27018', username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
 #client = MongoClient(username='mongoadmin', password='3aw#Aq')
 db = client.get_database('main')
 

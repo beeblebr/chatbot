@@ -1,3 +1,4 @@
+spacy==2.0.5
 attrs==17.3.0
 Automat==0.6.0
 backports.functools-lru-cache==1.4
@@ -52,6 +53,7 @@ pymongo==3.5.1
 pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.3
+rasa-core==0.7.9
 rasa-nlu==0.10.5
 regex==2017.4.5
 requests==2.18.4
@@ -61,8 +63,8 @@ scipy==0.19.1
 simplejson==3.13.2
 six==1.11.0
 sklearn==0.0
+sklearn-crfsuite==0.3.6
 smart-open==1.5.3
-spacy==2.0.5
 subprocess32==3.2.7
 termcolor==1.1.0
 thinc==6.10.2

@@ -66,5 +66,5 @@ def cache_transformation_of_knowledge_items():
 if __name__ == '__main__':
     cache_transformation_of_knowledge_items()
 
-# create_users()
-# store_knowledge()
+create_users()
+store_knowledge()
