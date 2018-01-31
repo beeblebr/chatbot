@@ -13,9 +13,9 @@ from rasa_core.actions.action import Action
 from rasa_core.events import SlotSet
 from rasa_config import *
 
-from util.sense_utils import perform_batch_call, _transform_doc
-from util.chat_utils import get_all_topics, get_all_topics_plain, get_topics_from_transformed_text
-from util.topic_utils import get_top_categories, assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict
+from util.sense_utils import perform_batch_call
+from util.chat_utils import get_all_topics
+from util.topic_utils import assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict
 from util.db_utils import *
 
 
@@ -25,30 +25,23 @@ class ActionSearchKnowledgeBase(Action):
     def name(self):
         return 'action_search_knowledge_base'
 
+
     def run(self, dispatcher, tracker, domain):
-        message = tracker.latest_message
-        nlu_topics = get_all_topics(message)['nlu_topics']
-        # Retrieve user_id from populated slot
         user_id = tracker.slots['user_id'].value
-        # Get all knowledge items except ones entered by user
-        corpus = list(get_knowledge_corpus(user_id))
+        message = tracker.latest_message.text
 
-        # Store question in DB
-        add_question_to_user_history(user_id, message.text)
-
-        server_calls = []  # for batching network requests
+        add_question_to_user_history(user_id, message)
+        # Get topics (noun phrases) for both query and every knowledge item
         try:
-            for index, k in enumerate(corpus):
-                k_nlu_topics = get_topics_from_transformed_text(
-                    k['transformed_text'])['nlu_topics']
-                server_calls.append(
-                    {'topics1': nlu_topics, 'topics2': k_nlu_topics})
-            print('finished')
+            query_topics = {'text': get_all_topics(message)}
+            print(query_topics)
+            corpus = list(get_knowledge_corpus(exclude_user=user_id))
+            corpus_topics_map = [{'text': get_all_topics(item['transformed_text'], transformed=True)} for item in corpus]
             # Perform network request
-            similarity_map = perform_batch_call(server_calls)
+            similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map})
         except Exception as e:
             print(e)
-
+        
         # Get topic wise ranking
         topic_wise_ranking = assemble_topic_wise_rankings(
             similarity_map, corpus)
@@ -56,6 +49,7 @@ class ActionSearchKnowledgeBase(Action):
         aggregate_ranking = get_aggregate_scores(
             topic_wise_ranking, corpus)
         aggregate_ranking.sort(key=lambda x: x['avg_score'], reverse=True)
+
 
         # Topic-wise sorting was deferred until aggregate merging to
         # preserve order
@@ -67,7 +61,7 @@ class ActionSearchKnowledgeBase(Action):
                 lambda x: x['score'] > 0.6, topic_wise_ranking[topic])
             print(topic + ' has ' +
                   str(len(topic_wise_ranking[topic])) + ' entries')
-    
+        
 
         # Get the list of topics along with their ranks (from the server
         # response)
@@ -94,7 +88,6 @@ class ActionSearchKnowledgeBase(Action):
                 common_items.sort(key=lambda x: x['score'], reverse=True)
                 if common_items:
                     print('{0} common items'.format(len(common_items)))
-                    pprint(common_items)
                     print('\n')
                     break
             else:

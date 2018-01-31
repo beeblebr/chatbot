@@ -19,29 +19,6 @@ print('Loading Word2Vec model...')
 # model = pickle.load(open('model.pickle', 'rb'))
 model = {}
 
-def w2v_similarity(a, b):
-    if a in model and b in model:
-        return cosine_similarity([model[a]], [model[b]])[0][0]
-    return 0
-
-
-def sentence_similarity(sent, word):
-    a = 0
-    count = 0
-    for w in sent.split():
-        si = w2v_similarity(w, word)
-        if si == 0:
-            continue
-        a += si # * tfidf(w)
-        count += 1
-    a = a / float(max(1, count))
-    return a
-
-
-def get_top_categories(text):
-    return map(lambda x : x[1], sorted(map(lambda x : (sentence_similarity(text, x), x), cats), reverse=True)[:5])
-
-
 def assemble_topic_wise_rankings(similarity_map, corpus):
     """Assemble separate rankings for each topic"""
     assert similarity_map
@@ -80,16 +57,19 @@ def get_aggregate_scores(topic_wise_ranking, corpus):
     aggregate_ranking = []
     
     for i in range(len(corpus)):
-        # Get similarity scores for same knowledge item from the perspective of all topics
-        scores = [topic_wise_ranking[topic][i]['score'] for topic in topics]
-        matched_variants = [topic_wise_ranking[topic][i]['matched_variant'] for topic in topics]
-        # Get average similarity score (make it weighted?)
-        avg_similarity = sum(scores) / float(len(scores))
+        try:
+            # Get similarity scores for same knowledge item from the perspective of all topics
+            scores = [topic_wise_ranking[topic][i]['score'] for topic in topics]
+            matched_variants = [topic_wise_ranking[topic][i]['matched_variant'] for topic in topics]
+            # Get average similarity score (make it weighted?)
+            avg_similarity = sum(scores) / max(1, float(len(scores)))
 
-        item = corpus[i].copy()
-        item.update(avg_score=avg_similarity)
-        item.update(matched_variants=matched_variants)
-        aggregate_ranking.append(item)
+            item = corpus[i].copy()
+            item.update(avg_score=avg_similarity)
+            item.update(matched_variants=matched_variants)
+            aggregate_ranking.append(item)
+        except Exception as e:
+            print(e)
 
     return aggregate_ranking
 
@@ -102,9 +82,4 @@ def find_topic_intersection(combination, topic_wise_ranking):
     """Finds the knowledge items tagged with all these topics"""
     ids = [map(hashabledict, topic_wise_ranking[topic]) for topic in combination]
     common_items = list(functools.reduce(operator.and_, map(set, ids)))
-    
-    # common_items = map(set, common_items)
-    # common_items = []
-    # if common_item_ids:
-    #     common_items = list(db.knowledge.find({'$or': [{'_id': id} for id in common_item_ids]}))
     return common_items

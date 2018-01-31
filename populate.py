@@ -2,17 +2,16 @@ import cPickle as pickle
 import string
 from random import *
 from string import digits
-import names
-
+from util.sense_utils import _transform_doc_nltk
 import categorize
-
+from datetime import datetime
 from pymongo import MongoClient
 
 k = pickle.load(open('k', 'rb'))
 # q = pickle.load(open('q_processed', 'rb'))
 
 N = len(k)
-client = MongoClient()
+client = MongoClient('mongo')
 #client = MongoClient('35.197.133.233', username='mongoadmin', password='3aw#Aq')
 #client = MongoClient('35.185.96.31')
 db = client.main
@@ -30,7 +29,6 @@ def create_users():
     for u in users:
         db.users.insert_one(u)
 
-from datetime import datetime
 
 
 def store_knowledge():
@@ -49,22 +47,21 @@ def store_knowledge():
 
 def cache_transformation_of_knowledge_items():
 
-    from util.sense_utils import _transform_doc
-
-    corpus = list(db.knowledge.find())
+    corpus = db.knowledge.find()
 
     for k in corpus:
         try:
             print(k['_id'])
-            transformed_text = _transform_doc(k['text'])
+            transformed_text = _transform_doc_nltk(k['text'])
             db.knowledge.update_one(
                 {'_id': k['_id']}, {'$set': {'transformed_text': transformed_text}})
         except Exception as e:
             print(e)
 
+    print('Knowledge items transformed')
 
-if __name__ == '__main__':
-    cache_transformation_of_knowledge_items()
+print('what')
 
 create_users()
 store_knowledge()
+cache_transformation_of_knowledge_items()

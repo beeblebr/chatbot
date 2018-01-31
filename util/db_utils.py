@@ -3,7 +3,10 @@ from datetime import datetime
 
 import conf
 
-client = MongoClient('mongodb://mongo:27018', username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
+# from util.sense_utils import get_closest_sense_items
+from util.chat_utils import get_all_topics
+
+client = MongoClient('mongo', username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
 #client = MongoClient(username='mongoadmin', password='3aw#Aq')
 db = client.get_database('main')
 
@@ -16,10 +19,11 @@ def get_knowledge_corpus(exclude_user=None):
 
 
 def insert_knowledge(k, transform_text=True):
-	from util.sense_utils import _transform_doc
+	from util.sense_utils import _transform_doc_nltk
 	if transform_text:
-		transformed_text = _transform_doc(k['text'])
+		transformed_text = _transform_doc_nltk(k['text'])
 		k['transformed_text'] = transformed_text
+		# k['closest_sense_items'] = get_closest_sense_items({'topics': get_all_topics(transformed_text, transformed=True)})
 	db.knowledge.insert_one(k)
 
 
@@ -53,6 +57,7 @@ def add_user(eight_id, **kwargs):
 	
 
 def add_question_to_user_history(eight_id, question_text):
+	print('adding')
 	question = {
 		'text': question_text,
 		'timestamp': datetime.now()
@@ -66,3 +71,7 @@ def clear_questions_history_for_user(eight_id):
 
 def clear_questions_history():
 	db.users.update({}, {'$unset': {'questions': 1}}, multi=True, upsert=True)	
+	
+
+# def get_questions_since(start_time):
+# 	db.users.find({'questions': {''}})

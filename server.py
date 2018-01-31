@@ -14,17 +14,7 @@ app.config['SECRET_KEY'] = 'super-secrfeet'
 def index():
     return render_template('login2.html')
 
-@app.route('/login', methods=['POST'])
-def login():
-    user = request.form.get('user')
-    pwd = request.form.get('pass')
 
-    user = db.users.find_one({'username': user, 'password': pwd})
-
-    if user:
-        return redirect('/home')
-
-    return redirect('/')
 
 @app.route('/home')
 def home():
@@ -38,6 +28,7 @@ def ask():
 @app.route('/share')
 def share():
     return render_template('share.html', action='share')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -88,9 +79,11 @@ def add_to_k():
 from pprint import pprint
 @app.route('/api/query')
 def query():
+    print('yoooo')
     q = request.args.get('text')
     user_id = request.args.get('user_id')
-    
+    print(q)
+    print(user_id)
     # Send message to bot, and retrieve response_metadata
     response, slots = handle_message(user_id, unicode(q))
     info = slots['response_metadata'].value
@@ -104,8 +97,6 @@ def query():
             return jsonify({'type': info['type'], 'match': {'user_id': eight_id}})
         elif info['type'] == 'nothing_found':
             return jsonify({'type': info['type'], 'before_message': 'Nothing found'})
-        elif info['type'] == 'clarify_case':
-            return jsonify({'type': info['type'], 'specify': info['case_conflicts']})
     except Exception as e:
         print(e)
 
