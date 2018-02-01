@@ -9,20 +9,20 @@ import conf
 from nltk import pos_tag
 
 
+
 def _transform_doc_nltk(doc, maintain_case=False):
     doc = re.sub(r'[^\w\s]', '', doc)
     tagged = pos_tag(doc.split())
-    # Chain noun tags
+    tags = ' '.join([x[1] for x in tagged])
+    # Noun chaining with optional leading adjective
+    matches = re.finditer('((JJ[A-Z]? )?)((NN[A-Z]? ?)+)', tags)
     noun_phrases = []
-    i = 0
-    while i < len(tagged):
-        noun_phrase = []    
-        while i < len(tagged) and tagged[i][1][0] == 'N':
-            noun_phrase.append(tagged[i][0])
-            i += 1
-        if noun_phrase:
-            noun_phrases.append('_'.join(noun_phrase) + '|NOUN')
-        i += 1
+    for match in matches:
+        chain_start_index = tags[:match.start()].strip().count(' ')
+        chain_end_index = tags[:match.end()].strip().count(' ')
+        chain = tagged[chain_start_index + 1:chain_end_index + 1]
+        chain = '_'.join([x[0] for x in chain]) + '|NOUN'
+        noun_phrases.append(chain)
     return ' '.join(noun_phrases)
 
 

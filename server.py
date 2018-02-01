@@ -1,5 +1,6 @@
 from flask import *
 from datetime import datetime
+from pprint import pprint
 
 import requests
 
@@ -71,12 +72,12 @@ def add_to_k():
     k['timestamp'] = datetime.now()
     k['text'] = k['text']
     k['type'] = 'text'
+    pprint(k)
     insert_knowledge(k)
     return jsonify({'success': True})
 
 
 
-from pprint import pprint
 @app.route('/api/query')
 def query():
     print('yoooo')

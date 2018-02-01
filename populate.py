@@ -62,6 +62,6 @@ def cache_transformation_of_knowledge_items():
 
 print('what')
 
-create_users()
-store_knowledge()
-cache_transformation_of_knowledge_items()
+# create_users()
+# store_knowledge()
+# cache_transformation_of_knowledge_items()

@@ -3,8 +3,6 @@ from datetime import datetime
 
 import conf
 
-# from util.sense_utils import get_closest_sense_items
-from util.chat_utils import get_all_topics
 
 client = MongoClient('mongo', username=conf.MONGO_USERNAME, password=conf.MONGO_PASSWORD)
 #client = MongoClient(username='mongoadmin', password='3aw#Aq')
@@ -23,15 +21,7 @@ def insert_knowledge(k, transform_text=True):
 	if transform_text:
 		transformed_text = _transform_doc_nltk(k['text'])
 		k['transformed_text'] = transformed_text
-		# k['closest_sense_items'] = get_closest_sense_items({'topics': get_all_topics(transformed_text, transformed=True)})
 	db.knowledge.insert_one(k)
-
-
-def update_knowledge():
-	import pickle
-	kk = pickle.load(open('k', 'rb'))
-	for i, k in enumerate(kk):
-		db.knowledge.update_one({'eight_id': str(i).zfill(8)}, {'$set': {'text': k}}, upsert=False)
 
 
 def get_knowledge_by_eight_id(eight_id):
@@ -71,6 +61,8 @@ def clear_questions_history_for_user(eight_id):
 
 def clear_questions_history():
 	db.users.update({}, {'$unset': {'questions': 1}}, multi=True, upsert=True)	
+
+
 	
 
 # def get_questions_since(start_time):

@@ -234,6 +234,7 @@ everywhere
 ex
 expert
 experts
+expertise
 exactly
 example
 except
@@ -717,6 +718,8 @@ since
 sincere
 six
 sixty
+skill
+skills
 slightly
 small
 smaller
