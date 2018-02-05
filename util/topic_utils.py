@@ -1,23 +1,24 @@
-import math
-import string
-import difflib
 import operator
 import functools
-
-import cPickle as pickle
-
-from sklearn.metrics.pairwise import cosine_similarity
-
-from nltk.corpus import stopwords
-from nltk.tokenize import RegexpTokenizer
+import re
 
 from util.db_utils import *
+from util.sense_utils import _transform_doc_nltk
 
-print('Loading category list file...')
-cats = map(lambda x : x.lower().encode('ascii', 'ignore'), pickle.load(open('topics3', 'rb')))
-print('Loading Word2Vec model...')
-# model = pickle.load(open('model.pickle', 'rb'))
-model = {}
+# Custom stopwords list
+stop = map(lambda x : x.strip(), open('code/data/words.txt', 'rb').readlines())
+# stop = map(lambda x : x.strip(), open('data/words.txt', 'rb').readlines())
+
+def get_all_topics(message, transformed=False):
+    message = message.encode('ascii', 'ignore')
+    if not transformed:
+        pos = _transform_doc_nltk(message).split()
+    else:
+        pos = message.split()
+    topics = filter(lambda x : x.split('|')[1] == 'NOUN', pos)
+    topics = filter(lambda x : x.split('|')[0] not in stop, topics)
+    return topics
+
 
 def assemble_topic_wise_rankings(similarity_map, corpus):
     """Assemble separate rankings for each topic"""

@@ -14,8 +14,7 @@ from rasa_core.events import SlotSet
 from rasa_config import *
 
 from util.sense_utils import perform_batch_call
-from util.chat_utils import get_all_topics
-from util.topic_utils import assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict
+from util.topic_utils import assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict, get_all_topics
 from util.db_utils import *
 
 
@@ -42,6 +41,7 @@ class ActionSearchKnowledgeBase(Action):
         except Exception as e:
             print(e)
         
+
         # Get topic wise ranking
         topic_wise_ranking = assemble_topic_wise_rankings(
             similarity_map, corpus)

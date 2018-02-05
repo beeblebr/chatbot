@@ -10,15 +10,13 @@ sense_vec_model = sense2vec.load()
 
 def find_valid_case_combination(topic):
     topic = unicode(topic)
-    if topic in sense_vec_model and not topic.istitle():
-        return topic
     tokens = topic.split('|')[0].split('_')
     param_for_product = [[1, 0]] * len(tokens)
     case_variants = []
     for comb in product(*param_for_product):
         variant = [tokens[i].title() if comb[i] else tokens[i].lower() for i in range(len(tokens))]
         repr = '_'.join(variant) + '|NOUN'
-    if repr in sense_vec_model:
+        if repr in sense_vec_model:
             return repr
     return None
 
@@ -30,7 +28,7 @@ def generate_variants(topic):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
     variants = [find_valid_case_combination('_'.join(x) + '|NOUN') for x in variants]
-    variants = filter(lambda x : x and x != '|NOUN', variants)
+    variants = filter(lambda x : x and x != '|NOUN', variants)  # Remove empty strings
     variants = map(lambda topic : topic.split('|')[0].split('_'), variants)
 
     # Remove proper subsets
@@ -43,18 +41,22 @@ def generate_variants(topic):
     return sorted([unicode('_'.join(x)) + '|NOUN' for x in unique], key=lambda x : len(x.split('|')[0].split('_')), reverse=True)
 
 
-def get_top_items(topic, n=20000):
-    variants = generate_variants(topic)
-    result = dict()
-    for variant in variants:
-        try:
-            token = sense_vec_model[variant][1]
-            result[variant] = sense_vec_model.most_similar(token, n)[0]
-        except Exception as e:
-            print(e)
-            result[variant] = []
-            continue
-    return result 
+def get_top_items(topic, n=1000):
+    topic = unicode(topic)
+    try:
+        token = sense_vec_model[topic][1]
+        related_items = sense_vec_model.most_similar(token, n)[0]
+    except Exception as e:
+        print(e)
+
+    prettify_topic = lambda x : x.split('|')[0].replace('_', ' ')
+
+    for i in range(len(related_items)):
+        related_items[i] = {'text': prettify_topic(related_items[i]), 'similarity': sense_vec_model_similarity(topic, related_items[i]).similarity}
+        if related_items[i]['similarity'] < 0.6:
+            break
+
+    return related_items[:i]
 
 
 # def get_index_in_rankings(token, search_term, nearest_items, n=20000):

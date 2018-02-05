@@ -1,0 +1,109 @@
+textarea{
+    resize: vertical;
+}
+
+#logo {
+    margin-top: -6px;
+}
+
+.mg-rt-20{
+    margin-right: 20px;
+}
+
+#loading{
+    margin-top: 25vh;
+}
+.loadinggif {
+    align-self: center;
+}
+
+.loadingtext {
+    align-self: center;
+}
+
+#border-right {
+    height: 100%;
+    border-right: 1px solid #777;
+}
+
+.pointer{
+    cursor: pointer!important;
+}
+
+.pointer:hover{
+    text-decoration: underline!important;
+}
+
+.header{
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.mgbt20{
+    margin-bottom: 20px;    
+}
+
+.mgbt30{
+    margin-bottom: 30px;    
+}
+
+legend {
+  padding: 10px !important;
+}
+
+.well-primary {
+    display: inline-block;
+    text-align: center;
+    padding: 30px;
+    font-size: 20px;
+    color: white;
+    width: 200px;
+    height: 200px;
+    background-color: #1b1600;
+}
+
+.well-primary:hover {
+    text-decoration: none;
+    color: #1b1600;
+    background-color: white;
+    border-color: #1b1600;
+}
+
+.users-list, #knowledge, #info .panel-body{
+    overflow: auto;
+}
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.container {
+    position: absolute;
+    top: 80px;
+    width: 100%;
+}
+
+.active .text-muted {
+    color: #ccc;
+}
+
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }

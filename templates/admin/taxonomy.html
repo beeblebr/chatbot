@@ -1,0 +1,168 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Taxonomy Builder | Myndpool Admin</title>
+    <link rel="stylesheet" href="/static/css/cerulean-bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/token-input/token-input.css">
+    <link rel="stylesheet" href="/static/css/token-input/token-input-facebook.css">
+    <link rel="shortcut icon" href="/static/img/stride-badge-original@2x.png" type="image/x-icon">
+
+    <style type="text/css">
+        .navbar {
+            background: #1b1600 !important;
+            border-color: #1b1600;
+            border-radius: 0px;
+            min-height: 60px;
+        }
+        .navbar-brand {
+            display: inline;
+        }
+        .navbar-header {
+            text-align: center;
+            margin: auto auto;
+            cursor: pointer;
+        }
+        .navbar-brand-admin {
+            color: white;
+            font-size: 19px;
+            display: inline-block;
+            margin-top: 5px;
+            font-family: "Open Sans", "Arial", sans-serif;
+            letter-spacing: 1px;
+        }
+
+        ul.token-input-list {
+            width: 100% !important;
+
+        }
+
+        li.token-input-token {
+            font-family: "Open Sans", "Arial", sans-serif;
+            padding: 5px;
+        }
+        .well {
+            display: none;
+        }
+        ul.token-input-list li {
+            width: 32%;
+            display: inline-block;
+        }
+        ul.token-input-list li {
+            vertical-align: middle !important;
+            font-size: 14px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/admin"><img src="/static/images/elements/logo-white.svg" id="logo" alt="logo" height="40"></a><span class='navbar-brand-admin'>ADMIN</span>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class='logout' href="/logout">Sign Out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" id="home">
+        <div class="row mgbt30">
+            <div class="col-md-4 col-md-offset-4 col-xs-6 col-xs-offset-3">
+                <legend class="text-center">
+                    Smart Taxonomy Builder
+                </legend>
+                <br>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="inner-addon left-addon">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <form id='search'>
+                        <input type="text" id='search-term' class="form-control" placeholder="Enter a topic and press return" />
+                        <input type="submit" style="display: none" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <br />
+                <div class="well well-lg" id="custom">
+                    <h4>Custom relationships <small class="text-muted"><br /> Add your own topic(s) to include it in the taxonomy</small></h4>
+                    <div>
+                        <textarea type="text" id="related-topics-custom"></textarea>
+                        <!-- <input type="button" value="Submit" /> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <br />
+                <div class="well well-lg" id="prepopulated">
+                    <h4>Related topics from existing taxonomy</h4>
+                    <div>
+                        <textarea type="text" id="related-topics-pre-populated"></textarea>
+                        <!-- <input type="button" value="Submit" /> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container hidden" id="results">
+    </div>
+</body>
+
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/token-input/jquery.tokeninput.js"></script>
+<script src="/static/js/jquery-ui.min.js"></script>
+<script src="/static/js/jquery.tagsinput.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+        RELATED_TOPICS_URL = '/admin/taxonomy/related'
+
+        $('form#search').submit(function(e) {
+            $('.well').hide()
+            e.preventDefault()
+            $('#related-topics-pre-populated').tokenInput('clear')
+            var searchTerm = $('#search-term').val()
+            $.post(RELATED_TOPICS_URL, {
+                'q': searchTerm
+            }).done(function(data) {
+                $('.well').show()
+                for (var i = 0; i < data.length; i++)
+                    $("#related-topics-pre-populated").tokenInput('add', data[i])
+            })
+            return false
+        })
+
+        $("#related-topics-pre-populated").tokenInput([], {
+            tokenFormatter: function (item) {
+                return '<li style="color: white; background: rgba(255, 3, 61, ' + item['similarity'] + ')" class="token-input-token"><p>' + item['name'] + '</p></li>'
+            }
+        });
+
+        $("#related-topics-custom").tokenInput([], {
+            tokenFormatter: function (item) {
+                return '<li style="color: white; background: rgba(255, 3, 61, ' + item['similarity'] + ')" class="token-input-token"><p>' + item['name'] + '</p></li>'
+            },
+            hideDropdown: true
+        });
+
+        $('#token-input-related-topics-custom').keydown(function(e) {
+            if (e.which == 9) {
+                e.preventDefault()
+                var topic = $(this).val()
+                $('#related-topics-custom').tokenInput('add', {'name': topic, 'similarity': 1})
+                return false
+            }
+        })
+    });
+
+</script>
+</html>

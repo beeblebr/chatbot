@@ -1,0 +1,82 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Myndpool Admin</title>
+    <link rel="stylesheet" href="static/css/cerulean-bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="shortcut icon" href="static/img/stride-badge-original@2x.png" type="image/x-icon">
+    <style type="text/css">
+        .navbar {
+            background: #1b1600 !important;
+            border-color: #1b1600;
+            border-radius: 0px;
+            min-height: 60px;
+        }
+        .navbar-brand {
+            display: inline;
+        }
+        .navbar-header {
+            text-align: center;
+            margin: auto auto;
+            cursor: pointer;
+        }
+        .navbar-brand-admin {
+            color: white;
+            font-size: 19px;
+            display: inline-block;
+            margin-top: 5px;
+            font-family: "Open Sans", "Arial", sans-serif;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/"><img src="static/images/elements/logo-white.svg" id="logo" alt="logo" height="40"></a><span class='navbar-brand-admin'>ADMIN</span>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class='logout' href="/logout">Sign Out</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container hidden" id="loading" align="center">
+        <div class="col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4" id="loadingMessage">
+            <img src="static/img/loading.gif" alt="Loading Stride Logo" class="img loadinggif" width="100">
+            <h3 class="loadingtext">Loading...</h3>
+        </div>
+        <div class="col-md-6 col-md-offset-3 col-xs-4 col-xs-offset-4 hidden" id="connectionClosed">
+            <h2 class="text-danger text-center"><span><i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span></h2>
+            <br>
+            <h4 class="text-center">Something went wrong! Please try again later.</h4>
+        </div>
+    </div>
+    <div class="container" id="home">
+        <div class="row mgbt30">
+            <div class="col-md-4 col-md-offset-4 col-xs-6 col-xs-offset-3">
+                <legend class="text-center">
+                   Choose a panel
+                </legend>
+                <br>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2 text-right">
+                <a href="admin/users" class="well well-lg well-primary"><i class="fa fa-user" aria-hidden="true"></i><br /><br /> Manage Users</span></a>
+            </div>
+            <div class="col-md-4">
+                <a href="admin/taxonomy" class="well well-lg well-primary"><i class="fa fa-wrench" aria-hidden="true"></i><br /><br /> Smart Taxonomy Builder</a>
+            </div>
+        </div>
+    </div>
+    <div class="container hidden" id="results">
+    </div>
+</body>
+
+<script src="static/js/jquery-3.1.1.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+</html>

@@ -3,7 +3,6 @@ import string
 from random import *
 from string import digits
 from util.sense_utils import _transform_doc_nltk
-import categorize
 from datetime import datetime
 from pymongo import MongoClient
 
@@ -60,7 +59,7 @@ def cache_transformation_of_knowledge_items():
 
     print('Knowledge items transformed')
 
-print('what')
+# print('what')
 
 # create_users()
 # store_knowledge()

@@ -2,34 +2,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Myndpool Signup</title>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/superhero-bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/font-awesome.min.css">
-    <link rel="stylesheet" href="static/css/kyc.css">
-    <link rel="shortcut icon" href="static/img/stride-badge-original@2x.png" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/superhero-bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/kyc.css">
+    <link rel="shortcut icon" href="/static/img/stride-badge-original@2x.png" type="image/x-icon">
+    <style type="text/css">
+        .navbar {
+            background: #1b1600 !important;
+            border-color: #1b1600;
+            border-radius: 0px;
+            min-height: 60px;
+        }
+        .navbar-brand {
+            display: inline;
+        }
+        .navbar-header {
+            text-align: center;
+            margin: auto auto;
+            cursor: pointer;
+        }
+        .navbar-brand-admin {
+            color: white;
+            font-size: 19px;
+            display: inline-block;
+            margin-top: 5px;
+            font-family: "Open Sans", "Arial", sans-serif;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 
 <body ng-controller="mpa">
-    <nav style='padding: 5px' class="navbar navbar-default" role="navigation">
+        <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a style='cursor: pointer' class="navbar-brand" href="http://stride.ai"><img src="static/img/nav-logo.png" id="logo" alt="logo" width="100"></a>
+                <a class="navbar-brand" href="/admin"><img src="/static/images/elements/logo-white.svg" id="logo" alt="logo" height="40"></a><span class='navbar-brand-admin'>ADMIN</span>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <!-- <li><h4 class="mg-rt-20 hidden" id="timer">0:00:00</h4></li> -->
-                <!-- <li><a class="btn btn-info mg-rt-20" href="/retrieve">Reset</a></li> -->
+                <li><a class='logout' href="/logout">Sign Out</a></li>
             </ul>
         </div>
     </nav>
     <div class="container hidden" id="loading" align="center">
         <div class="col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4" id="loadingMessage">
-            <img src="static/img/loading.gif" alt="Loading Stride Logo" class="img loadinggif" width="100">
+            <img src="/static/img/loading.gif" alt="Loading Stride Logo" class="img loadinggif" width="100">
             <h3 class="loadingtext">Loading...</h3>
         </div>
         <!-- <div class="col-md-6 col-md-offset-3 col-xs-4 col-xs-offset-4 hidden" id="connectionClosed">
@@ -41,7 +58,7 @@
     <div class="container" id="retrieval_form">
         <div class="col-md-4 col-md-offset-4 col-xs-6 col-xs-offset-3">
             <legend class="text-center">
-                Myndpool
+                Add user
             </legend>
             <!-- <div class="alert alert-danger" id="fillall">
                 <button type="button" class="close" onclick="$('#fillall').slideUp();" aria-hidden="true">&times;</button>
@@ -63,7 +80,7 @@
                 </div>
                 <br>
                 <div class="col-xs-12 ">
-                    <button class="btn btn-success center-block mgbt30" type="submit" ng-click="formSubmission()" id="submit_button">Sign up</button>
+                    <button class="btn btn-success center-block mgbt30" type="submit" ng-click="formSubmission()" id="submit_button">Add user</button>
                 </div>
             </form>
         </div>

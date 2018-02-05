@@ -1,0 +1,189 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Users | Myndpool Admin</title>
+    <link rel="stylesheet" href="/static/css/cerulean-bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="/static/img/stride-badge-original@2x.png" type="image/x-icon">
+    <style type="text/css">
+        .navbar {
+            background: #1b1600 !important;
+            border-color: #1b1600;
+            border-radius: 0px;
+            min-height: 60px;
+        }
+        .navbar-brand {
+            display: inline;
+        }
+        .navbar-header {
+            text-align: center;
+            margin: auto auto;
+            cursor: pointer;
+        }
+        .navbar-brand-admin {
+            color: white;
+            font-size: 19px;
+            display: inline-block;
+            margin-top: 5px;
+            font-family: "Open Sans", "Arial", sans-serif;
+            letter-spacing: 1px;
+        }
+        .list-group-item {
+            border-radius: 0;
+            margin-bottom: 3px;
+            margin-top: 3px;
+            background: white !important;
+            color: #333 !important;
+        }
+        .eight-id {
+            font-family: "Helvetica";
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/admin"><img src="/static/images/elements/logo-white.svg" id="logo" alt="logo" height="40"></a><span class='navbar-brand-admin'>ADMIN</span>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class='logout' href="/logout">Sign Out</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container hidden" id="loading" align="center">
+        <div class="col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4" id="loadingMessage">
+            <img src="static/img/loading.gif" alt="Loading Stride Logo" class="img loadinggif" width="100">
+            <h3 class="loadingtext">Loading...</h3>
+        </div>
+        <div class="col-md-6 col-md-offset-3 col-xs-4 col-xs-offset-4 hidden" id="connectionClosed">
+            <h2 class="text-danger text-center"><span><i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span></h2>
+            <br>
+            <h4 class="text-center">Something went wrong! Please try again later.</h4>
+        </div>
+    </div>
+    <div class="container" id="home">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h4>All users <button class="btn btn-info btn-sm"><a style='color: white' href='/admin/signup'><i class="fa fa-plus"></i> New User </button><small class="text-muted"><br />Click on a user to view details</small></a></h4>
+                <div class="col-md-10">
+                    <div class="list-group users-list">
+                        {% for user in users %}
+                        <div id='{{ user["eight_id"] }}'>
+                            <a href="#" id='{{ user["eight_id"] }}' class="user-list-item list-group-item active">{{ user['name'] }} <small class="text eight-id pull-right">
+                            {{ user['eight_id'] }}</small></a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="affix">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active"><a href="#info" data-toggle="tab">Personal Information</a></li>
+                    <li><a href="#knowledge" data-toggle="tab">Knowledge</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="info">
+                        <div class="panel panel-danger">
+                            <div class="panel-body">
+                                <div class="col-md-6">
+                                    <span class="text-muted pull-left">Full name</span><br />
+                                    <span id="user-profile-full-name"></span>
+                                </div>
+                                <div class="col-md-6 text-left">
+                                    <span class="text-muted pull-left">ID</span><br />
+                                    <span id='user-profile-id'></span>
+                                </div>
+                                <!-- <div class="col-md-6 text-left">
+                                    <br />
+                                    <span class="text-muted pull-left">Location</span><br />
+                                    <span id='user-profile-location'></span>
+                                </div> -->
+                            </div>
+                            <div class="panel-footer">
+                                <button id='user-profile-delete' class="btn btn-danger btn-block">Delete this user</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id='knowledge'>
+                        <div class="list-group" id='knowledge-items-panel'>
+                            Nothing here yet!
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container hidden" id="results">
+    </div>
+</body>
+
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var currentUser = null
+
+        $('.user-list-item').click(function(e) {
+            var eight_id = $(this).attr('id')
+            currentUser = eight_id
+            $.ajax({
+                url: '/admin/users/user?id=' + eight_id,
+                method: 'GET',
+            }).done(function(result) {
+                $('#user-profile-full-name').html(result['name'])
+                $('#user-profile-id').  html(result['eight_id'])
+                var knowledgeItems = result['knowledge']          
+                if (knowledgeItems.length)      
+                    $('#knowledge-items-panel').html(null)
+                knowledgeItems.forEach(function(item, index) {
+                    console.log(item)
+                    $('#knowledge-items-panel').append('<a href="#" class="list-group-item"><button type="button" class="close delete-knowledge-item" aria-hidden="true">&times;</button><h5 class="list-group-item-heading">' + item['text'] + '</h5></a>')
+                })
+
+                $('.delete-knowledge-item').click(function() {
+                    if (confirm('Are you sure you want to delete this knowledge item?')) {
+                        $.ajax({
+                            url: '/admin/users/delete_knowledge_item',
+                            method: 'POST',
+                            data: {
+                                'id': currentUser,
+                                'text': $(this).siblings('h5').html()
+                            }
+                        })
+                    }
+                })
+            })
+        })
+
+        function resetUserSelection() {
+            // Trigger selection of first user
+            var firstUser = $('.user-list-item')[0]
+            $(firstUser).trigger('click')
+        }
+
+        /*Delete user*/
+        $('#user-profile-delete').click(function() {
+            var choice = confirm('Are you sure you want to delete this user?')
+            if (choice) {
+                $.ajax({
+                    url: '/admin/users/delete?id=' + currentUser,
+                    method: 'GET'
+                }).done(function(result) {
+                    $('div#' + currentUser).remove()
+                    resetUserSelection()
+                })
+            }
+        })
+
+        
+        resetUserSelection()
+    })  
+</script>
+</html>

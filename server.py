@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import *
 from datetime import datetime
 from pprint import pprint
@@ -5,9 +6,91 @@ from pprint import pprint
 import requests
 
 from util.db_utils import *
+from util.sense_utils import get_closest_sense_items
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'super-secrfeet'
+
+
+"""Admin routes"""
+def check_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == 'admin' and password == 's3cret'
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.route('/admin')
+@requires_auth
+def admin():
+    return render_template('admin/admin.html')
+
+
+@app.route('/admin/taxonomy')
+@requires_auth
+def taxonomy_builder():
+    return render_template('admin/taxonomy.html')
+
+
+@app.route('/admin/taxonomy/related', methods=['POST'])
+@requires_auth
+def fetch_related_topics():
+    topic = request.form.get('q')
+    related_topics = get_closest_sense_items(topic)
+    return jsonify([{'name': topic['text'], 'similarity': (topic['similarity'] if topic['similarity'] < 0.75 else 1)} for topic in related_topics])
+
+
+@app.route('/admin/users/delete_knowledge_item', methods=['POST'])
+@requires_auth
+def remove_knowledge_item():
+    user_id = request.form.get('id')
+    item_text = request.form.get('text')
+    delete_knowledge_item(user_id, item_text)
+    return jsonify({'success': True})
+
+
+@app.route('/admin/users')
+@requires_auth
+def manage_users():
+    users = get_all_users()
+    return render_template('admin/users.html', users=users)
+
+
+@app.route('/admin/users/user')
+@requires_auth
+def user_details():
+    eight_id = request.args.get('id')
+    user = get_user_from_eight_id(eight_id)
+    user_knowledge = get_knowledge_list_by_eight_id(eight_id)
+    for k in user_knowledge:
+        k.pop('_id')
+    user['knowledge'] = user_knowledge
+    user.pop('_id')
+    return jsonify(user)
+
+
+@app.route('/admin/users/delete')
+@requires_auth
+def user_delete():
+    eight_id = request.args.get('id')
+    delete_user(eight_id)
+    return jsonify({'success': True})
 
 
 """Webpage routes"""
@@ -15,11 +98,19 @@ app.config['SECRET_KEY'] = 'super-secrfeet'
 def index():
     return render_template('login2.html')
 
-
-
+    
 @app.route('/home')
 def home():
-    return render_template('home2.html')
+    from trends.trending import identify_trending_topics
+    trending_topics = identify_trending_topics()
+    trending_topics = {topic.split('|')[0].replace('_', ' '): trending_topics[topic] for topic in trending_topics}
+    trending_topics = dict(sorted(trending_topics.iteritems(), key=lambda (k,v): (v,k), reverse=True)[:5])
+    return render_template('home2.html', trending_topics=trending_topics)
+
+
+@app.route('/trending')
+def trending():
+    return render_template('trending.html')
 
 
 @app.route('/ask')
@@ -31,7 +122,8 @@ def share():
     return render_template('share.html', action='share')
 
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/admin/signup', methods=['GET', 'POST'])
+@requires_auth
 def signup():
     if request.method == 'GET':
         return render_template('signup.html')

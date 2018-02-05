@@ -9,25 +9,25 @@ import conf
 from nltk import pos_tag
 
 
-
-def _transform_doc_nltk(doc, maintain_case=False):
-    doc = re.sub(r'[^\w\s]', '', doc)
+def _transform_doc_nltk(doc, maintain_case=False):  
+    doc = re.sub(r'[^\w\s]', '', doc).lower()
     tagged = pos_tag(doc.split())
     tags = ' '.join([x[1] for x in tagged])
+    print(tags)
     # Noun chaining with optional leading adjective
-    matches = re.finditer('((JJ[A-Z]? )?)((NN[A-Z]? ?)+)', tags)
+    matches = list(re.finditer('((JJ[A-Z]? )?)((NN[A-Z]? ?)+)', tags))
     noun_phrases = []
     for match in matches:
-        chain_start_index = tags[:match.start()].strip().count(' ')
-        chain_end_index = tags[:match.end()].strip().count(' ')
-        chain = tagged[chain_start_index + 1:chain_end_index + 1]
+        chain_start_index = tags[:match.start() + 1].strip().count(' ')  # 4
+        chain_end_index = tags[:match.end()].strip().count(' ')  #  
+        print(tagged[chain_start_index:chain_end_index + 1])
+        chain = tagged[chain_start_index : chain_end_index + 1]
         chain = '_'.join([x[0] for x in chain]) + '|NOUN'
         noun_phrases.append(chain)
     return ' '.join(noun_phrases)
 
 
 def perform_batch_call(calls):
-    print('Performing call')
     headers = {'content-type': 'application/json'}
     url = conf.SENSE_SERVER_URL
     result = requests.post(url, data=json.dumps(calls), headers=headers).text
@@ -35,11 +35,11 @@ def perform_batch_call(calls):
     return res
 
 
-def get_closest_sense_items(calls):
-    print('Performing call')
+def get_closest_sense_items(topic):
+    topic = topic.lower().replace(' ', '_') + '|NOUN'
     headers = {'content-type': 'application/json'}
     url = conf.SENSE_SERVER_URL
-    result = requests.post(url + '/top', data=json.dumps(calls), headers=headers).text
+    result = requests.post(url + '/top_related_items', data=json.dumps({'topic': topic}), headers=headers).text
     res = json.loads(json.loads(result)['result'])
-    print(res)
     return res
+

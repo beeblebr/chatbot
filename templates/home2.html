@@ -24,10 +24,11 @@
         <meta name="msapplication-TileImage" content="static/images/app-icon/android-myndpool-icon-144.png">
         <meta name="theme-color" content="#ffffff">
 
+        
         <title>Myndpool | Your Collaboration Concierge</title>
     </head>
 
-    <body id="home"">
+    <body id="home">
         <div class="main">
               
         <section class="container logo">
@@ -36,32 +37,29 @@
         </section>
 
         <section class="container profile">
-            <div class="col connections left">
-                <img src="static/images/users/10002480.jpg" class="photo" />
-                <img src="static/images/users/10013719.jpg" class="photo" />
-                <img src="static/images/users/10406560.jpg" class="photo" />
-            </div>
-            <div class="col user">
-                <img class="photo" id="user_photo" />
-            </div>
-            <div class="col connections right">
-                <img src="static/images/users/10431553.jpg" class="photo" />
-                <img src="static/images/users/10384315.jpg" class="photo" />
-                <img src="static/images/users/10343020.jpg" class="photo"
-            </div>
+           
         </section>
 
         <section class="container welcome">
-            <p>Welcome back</p>
+            <p>Welcome back,</p>
+            <p id='trending'></p>
             <p class="first-name">Liz</p>
         </section>
 
         <section class="container actions">
             <a href="/share" class="button primary share">Share Something</a>
             <a href="/ask" class="button primary ask">Ask a Question</a>
+            <a href="#" class="button primary" id="trends">View trends</a>
         </section>
 
-    
+
+        <section class="container trends">
+            <hr />
+            <h2>Topics trending right now</h2>
+            {{trending_topics}}
+            <div id='trends-word-cloud'></div>
+        </section>
+
         </div>
 
         <script src="static/javascripts/jquery.js"></script>
@@ -75,5 +73,55 @@
         <script src="static/javascripts/home.js"></script>
         <script src="static/javascripts/navigation.js"></script>
         <script src="static/javascripts/html.js"></script>
+        <script src="static/js/jquery-3.1.1.min.js"></script>
+        <script src="static/js/jqcloud.min.js"></script>
+        <link rel="stylesheet" href="static/css/jqcloud.min.css" type="text/css" />
+        <style type="text/css">
+        .welcome {
+            z-index: 100000; 
+        }
+        #trends-word-cloud {
+            width: 400px;
+            height: 630px;
+            text-align: center;
+            margin: auto auto;
+        }
+        </style>
+        <script>
+            $(document).ready(function() {
+
+                $('#trends').click(function() {
+                    $('html, body').animate({
+                        scrollTop: $(".trends").offset().top
+                    }, 800);
+                })
+
+
+                var words = [
+                  {% for topic in trending_topics %}
+                    {text: "{{ topic }}", weight: "{{ trending_topics[topic] }}" },
+                  {% endfor %}
+                  // {text: "Lorem", weight: 13, link: 'http://github.com/mistic100/jQCloud'},
+                  // {text: "Ipsum", weight: 10.5, link: 'http://www.strangeplanet.fr'},
+                  // {text: "Dolor", weight: 200.4, link: 'http://piwigo.org'},
+                  // {text: "Lorem", weight: 13, link: 'http://github.com/mistic100/jQCloud'},
+                  // {text: "Ipsum", weight: 10.5, link: 'http://www.strangeplanet.fr'},
+                  // {text: "Dolor", weight: 9.4, link: 'http://piwigo.org'},
+                  // {text: "Lorem", weight: 13, link: 'http://github.com/mistic100/jQCloud'},
+                  // {text: "Ipsum", weight: 10.5, link: 'http://www.strangeplanet.fr'},
+                  // {text: "Dolor", weight: 9.4, link: 'http://piwigo.org'},
+                  // {text: "Lorem", weight: 13, link: 'http://github.com/mistic100/jQCloud'},
+                  // {text: "Ipsum", weight: 10.5, link: 'http://www.strangeplanet.fr'},
+                  // {text: "Dolor", weight: 9.4, link: 'http://piwigo.org'},
+                  /* ... */
+                ];
+                $('#trends-word-cloud').jQCloud(words, {
+                    width: 400,
+                    height: 630
+                });
+
+            })
+        </script>
+
     </body>
 </html>

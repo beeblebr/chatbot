@@ -26,12 +26,11 @@ def index():
     return json.dumps({'result' : json.dumps(results)})
 
 
-@app.route('/top', methods=['POST'])
+@app.route('/top_related_items', methods=['POST'])
 def top_items():
-    print('received')
     params = json.loads(request.data)
-    topics = params['topics']
-    results = {topic: get_top_items(topic) for topic in topics}
+    topic = params['topic']
+    results = get_top_items(topic)
     return json.dumps({'result': json.dumps(results)})
 
 
