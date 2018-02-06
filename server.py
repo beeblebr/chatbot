@@ -36,11 +36,8 @@ def requires_auth(f):
     return decorated
 
 
-@app.route('/admin')
-@requires_auth
-def admin():
-    return render_template('admin/admin.html')
 
+"""Taxonomy related routes."""
 
 @app.route('/admin/taxonomy')
 @requires_auth
@@ -51,10 +48,29 @@ def taxonomy_builder():
 @app.route('/admin/taxonomy/related', methods=['POST'])
 @requires_auth
 def fetch_related_topics():
-    topic = request.form.get('q')
+    topic = request.form.get('topic')
     related_topics = get_closest_sense_items(topic)
-    return jsonify([{'name': topic['text'], 'similarity': (topic['similarity'] if topic['similarity'] < 0.75 else 1)} for topic in related_topics])
+    return jsonify([{'name': topic['text'], 'similarity': (1)} for topic in related_topics])
 
+
+@app.route('/admin/taxonomy/related_custom', methods=['POST'])
+@requires_auth
+def fetch_custom_topics():
+    topic = request.form.get('topic')
+    relations = [{'name': b, 'similarity': 1} for b in get_relations(topic)]
+    return jsonify(relations)
+
+
+@app.route('/admin/taxonomy/save_custom', methods=['POST'])
+@requires_auth
+def set_custom_topics():
+    topic = request.form.get('topic')
+    custom_related = request.form.get('custom_topics').split(';')
+    update_relations(topic, custom_related)
+    return jsonify({'success': True})
+
+
+"""User related routes."""
 
 @app.route('/admin/users/delete_knowledge_item', methods=['POST'])
 @requires_auth
@@ -94,6 +110,13 @@ def user_delete():
 
 
 """Webpage routes"""
+
+@app.route('/admin')
+@requires_auth
+def admin():
+    return render_template('admin/admin.html')
+
+
 @app.route('/')
 def index():
     return render_template('login2.html')
@@ -104,7 +127,7 @@ def home():
     from trends.trending import identify_trending_topics
     trending_topics = identify_trending_topics()
     trending_topics = {topic.split('|')[0].replace('_', ' '): trending_topics[topic] for topic in trending_topics}
-    trending_topics = dict(sorted(trending_topics.iteritems(), key=lambda (k,v): (v,k), reverse=True)[:5])
+    trending_topics = dict(sorted(trending_topics.iteritems(), key=lambda (k,v): (v,k), reverse=True))
     return render_template('home2.html', trending_topics=trending_topics)
 
 
@@ -133,11 +156,11 @@ def signup():
 
         existing = db.users.find_one({'eight_id': eight_id})
         if existing:
-            return redirect('/signup')
+            return redirect('/admin/signup')
         else:
             db.users.insert_one({'name': name, 'eight_id': eight_id})
         
-        return redirect('/')
+        return redirect('/admin/users')
 
 
 """API Endpoints"""
@@ -172,11 +195,9 @@ def add_to_k():
 
 @app.route('/api/query')
 def query():
-    print('yoooo')
     q = request.args.get('text')
     user_id = request.args.get('user_id')
-    print(q)
-    print(user_id)
+    
     # Send message to bot, and retrieve response_metadata
     response, slots = handle_message(user_id, unicode(q))
     info = slots['response_metadata'].value

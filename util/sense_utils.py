@@ -12,6 +12,7 @@ from nltk import pos_tag
 def _transform_doc_nltk(doc, maintain_case=False):  
     doc = re.sub(r'[^\w\s]', '', doc).lower()
     tagged = pos_tag(doc.split())
+    print(tagged)
     tags = ' '.join([x[1] for x in tagged])
     print(tags)
     # Noun chaining with optional leading adjective

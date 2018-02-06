@@ -9,6 +9,7 @@ from util.sense_utils import _transform_doc_nltk
 stop = map(lambda x : x.strip(), open('code/data/words.txt', 'rb').readlines())
 # stop = map(lambda x : x.strip(), open('data/words.txt', 'rb').readlines())
 
+
 def get_all_topics(message, transformed=False):
     message = message.encode('ascii', 'ignore')
     if not transformed:
@@ -22,10 +23,10 @@ def get_all_topics(message, transformed=False):
 
 def assemble_topic_wise_rankings(similarity_map, corpus):
     """Assemble separate rankings for each topic"""
-    assert similarity_map
     valid_variants = map(lambda x : x['topic'], similarity_map[0])
 
     topic_wise_ranking = {}
+
     for topic in valid_variants:
         ranking = []
         for i in range(len(corpus)):
@@ -45,8 +46,7 @@ def assemble_topic_wise_rankings(similarity_map, corpus):
             item.update(rank2=rank2)
             item.update(matched_variant=matched_variant)
             ranking.append(item)
-
-        from pprint import pprint
+            
         topic_wise_ranking[topic] = ranking
 
     return topic_wise_ranking
@@ -78,6 +78,7 @@ def get_aggregate_scores(topic_wise_ranking, corpus):
 class hashabledict(dict):
     def __hash__(self):
         return hash(tuple(sorted(self.items())))
+
 
 def find_topic_intersection(combination, topic_wise_ranking):
     """Finds the knowledge items tagged with all these topics"""

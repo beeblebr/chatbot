@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/token-input/token-input.css">
+    <link rel="stylesheet" href="/static/css/jquery.toast.min.css">
     <link rel="stylesheet" href="/static/css/token-input/token-input-facebook.css">
     <link rel="shortcut icon" href="/static/img/stride-badge-original@2x.png" type="image/x-icon">
 
@@ -36,6 +37,10 @@
         ul.token-input-list {
             width: 100% !important;
 
+        }
+
+        legend {
+            margin-bottom: 0 !important;
         }
 
         li.token-input-token {
@@ -75,6 +80,7 @@
                     Smart Taxonomy Builder
                 </legend>
                 <br>
+                <h3 style="text-align: center">Enter a topic</h3>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -83,7 +89,7 @@
                 <div class="inner-addon left-addon">
                     <i class="glyphicon glyphicon-search"></i>
                     <form id='search'>
-                        <input type="text" id='search-term' class="form-control" placeholder="Enter a topic and press return" />
+                        <input type="text" id='search-term' class="form-control" autocomplete="off" placeholder="Enter a topic and press return" />
                         <input type="submit" style="display: none" />
                     </form>
                 </div>
@@ -93,10 +99,13 @@
             <div class="col-md-6">
                 <br />
                 <div class="well well-lg" id="custom">
-                    <h4>Custom relationships <small class="text-muted"><br /> Add your own topic(s) to include it in the taxonomy</small></h4>
+                    <h4>Custom relationships <small class="text-muted"><br /> Add your own topic(s) to include it in the taxonomy. <br />(Note: Custom topics take precedence over the topics from the model)</small>
+                    <small><br /><b>Hit &lt;TAB&gt; after adding a topic.</b></small>
+                    </h4>
                     <div>
                         <textarea type="text" id="related-topics-custom"></textarea>
-                        <!-- <input type="button" value="Submit" /> -->
+                        <br />
+                        <input class="btn btn-success" id='save-custom' type="button" value="Save" />
                     </div>
                 </div>
             </div>
@@ -107,6 +116,7 @@
                     <div>
                         <textarea type="text" id="related-topics-pre-populated"></textarea>
                         <!-- <input type="button" value="Submit" /> -->
+                        <div id="no-such-topic"></div>
                     </div>
                 </div>
             </div>
@@ -121,46 +131,101 @@
 <script src="/static/js/jquery-ui.min.js"></script>
 <script src="/static/js/jquery.tagsinput.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.toast.min.js"></script>
+
 <script>
     $(document).ready(function() {
 
         RELATED_TOPICS_URL = '/admin/taxonomy/related'
+        SAVE_CUSTOM_URL = '/admin/taxonomy/save_custom'
+        FETCH_CUSTOM_TOPICS_URL = '/admin/taxonomy/related_custom'
 
-        $('form#search').submit(function(e) {
-            $('.well').hide()
-            e.preventDefault()
-            $('#related-topics-pre-populated').tokenInput('clear')
-            var searchTerm = $('#search-term').val()
-            $.post(RELATED_TOPICS_URL, {
-                'q': searchTerm
-            }).done(function(data) {
-                $('.well').show()
-                for (var i = 0; i < data.length; i++)
-                    $("#related-topics-pre-populated").tokenInput('add', data[i])
-            })
-            return false
-        })
+        var currentTopic = null
 
         $("#related-topics-pre-populated").tokenInput([], {
             tokenFormatter: function (item) {
-                return '<li style="color: white; background: rgba(255, 3, 61, ' + item['similarity'] + ')" class="token-input-token"><p>' + item['name'] + '</p></li>'
+                return '<li style="color: white; background: rgb(255, 96, 3);" class="token-input-token"><p>' + item['name'] + '</p></li>'
             }
         });
 
         $("#related-topics-custom").tokenInput([], {
             tokenFormatter: function (item) {
-                return '<li style="color: white; background: rgba(255, 3, 61, ' + item['similarity'] + ')" class="token-input-token"><p>' + item['name'] + '</p></li>'
+                return '<li style="color: white; rgb(255, 96, 3);" class="token-input-token"><p>' + item['name'] + '</p></li>'
             },
             hideDropdown: true
         });
+
+        $('form#search').submit(function(e) {
+            $('.well').hide()
+            $('#no-such-topic').html(null)
+            e.preventDefault()
+            $('#related-topics-pre-populated').tokenInput('clear')
+            $('#related-topics-custom').tokenInput('clear')
+            var searchTerm = $('#search-term').val()
+            $.post(RELATED_TOPICS_URL, {
+                'topic': searchTerm
+            }).done(function(data) {
+                $('.well').show()
+                currentTopic = searchTerm
+                for (var i = 0; i < data.length; i++)
+                    $("#related-topics-pre-populated").tokenInput('add', data[i])
+                if (data.length == 0) {
+                    $('#related-topics-pre-populated').hide()
+                    $('#prepopulated div #no-such-topic').html('<br /><span style="width: 100%;text-align: center;display: block"><b style="color:red">"' + currentTopic + '" was not found in the corpus. </b><br />You can still add custom topics and they will be reflected in the results.</span><br /><br /><br />')
+                }
+            })
+
+            $.ajax({
+                url: FETCH_CUSTOM_TOPICS_URL,
+                method: 'POST',
+                data: {
+                    'topic': searchTerm
+                }
+            }).done(function(data) {
+                for (var i = 0; i < data.length; i++)
+                    $('#related-topics-custom').tokenInput('add', data[i])
+            });
+
+            return false
+        })
+
+
 
         $('#token-input-related-topics-custom').keydown(function(e) {
             if (e.which == 9) {
                 e.preventDefault()
                 var topic = $(this).val()
-                $('#related-topics-custom').tokenInput('add', {'name': topic, 'similarity': 1})
+                if (topic.trim() != '')
+                    $('#related-topics-custom').tokenInput('add', {'name': topic, 'similarity': 1})
                 return false
             }
+        });
+
+        $('#save-custom').click(function() {
+            var topicParagraphs = $('#custom li.token-input-token p')
+            var topics = []
+            for (var i = 0; i < topicParagraphs.length; i++) {
+                var topic = $(topicParagraphs[i]).html()
+                if (topic.trim() != '')
+                    topics.push(topic)
+            }
+            topics = topics.join(';')
+            $.ajax({
+                url: SAVE_CUSTOM_URL,
+                method: 'POST',
+                data: {
+                    'topic': currentTopic,
+                    'custom_topics': topics
+                }
+            }).done(function(result) {
+                $.toast({
+                    text: 'Saved',
+                    loader: false,
+                    position: 'bottom-center',
+                    allowToastClose : false,
+                    stack: false
+                })
+            })
         })
     });
 

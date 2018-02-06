@@ -14,11 +14,13 @@ def index():
 
     query_topics = params['query_topics']
     corpus_topics_map = params['corpus_topics_map']
+    # User-defined taxonomy
+    user_defined_taxonomy = params['user_defined_taxonomy']
 
     results = []
     for item_topics in corpus_topics_map:
         try:
-            similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'])
+            similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'], user_defined_taxonomy)
             results.append(similarity_map)
         except KeyError as ke:
             results.append(str(0))

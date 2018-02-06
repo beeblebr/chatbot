@@ -144,6 +144,8 @@ cause
 causes
 certain
 certainly
+challenge
+challenges
 changes
 clear
 clearly
@@ -397,6 +399,8 @@ invention
 inward
 is
 isn't
+issue
+issues
 it
 it'd
 it'll

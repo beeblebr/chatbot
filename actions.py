@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import pickle
 import itertools
+import operator
 from collections import defaultdict
 from datetime import datetime
 from pprint import pprint
@@ -33,11 +34,15 @@ class ActionSearchKnowledgeBase(Action):
         # Get topics (noun phrases) for both query and every knowledge item
         try:
             query_topics = {'text': get_all_topics(message)}
-            print(query_topics)
             corpus = list(get_knowledge_corpus(exclude_user=user_id))
             corpus_topics_map = [{'text': get_all_topics(item['transformed_text'], transformed=True)} for item in corpus]
+
+            # Fetch custom taxonomy for all topics in `query_topics`
+            prettify_topic = lambda x: x.split('|')[0].replace('_', ' ')
+            user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in query_topics['text']}
+
             # Perform network request
-            similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map})
+            similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
         except Exception as e:
             print(e)
         
@@ -87,8 +92,6 @@ class ActionSearchKnowledgeBase(Action):
                     combination_names, topic_wise_ranking)
                 common_items.sort(key=lambda x: x['score'], reverse=True)
                 if common_items:
-                    print('{0} common items'.format(len(common_items)))
-                    print('\n')
                     break
             else:
                 # Reduce combination size by 1 and continue
@@ -105,10 +108,6 @@ class ActionSearchKnowledgeBase(Action):
         prettify_variant = lambda x: ' '.join(x['matched_variant'].split('|')[0].split('_'))
         # matched_variants = list(set(map(prettify_variant, common_items)))
         matched_variants = list(set(sorted(common_items, key=lambda x : x['rank2'], reverse=True)))
-        print(map(lambda x : (x['matched_variant'], x['rank2']), matched_variants))
-        # from sklearn.cluster import KMeans
-        # y_pred = KMeans(n_clusters=min(len(matched_variants), 6), random_state=170).fit_predict(X)
-
 
 
         prettify_tag = lambda x: '"' + \
