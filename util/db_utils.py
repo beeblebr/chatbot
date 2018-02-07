@@ -33,6 +33,11 @@ def delete_knowledge_item(eight_id, item_text):
     db.knowledge.remove({'eight_id': eight_id, 'text': item_text})
 
 
+def update_knowledge_item(eight_id, original_text, updated_text):
+    transformed_text = _transform_doc_nltk(updated_text)
+    db.knowledge.update({'eight_id': eight_id, 'text': original_text}, {'$set': {'text': updated_text, 'transformed_text': transformed_text}})
+
+
 def get_knowledge_by_eight_id(eight_id):
     return db.knowledge.find_one({'eight_id': eight_id})
 

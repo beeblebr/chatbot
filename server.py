@@ -81,6 +81,16 @@ def remove_knowledge_item():
     return jsonify({'success': True})
 
 
+@app.route('/admin/users/update_knowledge_item', methods=['POST'])
+@requires_auth
+def edit_knowledge_item():
+    user_id = request.form.get('id')
+    original_text = request.form.get('originalText')
+    updated_text = request.form.get('updatedText')
+    update_knowledge_item(user_id, original_text, updated_text)
+    return jsonify({'success': True})    
+
+
 @app.route('/admin/users')
 @requires_auth
 def manage_users():

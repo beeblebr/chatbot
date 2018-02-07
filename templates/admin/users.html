@@ -40,7 +40,12 @@
             font-family: "Helvetica";
             letter-spacing: 1px;
         }
+        .close {
+            width: 10%;
+            float: right;
+        }
     </style>
+
 </head>
 
 <body>
@@ -144,7 +149,7 @@
                     $('#knowledge-items-panel').html(null)
                 knowledgeItems.forEach(function(item, index) {
                     console.log(item)
-                    $('#knowledge-items-panel').append('<a href="#" class="list-group-item"><button type="button" class="close delete-knowledge-item" aria-hidden="true">&times;</button><h5 class="list-group-item-heading">' + item['text'] + '</h5></a>')
+                    $('#knowledge-items-panel').append('<a href="#" style="min-height: 30px;padding: 10px;display: block !important;" class="list-group-item"><h5 class="list-group-item-heading" style="width: 80%;display: inline-block;">' + item['text'] + '</h5><button type="button" class="close delete-knowledge-item" aria-hidden="true"><i class="fa fa-trash"></i></button><button class="close edit-knowledge-item"><i class="fa fa-edit"></i></button></a>')
                 })
 
                 $('.delete-knowledge-item').click(function() {
@@ -159,6 +164,25 @@
                             }
                         }).done(function() {
                             $(_this).parent().remove()
+                        })
+                    }
+                })
+
+                $('.edit-knowledge-item').click(function() {
+                    var _this = this;
+                    var text = $(this).siblings('h5').html()
+                    var edited = prompt('Edit knowledge item', text)
+                    if (edited && edited != text) {
+                        $.ajax({
+                            url: '/admin/users/update_knowledge_item',
+                            method: 'POST',
+                            data: {
+                                'id': currentUser,
+                                'originalText': text,
+                                'updatedText': edited
+                            }
+                        }).done(function() {
+                            $(_this).siblings('h5').html(edited)
                         })
                     }
                 })

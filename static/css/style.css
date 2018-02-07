@@ -79,6 +79,10 @@ legend {
     z-index: 1000;
 }
 
+.close {
+    width: 10%;
+}
+
 .container {
     position: absolute;
     top: 80px;

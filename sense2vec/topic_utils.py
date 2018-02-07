@@ -58,7 +58,7 @@ def generate_variants(topic):
     proper_subsets = []
     for i in range(len(variants) - 1):
         for j in range(i + 1, len(variants)):
-            if ' '.join(variants[j]) in ' '.join(variants[i]):
+            if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
     return sorted([unicode('_'.join(x)) + '|NOUN' for x in unique], key=lambda x : len(x.split('|')[0].split('_')), reverse=True)
@@ -118,9 +118,12 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
         similarity_map = []
         for query_topic in topics_from_query:
             comparisons_against_current_knowledge_item = []
+
             for knowledge_item_topic in topics_from_knowledge_item:
+
                 if query_topic['valid'] and knowledge_item_topic['valid']:
                     comparisons_against_current_knowledge_item.append(Comparison(score=sense_vec_model_similarity(query_topic['topic'], knowledge_item_topic['topic']), matched_topic=query_topic['topic'], matched_variant=knowledge_item_topic['topic']))
+
                 elif not query_topic['valid'] and query_topic['topic'] in user_defined_taxonomy:
                     # If knowledge_item_topics is valid, convert it into pretty format
                     if knowledge_item_topic['valid']:

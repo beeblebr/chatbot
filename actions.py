@@ -15,7 +15,7 @@ from rasa_core.events import SlotSet
 from rasa_config import *
 
 from util.sense_utils import perform_batch_call
-from util.topic_utils import assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict, get_all_topics
+from util.topic_utils import assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict, get_all_topics, prettify_topic, uglify_topic
 from util.db_utils import *
 
 
@@ -38,7 +38,6 @@ class ActionSearchKnowledgeBase(Action):
             corpus_topics_map = [{'text': get_all_topics(item['transformed_text'], transformed=True)} for item in corpus]
 
             # Fetch custom taxonomy for all topics in `query_topics`
-            prettify_topic = lambda x: x.split('|')[0].replace('_', ' ')
             user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in query_topics['text']}
 
             # Perform network request
@@ -71,6 +70,8 @@ class ActionSearchKnowledgeBase(Action):
         # Get the list of topics along with their ranks (from the server
         # response)
         topics = [topic.copy() for topic in similarity_map[0]]
+        print('eeerieeeeeeeeeeeee')
+        print(topics)
 
         # Find the intersection of the most number of topics, and
         # prioritize the combination with most rarity (within the given
