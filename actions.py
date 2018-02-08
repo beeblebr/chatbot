@@ -45,6 +45,8 @@ class ActionSearchKnowledgeBase(Action):
         # Perform network request
         similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
 
+        from pprint import pprint
+        pprint(similarity_map)
         
         similarity_map = pipeline.execute_pipeline(
             similarity_map,
