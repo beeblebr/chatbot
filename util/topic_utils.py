@@ -26,15 +26,3 @@ def get_all_topics(message, transformed=False):
     topics = filter(lambda x : x.split('|')[1] == 'NOUN', pos)
     topics = filter(lambda x : x.split('|')[0] not in stop, topics)
     return topics
-
-
-class hashabledict(dict):
-    def __hash__(self):
-        return hash(tuple(sorted(self.items())))
-
-
-def find_topic_intersection(combination, topic_wise_ranking):
-    """Finds the knowledge items tagged with all these topics"""
-    ids = [map(hashabledict, topic_wise_ranking[topic]) for topic in combination]
-    common_items = list(functools.reduce(operator.and_, map(set, ids)))
-    return common_items

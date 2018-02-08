@@ -2,7 +2,7 @@ import json
 
 from flask import Flask, request
 
-from topic_utils import *
+from comparison import topic_similarity_map
 
 
 app = Flask(__name__)
