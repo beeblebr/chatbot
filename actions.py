@@ -46,12 +46,12 @@ class ActionSearchKnowledgeBase(Action):
         similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
 
         
-        pipeline.execute_pipeline(
+        similarity_map = pipeline.execute_pipeline(
             similarity_map,
 
             (transforms.ConvertSimilarityToFloat,),
             (transforms.ZipWithCorpus, corpus),
-            (filters.DropBelowSimilarityThreshold,),
+            (filters.DropItemsBelowSimilarityThreshold,),
             (transforms.SortBySimilarityDesc,),
         )
 
