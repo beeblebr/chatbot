@@ -144,13 +144,13 @@
 
         $("#related-topics-pre-populated").tokenInput([], {
             tokenFormatter: function (item) {
-                return '<li style="color: white; background: rgb(255, 96, 3);" class="token-input-token"><p>' + item['name'] + '</p></li>'
+                return '<li style="color: white; background: #317eac;" class="token-input-token"><p>' + item['name'] + '</p></li>'
             }
         });
 
         $("#related-topics-custom").tokenInput([], {
             tokenFormatter: function (item) {
-                return '<li style="color: white; rgb(255, 96, 3);" class="token-input-token"><p>' + item['name'] + '</p></li>'
+                return '<li style="color: white; background: #317eac;" class="token-input-token"><p>' + item['name'] + '</p></li>'
             },
             hideDropdown: true
         });
