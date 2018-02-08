@@ -25,7 +25,7 @@ def populate_with_variants(topics, user_defined_taxonomy, query_or_knowledge_ite
     return all_topics
 
 
-def custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item):
+def get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item):
     """Returns topics in topics_from_knowledge_item that match any user-defined taxonomy matches."""
     matches = []
     for query_topic in topics_from_query:
@@ -41,7 +41,7 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     if not (topics_from_query and topics_from_knowledge_item):
         return str(0)
 
-    custom_topic_matches = custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
+    custom_topic_matches = get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
     custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_similarity else 0
     model_similarity = cosine_similarity(
                             weighted_vector_sum(topics_from_query).reshape(1, -1), 
