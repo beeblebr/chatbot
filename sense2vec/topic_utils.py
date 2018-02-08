@@ -78,6 +78,15 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     topics_from_query = populate_with_variants(topics1)
     topics_from_knowledge_item = populate_with_variants(topics2)
 
+    print('Topics from query:')
+    print(topics_from_query)
+
+    print('Topics from knowledge item:')
+    print(topics_from_knowledge_item)
+
+    if not topics_from_query or not topics_from_knowledge_item:
+        return str(0)
+
     def weighted_vector_sum(topics):
         topics = map(lambda x : x['topic'], topics)
         max_rank = max(map(lambda x : sense_vec_model[x][0], topics))
