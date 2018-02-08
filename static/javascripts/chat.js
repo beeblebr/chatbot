@@ -229,11 +229,12 @@ ChatUtils.validateUserInput = function (input) {
 }
 
 ChatUtils.getMockTypingTime = function (messageLength) {
-    if (messageLength < 30) {
+    return 1000
+    /*if (messageLength < 30) {
         return 1000
     } else if (messageLength > 50) {
         return 2500
     } else {
         return messageLength * 50
-    }
+    }*/
 }
