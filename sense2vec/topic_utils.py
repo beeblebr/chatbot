@@ -22,7 +22,7 @@ def uglify_topic(x):
 
 
 def find_valid_case_combination(topic):
-    """If the originally entered case-variant is not available, it looks for te first valid case-variant. It is greedy towards lowercase variants. Returns None if none of them are valid."""
+    """If the originally entered case-variant is not available, it looks for the most frequently occuring valid case-variant. It is greedy towards lowercase variants. Returns None if none of them are valid."""
     topic = unicode(topic)
     # If original case combination is valid, return it
     if topic in sense_vec_model:
@@ -79,8 +79,6 @@ def get_top_items(topic, n=1000):
     return related_items[:i]
 
 
-
-def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
 
 
 
