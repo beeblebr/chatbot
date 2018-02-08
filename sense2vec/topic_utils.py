@@ -80,96 +80,15 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
 
     def weighted_vector_sum(topics):
         topics = map(lambda x : x['topic'], topics)
-        result = sense_vec_model[topics[0]][1]# / sense_vec_model[topics[0]][0]
+        result = sense_vec_model[topics[0]][1] / sense_vec_model[topics[0]][0]
         for topic in topics[1:]:
-            result += sense_vec_model[topic][1]# / sense_vec_model[topic][0]
+            result += sense_vec_model[topic][1] / sense_vec_model[topic][0]
         return result
 
     return str(cosine_similarity(
         weighted_vector_sum(topics_from_query).reshape(1, -1), 
         weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
     )[0][0])
-
-
-def topic_similarity_map_2(topics1, topics2, user_defined_taxonomy):
-    """
-    user_defined_taxonomy is referred to when either
-    1. A topic in `topics1_variants` is not in sense2vec model.
-    2. A topic in `topics1_variants` does not yield any matches."""
-
-    print(user_defined_taxonomy)
-    
-    try:
-        if not topics1 or not topics2:
-            return [{'topic': t, 'score': '0', 'rank1': 0, 'rank2': 0} for t in topics1]
-
-        # Divide query topics into valid and invalid sets (valid ones are those that are part of Sense2Vec)
-        topics_from_query = []
-        for t in topics1:
-            variants = generate_variants(t)
-            topics_from_query.extend([{'topic': variant, 'valid': True} for variant in variants])
-        for t in user_defined_taxonomy:
-            topics_from_query.append({'topic': t, 'valid': False})
-
-
-        # Divide knowledge item topics into valid and invalid sets (valid ones are those that are part of Sense2Vec)
-        topics_from_knowledge_item = []
-        for t in topics2:
-            variants = generate_variants(t)
-            if variants:
-                topics_from_knowledge_item.extend([{'topic': variant, 'valid': True} for variant in variants])
-            else:
-                topics_from_knowledge_item.append({'topic': prettify_topic(t), 'valid': False})
-
-
-        CUSTOM_TOPIC_SIMILARITY = 0.95  # Custom relationships get a fixed similarity score
-
-        # Calculate aggregate similarity score
-        similarity_map = []
-        for query_topic in topics_from_query:
-            comparisons_against_current_knowledge_item = []
-
-            for knowledge_item_topic in topics_from_knowledge_item:
-
-                if query_topic['valid'] and knowledge_item_topic['valid']:
-                    comparisons_against_current_knowledge_item.append(Comparison(score=sense_vec_model_similarity(query_topic['topic'], knowledge_item_topic['topic']), matched_topic=query_topic['topic'], matched_variant=knowledge_item_topic['topic']))
-
-                elif not query_topic['valid'] and query_topic['topic'] in user_defined_taxonomy:
-                    # If knowledge_item_topics is valid, convert it into pretty format
-                    if knowledge_item_topic['valid']:
-                        kt = knowledge_item_topic['topic'].split('|')[0].replace('_', ' ')
-                    else:
-                        kt = knowledge_item_topic['topic']
-                    if kt in user_defined_taxonomy[query_topic['topic']]:
-                        comparisons_against_current_knowledge_item.append(Comparison(score=SimilarityAndRank(similarity=CUSTOM_TOPIC_SIMILARITY, rank1=1, rank2=1), matched_topic=query_topic['topic'], matched_variant=knowledge_item_topic['topic']))
-
-            # Select pair (query_topic, knowledge_item_topic) that has the highest similarity score
-            if not comparisons_against_current_knowledge_item:
-                continue
-            most_similar = sorted(comparisons_against_current_knowledge_item, key=lambda x: x.score, reverse=True)[0]
-            most_similar_entry = {
-                'topic': query_topic['topic'] if '|' in query_topic['topic'] else uglify_topic(query_topic['topic']),
-                'score': str(most_similar.score.similarity),
-                'rank1': most_similar.score.rank1, 
-                'rank2': most_similar.score.rank2, 
-                'matched_variant': most_similar.matched_variant
-            }
-
-            # If query_topic has already been matched with another topic, check if this is the highest (occurs when a topic is part of both Sense2Vec and custom taxonomy)
-            for i in range(len(similarity_map)):
-                match = similarity_map[i]
-                if match['topic'] == most_similar_entry['topic']:
-                    if float(match['score']) < most_similar.score.similarity:
-                        similarity_map[i] = most_similar_entry
-                    break
-            else:            
-                similarity_map.append(most_similar_entry)
-                
-        return similarity_map
-
-    except Exception as e:
-        print(e)
-        return [{'topic': t, 'score': '0', 'rank1': 0, 'rank2': 0} for t in topics1]
 
 
 def sense_vec_model_similarity(a, b):
