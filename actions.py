@@ -43,6 +43,7 @@ class ActionSearchKnowledgeBase(Action):
         # Perform network request
         similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
 
+        similarity_map = map(float, similarity_map)
         common_items = [corpus[similarity_map.index(max(similarity_map))]]
 
         dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
