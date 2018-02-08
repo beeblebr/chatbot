@@ -53,7 +53,7 @@ def generate_variants(topic):
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
-    variants = [find_best_casing(uglify_topic(x)) for x in variants if x and x != '|NOUN']
+    variants = [find_best_casing(merge_tokens(x)) for x in variants if x and x != '|NOUN']
     variants = map(split_tokens, variants)
 
     # Remove proper subsets
