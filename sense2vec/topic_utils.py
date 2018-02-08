@@ -82,9 +82,9 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     def weighted_vector_sum(topics):
         topics = map(lambda x : x['topic'], topics)
         max_rank = max(map(lambda x : sense_vec_model[x][0], topics))
-        weight_term = lambda topic : sense_vec_model[topic][1] / max_rank
+        weight_term = lambda topic : sense_vec_model[topic][1] #/ max_rank
         result = sum(map(weight_term, topics))
-        # result /= np.linalg.norm(result)
+        result /= np.linalg.norm(result)
         return result
 
     def powerset(iterable):
