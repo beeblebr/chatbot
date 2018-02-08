@@ -57,7 +57,7 @@ def generate_variants(topic):
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
-    variants = map(find_best_casing(merge_tokens(x)), variants)
+    variants = map(lambda x : find_best_casing(merge_tokens(x)), variants)
     variants = filter(lambda x : x and x != '|NOUN', variants)
     variants = map(split_tokens, variants)
 
