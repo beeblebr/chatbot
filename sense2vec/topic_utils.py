@@ -7,6 +7,7 @@ import sense2vec
 
 sense_vec_model = sense2vec.load()
 
+
 def prettify_topic(x):
     return x.split('|')[0].replace('_', ' ')
 
@@ -56,8 +57,8 @@ def generate_variants(topic):
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
-    variants = [find_best_casing(merge_tokens(x)) for x in variants]
-    variants = [x for x in variants if x and x != '|NOUN']
+    variants = map(find_best_casing(merge_tokens(x)), variants)
+    variants = filter(lambda x : x and x != '|NOUN', variants)
     variants = map(split_tokens, variants)
 
     # Remove proper subsets

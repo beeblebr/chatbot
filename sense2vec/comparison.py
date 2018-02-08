@@ -2,33 +2,53 @@ from itertools import chain, combinations
 
 from sklearn.metrics.pairwise import cosine_similarity
 
-from topic_utils import generate_variants, weighted_vector_sum
+from topic_utils import generate_variants, weighted_vector_sum, prettify_topic
 
 
+def powerset(iterable):
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
+
+
+QUERY = 1
+KNOWLEDGE_ITEM = 2
+def populate_with_variants(topics, query_or_knowledge_item):
+    all_topics = []
+    for topic in topics:
+        variants = generate_variants(topic)
+        all_topics.extend([{'topic': variant, 'in_vocab': True} for variant in variants])
+        if query_or_knowledge_item == KNOWLEDGE_ITEM and not variants:
+            all_topics.append({'topic': prettify_topic(topic), 'in_vocab': False})
+    # Augment all_topics with user-defined taxonomy
+    if query_or_knowledge_item == QUERY:
+        all_topics.extend([{'topic': topic, 'in_vocab': False} for topic in user_defined_taxonomy])
+    return all_topics
+
+
+def custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item):
+    """Returns topics in topics_from_knowledge_item that match any user-defined taxonomy matches."""
+    matches = []
+    for query_topic in topics_from_query:
+        if not query_topic['in_vocab']:
+            matches.extend([knowledge_item_topic['topic'] for knowledge_item_topic in topics_from_knowledge_item if knowledge_item_topic['topic'] in user_defined_taxonomy[query_topic['topic']]])
+    return matches
+
+
+CUSTOM_TOPIC_SIMILARITY = 0.95  # Custom relationships get a fixed similarity score
 def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
-
-    def populate_with_variants(topics):
-        all_topics = []
-        for t in topics:
-            variants = generate_variants(t)
-            all_topics.extend([{'topic': variant, 'valid': True} for variant in variants])
-        return all_topics
-
-    topics_from_query = populate_with_variants(topics1)
-    topics_from_knowledge_item = populate_with_variants(topics2)
-
+    topics_from_query = populate_with_variants(topics1, QUERY)
+    topics_from_knowledge_item = populate_with_variants(topics2, KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
         return str(0)
 
-    def powerset(iterable):
-        s = list(iterable)
-        return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
+    custom_topic_matches = custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
+    custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_similarity else 0
+    model_similarity = cosine_similarity(
+                            weighted_vector_sum(topics_from_query).reshape(1, -1), 
+                            weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
+                        )[0][0]
 
     result = {
-        'cosine_similarity': str(cosine_similarity(
-            weighted_vector_sum(topics_from_query).reshape(1, -1), 
-            weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
-        )[0][0])
+        'cosine_similarity': str(max(custom_topic_similarity, model_similarity))
     }
-
     return result
