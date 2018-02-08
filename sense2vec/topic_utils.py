@@ -24,22 +24,21 @@ def uglify_topic(x):
 def find_valid_case_combination(topic):
     """If the originally entered case-variant is not available, it looks for te first valid case-variant. It is greedy towards lowercase variants. Returns None if none of them are valid."""
     topic = unicode(topic)
-
     # If original case combination is valid, return it
     if topic in sense_vec_model:
         return topic
 
-    tokens = topic.split('|')[0].split('_')
-
+    freqs = []
     # Generates all permutations of cases
+    tokens = topic.split('|')[0].split('_')
     param_for_product = [[0, 1]] * len(tokens)
-    case_variants = []
-    for comb in product(*param_for_product):
-        variant = [tokens[i].title() if comb[i] else tokens[i].lower() for i in range(len(tokens))]
-        repr = '_'.join(variant) + '|NOUN'
+
+    for casing_combination in product(*param_for_product):
+        casing = [tokens[i].title() if casing_combination[i] else tokens[i].lower() for i in range(len(tokens))]
+        repr = '_'.join(casing) + '|NOUN'
         if repr in sense_vec_model:
-            return repr
-    return None
+            freqs.append((sense_vec_model[repr][0], repr))
+    return max(freqs)[1] if freqs else None
 
 
 def generate_variants(topic):
@@ -50,7 +49,7 @@ def generate_variants(topic):
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
-    variants = [find_valid_case_combination('_'.join(x) + '|NOUN') for x in variants]
+    variants = [find_valid_case_combination(uglify_topic(x)) for x in variants]
     variants = filter(lambda x : x and x != '|NOUN', variants)  # Remove empty strings
     variants = map(lambda topic : topic.split('|')[0].split('_'), variants)
 
@@ -61,7 +60,7 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    return sorted([unicode('_'.join(x)) + '|NOUN' for x in unique], key=lambda x : len(x.split('|')[0].split('_')), reverse=True)
+    return sorted([unicode(uglify_topic(x)) for x in unique], key=lambda x : len(x.split('|')[0].split('_')), reverse=True)
 
 
 def get_top_items(topic, n=1000):
@@ -78,6 +77,10 @@ def get_top_items(topic, n=1000):
             break
 
     return related_items[:i]
+
+
+
+def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
 
 
 
