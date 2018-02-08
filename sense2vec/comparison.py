@@ -12,7 +12,7 @@ def powerset(iterable):
 
 QUERY = 1
 KNOWLEDGE_ITEM = 2
-def populate_with_variants(topics, query_or_knowledge_item):
+def populate_with_variants(topics, user_defined_taxonomy, query_or_knowledge_item):
     all_topics = []
     for topic in topics:
         variants = generate_variants(topic)
@@ -36,8 +36,8 @@ def custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_k
 
 CUSTOM_TOPIC_SIMILARITY = 0.95  # Custom relationships get a fixed similarity score
 def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
-    topics_from_query = populate_with_variants(topics1, QUERY)
-    topics_from_knowledge_item = populate_with_variants(topics2, KNOWLEDGE_ITEM)
+    topics_from_query = populate_with_variants(topics1, user_defined_taxonomy, QUERY)
+    topics_from_knowledge_item = populate_with_variants(topics2, user_defined_taxonomy, KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
         return str(0)
 
