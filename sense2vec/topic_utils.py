@@ -127,7 +127,7 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
                 elif not query_topic['valid'] and query_topic['topic'] in user_defined_taxonomy:
                     # If knowledge_item_topics is valid, convert it into pretty format
                     if knowledge_item_topic['valid']:
-                        kt = knowledge_item_topic['topic'].split('|')[0].replace('_', ' ')
+                        kt = prettify_topic(knowledge_item_topic['topic'])
                     else:
                         kt = knowledge_item_topic['topic']
                     if kt in user_defined_taxonomy[query_topic['topic']]:
