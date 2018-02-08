@@ -50,19 +50,24 @@ def get_knowledge_list_by_eight_id(eight_id):
 """Custom-taxonomy related queries."""
 
 def add_relation(a, b):
+    a = a.lower()
+    b = b.lower()
     db.taxonomy.insert({'a': a, 'b': b})
     db.taxonomy.insert({'b': a, 'a': b})
 
 def remove_relations(a):
+    a = a.lower()
     db.taxonomy.remove({'a': a})
     db.taxonomy.remove({'b': a})
 
 def update_relations(a, relations):
+    a = a.lower()
     remove_relations(a)
     for r in relations:
         add_relation(a, r)
 
 def get_relations(a):
+    a = a.lower()
     return map(lambda x : x['b'], list(db.taxonomy.find({'a': a})))
 
 
