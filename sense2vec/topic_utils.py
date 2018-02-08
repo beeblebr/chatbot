@@ -9,10 +9,6 @@ import sense2vec
 sense_vec_model = sense2vec.load()
 
 
-SimilarityAndRank = namedtuple('SimilarityAndRank', ['similarity', 'rank1', 'rank2'])
-Comparison = namedtuple('Comparison', ['score', 'matched_topic', 'matched_variant'])
-
-
 def prettify_topic(x):
     return x.split('|')[0].replace('_', ' ')
 
@@ -99,16 +95,3 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
         weighted_vector_sum(topics_from_query).reshape(1, -1), 
         weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
     )[0][0])
-
-
-def sense_vec_model_similarity(a, b):
-    """Returns the cosine similarity between two Sense2Vec phrases and their Sense2Vec popularity ranks."""
-    try:
-        f1, v1 = sense_vec_model[unicode(a)]
-        f2, v2 = sense_vec_model[unicode(b)]
-        v1 = v1.reshape(1, -1)
-        v2 = v2.reshape(1, -1)
-        sim = cosine_similarity(v1, v2)[0][0]
-        return SimilarityAndRank(similarity=round(sim * 100) / 100, rank1=float(f1), rank2=float(f2))
-    except Exception as e:
-        return SimilarityAndRank(similarity=0, rank1=float('inf'), rank2=float('inf'))
