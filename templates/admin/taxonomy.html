@@ -162,6 +162,7 @@
             $('#related-topics-pre-populated').tokenInput('clear')
             $('#related-topics-custom').tokenInput('clear')
             var searchTerm = $('#search-term').val()
+            if (searchTerm.trim() == '') return false
             $.post(RELATED_TOPICS_URL, {
                 'topic': searchTerm
             }).done(function(data) {
