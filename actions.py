@@ -15,7 +15,7 @@ from rasa_core.events import SlotSet
 from rasa_config import *
 
 from util.sense_utils import perform_batch_call
-from util.topic_utils import assemble_topic_wise_rankings, get_aggregate_scores, find_topic_intersection, hashabledict, get_all_topics, prettify_topic, uglify_topic
+from util.topic_utils import get_all_topics, prettify_topic, uglify_topic
 from util.db_utils import *
 
 
