@@ -18,6 +18,8 @@ from util.sense_utils import perform_batch_call
 from util.topic_utils import get_all_topics, prettify_topic, uglify_topic
 from util.db_utils import *
 
+from pipeline import filters, transforms, pipeline
+
 
 class ActionSearchKnowledgeBase(Action):
     """Handles intent to query knowledge base"""
@@ -43,13 +45,19 @@ class ActionSearchKnowledgeBase(Action):
         # Perform network request
         similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
 
-        similarity_map = map(float, similarity_map)
-        print('Highest similarity: ' + str(max(similarity_map)))
-        common_items = [corpus[similarity_map.index(max(similarity_map))]]
+        
+        pipeline.execute_pipeline(
+            similarity_map,
+
+            (transforms.ConvertSimilarityToFloat,),
+            (transforms.ZipWithCorpus, corpus),
+            (filters.DropBelowSimilarityThreshold,),
+            (transforms.SortBySimilarityDesc,),
+        )
 
         dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
-            common_items[0]['eight_id']))
-        response = {'type': 'found', 'top_matches': common_items}
+            similarity_map[0]['eight_id']))
+        response = {'type': 'found', 'top_matches': similarity_map}
 
         return [SlotSet('response_metadata', response)]
 

@@ -1,5 +1,5 @@
 from collections import namedtuple
-from itertools import product
+from itertools import product, chain, combinations
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -87,7 +87,15 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
         result /= np.linalg.norm(result)
         return result
 
-    return str(cosine_similarity(
-        weighted_vector_sum(topics_from_query).reshape(1, -1), 
-        weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
-    )[0][0])
+    def powerset(iterable):
+        s = list(iterable)
+        return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
+
+    result = {
+        'cosine_similarity': str(cosine_similarity(
+            weighted_vector_sum(topics_from_query).reshape(1, -1), 
+            weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
+        )[0][0])
+    }
+
+    return result
