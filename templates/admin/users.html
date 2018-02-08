@@ -168,23 +168,51 @@
                     }
                 })
 
+                // $('.edit-knowledge-item').click(function() {
+                //     var _this = this;
+                //     var text = $(this).siblings('h5').html()
+                //     var edited = prompt('Edit knowledge item', text)
+                //     if (edited && edited != text) {
+                //         $.ajax({
+                //             url: '/admin/users/update_knowledge_item',
+                //             method: 'POST',
+                //             data: {
+                //                 'id': currentUser,
+                //                 'originalText': text,
+                //                 'updatedText': edited
+                //             }
+                //         }).done(function() {
+                //             $(_this).siblings('h5').html(edited)
+                //         })
+                //     }
+                // })
+
                 $('.edit-knowledge-item').click(function() {
                     var _this = this;
-                    var text = $(this).siblings('h5').html()
-                    var edited = prompt('Edit knowledge item', text)
-                    if (edited && edited != text) {
-                        $.ajax({
-                            url: '/admin/users/update_knowledge_item',
-                            method: 'POST',
-                            data: {
-                                'id': currentUser,
-                                'originalText': text,
-                                'updatedText': edited
+                    var h5 = $(this).siblings('h5');
+                    var originalText = $(h5).html()
+                    $(h5).attr('contenteditable', 'true').focus()
+                    $(h5).keydown(function(e) {
+                        if (e.which == 13) {
+                            e.preventDefault()
+                            $(h5).attr('contenteditable', 'false')
+                            var updatedText = $(this).html()
+                            if (updatedText != originalText) {
+                                $.ajax({
+                                    url: '/admin/users/update_knowledge_item',
+                                    method: 'POST',
+                                    data: {
+                                        'id': currentUser,
+                                        'originalText': originalText,
+                                        'updatedText': updatedText
+                                    }
+                                }).fail(function() {
+                                    $(h5).html(originalText)
+                                })
                             }
-                        }).done(function() {
-                            $(_this).siblings('h5').html(edited)
-                        })
-                    }
+                            return false;
+                        }
+                    })
                 })
             })
         })
