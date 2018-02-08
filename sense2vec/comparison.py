@@ -42,13 +42,13 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
         return str(0)
 
     custom_topic_matches = get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
-    custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
+    #custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
     model_similarity = cosine_similarity(
                             weighted_vector_sum(topics_from_query).reshape(1, -1), 
                             weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
                         )[0][0]
 
     result = {
-        'cosine_similarity': str(max(custom_topic_similarity, model_similarity))
+        'cosine_similarity': str(model_similarity)
     }
     return result
