@@ -78,6 +78,7 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     topics_from_knowledge_item = populate_with_variants(topics2)
 
     def weighted_vector_sum(topics):
+        topics = map(lambda x : x['topic'], topics)
         result = sense_vec_model[topics[0]][1] / sense_vec_model[topics[0]][0]
         for topic in topics[1:]:
             result += sense_vec_model[topic][1] / sense_vec_model[topic][0]
