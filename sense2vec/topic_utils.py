@@ -80,9 +80,9 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
 
     def weighted_vector_sum(topics):
         topics = map(lambda x : x['topic'], topics)
-        result = sense_vec_model[topics[0]][1] #/ sense_vec_model[topics[0]][0]
+        result = sense_vec_model[topics[0]][1] / sense_vec_model[topics[0]][0]
         for topic in topics[1:]:
-            result += sense_vec_model[topic][1] #/ sense_vec_model[topic][0]
+            result += sense_vec_model[topic][1] / sense_vec_model[topic][0]
         return result
 
     return str(cosine_similarity(
