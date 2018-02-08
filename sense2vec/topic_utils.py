@@ -76,7 +76,7 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     topics_from_query = populate_with_variants(topics1)
     topics_from_knowledge_item = populate_with_variants(topics2)
 
-    if not topics_from_query or not topics_from_knowledge_item:
+    if not (topics_from_query and topics_from_knowledge_item):
         return str(0)
 
     def weighted_vector_sum(topics):
