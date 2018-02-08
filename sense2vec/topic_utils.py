@@ -72,6 +72,7 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
         for t in topics:
             variants = generate_variants(t)
             all_topics.extend([{'topic': variant, 'valid': True} for variant in variants])
+        return all_topics
 
     topics_from_query = populate_with_variants(topics1)
     topics_from_knowledge_item = populate_with_variants(topics2)
