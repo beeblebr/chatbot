@@ -20,6 +20,12 @@ def prettify_topic(x):
 def uglify_topic(x):
     return x.replace(' ', '_') + '|NOUN'
 
+def split_tokens(x):
+    return x.split('|')[0].split('_')
+
+def merge_tokens(x):
+    return '_'.join(x) + '|NOUN'
+
 
 def find_valid_case_combination(topic):
     """If the originally entered case-variant is not available, it looks for the most frequently occuring valid case-variant. It is greedy towards lowercase variants. Returns None if none of them are valid."""
@@ -60,7 +66,7 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    return sorted([unicode(uglify_topic(x)) for x in unique], key=lambda x : len(x.split('|')[0].split('_')), reverse=True)
+    return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x : len(x.split('|')[0].split('_')), reverse=True)
 
 
 def get_top_items(topic, n=1000):
