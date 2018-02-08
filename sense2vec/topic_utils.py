@@ -63,7 +63,7 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    return sorted([unicode(uglify_topic(x)) for x in unique], key=lambda x : len(split_tokens(x)), reverse=True)
+    return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x : len(split_tokens(x)), reverse=True)
 
 
 def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
