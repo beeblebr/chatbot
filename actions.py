@@ -18,7 +18,7 @@ from util.sense_utils import perform_batch_call
 from util.topic_utils import get_all_topics, prettify_topic, uglify_topic
 from util.db_utils import *
 
-from pipeline import filters, transforms, pipeline
+from processing import filters, transforms, pipeline
 
 
 class ActionSearchKnowledgeBase(Action):

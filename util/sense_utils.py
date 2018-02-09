@@ -12,16 +12,13 @@ from nltk import pos_tag
 def _transform_doc_nltk(doc, maintain_case=False):  
     doc = re.sub(r'[^\w\s]', '', doc).lower()
     tagged = pos_tag(doc.split())
-    print(tagged)
     tags = ' '.join([x[1] for x in tagged])
-    print(tags)
     # Noun chaining with optional leading adjective
     matches = list(re.finditer('((JJ[A-Z]? )?)((NN[A-Z]? ?)+)', tags))
     noun_phrases = []
     for match in matches:
         chain_start_index = tags[:match.start() + 1].strip().count(' ')  # 4
         chain_end_index = tags[:match.end()].strip().count(' ')  #  
-        print(tagged[chain_start_index:chain_end_index + 1])
         chain = tagged[chain_start_index : chain_end_index + 1]
         chain = '_'.join([x[0] for x in chain]) + '|NOUN'
         noun_phrases.append(chain)
