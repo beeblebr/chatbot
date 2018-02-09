@@ -42,7 +42,7 @@ def find_valid_case_combination(topic):
     for casing_combination in product(*param_for_product):
         casing = [tokens[i].title() if casing_combination[i] else tokens[i].lower() for i in range(len(tokens))]
         repr = '_'.join(casing) + '|NOUN'
-        if repr in sense_vec_model:
+        if repr in sens_vec_model:
             freqs.append((sense_vec_model[repr][0], repr))
     return max(freqs)[1] if freqs else None
 
@@ -55,7 +55,7 @@ def generate_variants(topic):
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
-    variants = [find_valid_case_combination(uglify_topic(x)) for x in variants]
+    variants = [find_valid_case_combination(merge_tokens(x)) for x in variants]
     variants = filter(lambda x : x and x != '|NOUN', variants)  # Remove empty strings
     variants = map(lambda topic : topic.split('|')[0].split('_'), variants)
 

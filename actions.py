@@ -70,8 +70,6 @@ class ActionSearchKnowledgeBase(Action):
         # Get the list of topics along with their ranks (from the server
         # response)
         topics = [topic.copy() for topic in similarity_map[0]]
-        print('eeerieeeeeeeeeeeee')
-        print(topics)
 
         # Find the intersection of the most number of topics, and
         # prioritize the combination with most rarity (within the given
