@@ -2,7 +2,7 @@ from itertools import product
 
 import numpy as np
 
-from . import sense_vec_model
+from sense import sense_vec_model
 
 
 def prettify_topic(x):
