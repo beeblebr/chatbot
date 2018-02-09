@@ -50,7 +50,7 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
 
     topics_from_query = filter(lambda x : x['in_vocab'], topics_from_query)
-    topics_from_knowledge_item = filter(lambda x : x['in_vocab'], topics_from_knowledge_item)or
+    topics_from_knowledge_item = filter(lambda x : x['in_vocab'], topics_from_knowledge_item)
     model_similarity = cosine_similarity(
                             weighted_vector_sum(topics_from_query).reshape(1, -1), 
                             weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
