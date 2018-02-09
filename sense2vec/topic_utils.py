@@ -2,10 +2,7 @@ from itertools import product
 
 import numpy as np
 
-import sense2vec
-
-
-sense_vec_model = sense2vec.load()
+from . import sense_vec_model
 
 
 def prettify_topic(x):

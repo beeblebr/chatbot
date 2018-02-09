@@ -34,20 +34,23 @@ def get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_fr
     return matches
 
 
+
 CUSTOM_TOPIC_SIMILARITY = 0.95  # Custom relationships get a fixed similarity score
+NULL_ENTRY = {
+    'cosine_similarity': str(0)
+}
+
 def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     topics_from_query = populate_with_variants(topics1, user_defined_taxonomy, QUERY)
     topics_from_knowledge_item = populate_with_variants(topics2, user_defined_taxonomy, KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
-        return {
-            'cosine_similarity': str(0)
-        }
+        return NULL_ENTRY
 
     custom_topic_matches = get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
-    #custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
+    custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
 
     topics_from_query = filter(lambda x : x['in_vocab'], topics_from_query)
-    topics_from_knowledge_item = filter(lambda x : x['in_vocab'], topics_from_knowledge_item)
+    topics_from_knowledge_item = filter(lambda x : x['in_vocab'], topics_from_knowledge_item)or
     model_similarity = cosine_similarity(
                             weighted_vector_sum(topics_from_query).reshape(1, -1), 
                             weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
