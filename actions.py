@@ -48,14 +48,14 @@ class ActionSearchKnowledgeBase(Action):
         from pprint import pprint
         pprint(similarity_map)
         
-        similarity_map = pipeline.execute_pipeline(
-            similarity_map,
+        # similarity_map = pipeline.execute_pipeline(
+        #     similarity_map,
 
-            (transforms.ConvertSimilarityToFloat,),
-            (transforms.ZipWithCorpus, corpus),
-            (filters.DropItemsBelowSimilarityThreshold,),
-            (transforms.SortBySimilarityDesc,),
-        )
+        #     (transforms.ConvertSimilarityToFloat,),
+        #     (transforms.ZipWithCorpus, corpus),
+        #     (filters.DropItemsBelowSimilarityThreshold,),
+        #     (transforms.SortBySimilarityDesc,),
+        # )
 
         dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
             similarity_map[0]['eight_id']))

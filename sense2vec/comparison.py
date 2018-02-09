@@ -39,9 +39,9 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
     topics_from_query = populate_with_variants(topics1, user_defined_taxonomy, QUERY)
     topics_from_knowledge_item = populate_with_variants(topics2, user_defined_taxonomy, KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
-        return str({
+        return {
             'cosine_similarity': str(0)
-        })
+        }
 
     custom_topic_matches = get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
     #custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
