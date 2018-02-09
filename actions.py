@@ -50,8 +50,8 @@ class ActionSearchKnowledgeBase(Action):
 
             (transforms.ConvertSimilarityToFloat,),
             (transforms.ZipWithCorpus, corpus),
-            (filters.DropItemsBelowSimilarityThreshold,),
             (transforms.SortBySimilarityDesc,),
+            (filters.DropItemsBelowSimilarityThreshold,)
         )
 
         dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
