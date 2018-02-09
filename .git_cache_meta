@@ -1,0 +1,756 @@
+chown 1000 Dockerfile
+chgrp 1005 Dockerfile
+touch -c -d "2018-02-08 20:55:25.9316538110" Dockerfile
+chmod 0777 Dockerfile
+chown 1000 README.md
+chgrp 1005 README.md
+touch -c -d "2018-02-08 20:55:25.9316538110" README.md
+chmod 0777 README.md
+chown 1000 __init__.py
+chgrp 1005 __init__.py
+touch -c -d "2018-02-08 15:33:27.6456557730" __init__.py
+chmod 0777 __init__.py
+chown 1000 actions.py
+chgrp 1000 actions.py
+touch -c -d "2018-02-09 11:36:25.1795015360" actions.py
+chmod 0777 actions.py
+chown 1000 bot_wrapper.py
+chgrp 1005 bot_wrapper.py
+touch -c -d "2018-02-09 06:40:16.7138142350" bot_wrapper.py
+chmod 0777 bot_wrapper.py
+chown 1000 conf.py
+chgrp 1005 conf.py
+touch -c -d "2018-02-09 06:40:16.7178142200" conf.py
+chmod 0777 conf.py
+chown 1000 data/nlu.md
+chgrp 1005 data/nlu.md
+touch -c -d "2018-02-08 15:33:27.6656559560" data/nlu.md
+chmod 0777 data/nlu.md
+chown 1000 data/stories.md
+chgrp 1005 data/stories.md
+touch -c -d "2018-02-08 16:45:47.9728657330" data/stories.md
+chmod 0777 data/stories.md
+chown 1000 data/train_data.json
+chgrp 1005 data/train_data.json
+touch -c -d "2018-02-08 16:45:48.0128661090" data/train_data.json
+chmod 0777 data/train_data.json
+chown 1000 data/words.txt
+chgrp 1005 data/words.txt
+touch -c -d "2018-02-08 16:45:48.0128661090" data/words.txt
+chmod 0777 data/words.txt
+chown 1000 db/db.py
+chgrp 1000 db/db.py
+touch -c -d "2018-02-09 11:35:52.7112480400" db/db.py
+chmod 0775 db/db.py
+chown 1000 domain.yml
+chgrp 1005 domain.yml
+touch -c -d "2018-02-08 20:55:26.0196547840" domain.yml
+chmod 0777 domain.yml
+chown 1000 k
+chgrp 1005 k
+touch -c -d "2018-02-08 20:55:26.0196547840" k
+chmod 0777 k
+chown 1000 nlu_model_config.json
+chgrp 1005 nlu_model_config.json
+touch -c -d "2018-02-08 20:55:26.0276548740" nlu_model_config.json
+chmod 0777 nlu_model_config.json
+chown 1000 populate.py
+chgrp 1005 populate.py
+touch -c -d "2018-02-09 06:36:00.0267987350" populate.py
+chmod 0777 populate.py
+chown 1000 rasa_config.py
+chgrp 1005 rasa_config.py
+touch -c -d "2018-02-09 06:40:16.7258141890" rasa_config.py
+chmod 0777 rasa_config.py
+chown 1000 rasa_hack_scripts/run.py
+chgrp 1005 rasa_hack_scripts/run.py
+touch -c -d "2018-02-08 16:45:48.2248681110" rasa_hack_scripts/run.py
+chmod 0777 rasa_hack_scripts/run.py
+chown 1000 rasa_hack_scripts/train_online.py
+chgrp 1005 rasa_hack_scripts/train_online.py
+touch -c -d "2018-02-08 16:45:48.2568684140" rasa_hack_scripts/train_online.py
+chmod 0777 rasa_hack_scripts/train_online.py
+chown 1000 requirements.txt
+chgrp 1005 requirements.txt
+touch -c -d "2018-02-08 20:55:26.0436550490" requirements.txt
+chmod 0777 requirements.txt
+chown 1000 search_knowledge_policy.py
+chgrp 1005 search_knowledge_policy.py
+touch -c -d "2018-02-09 06:40:16.7378141430" search_knowledge_policy.py
+chmod 0777 search_knowledge_policy.py
+chown 1000 sense2vec/comparison.py
+chgrp 1005 sense2vec/comparison.py
+touch -c -d "2018-02-09 11:35:52.7272481640" sense2vec/comparison.py
+chmod 0777 sense2vec/comparison.py
+chown 1000 sense2vec/requirements.txt
+chgrp 1005 sense2vec/requirements.txt
+touch -c -d "2018-02-08 20:55:26.0676553160" sense2vec/requirements.txt
+chmod 0777 sense2vec/requirements.txt
+chown 1000 sense2vec/sense_server.py
+chgrp 1005 sense2vec/sense_server.py
+touch -c -d "2018-02-09 11:35:52.7312481950" sense2vec/sense_server.py
+chmod 0777 sense2vec/sense_server.py
+chown 1000 sense2vec/topic_utils.py
+chgrp 1005 sense2vec/topic_utils.py
+touch -c -d "2018-02-09 11:36:18.7794515670" sense2vec/topic_utils.py
+chmod 0777 sense2vec/topic_utils.py
+chown 1000 server.py
+chgrp 1005 server.py
+touch -c -d "2018-02-08 23:28:55.0207436660" server.py
+chmod 0777 server.py
+chown 1000 setup.sh
+chgrp 1005 setup.sh
+touch -c -d "2018-02-08 20:55:26.1156558470" setup.sh
+chmod 0777 setup.sh
+chown 1000 static/css/Lato.css
+chgrp 1005 static/css/Lato.css
+touch -c -d "2018-02-08 16:45:48.3848696230" static/css/Lato.css
+chmod 0777 static/css/Lato.css
+chown 1000 static/css/annotate.css
+chgrp 1005 static/css/annotate.css
+touch -c -d "2018-02-08 16:45:48.4208699620" static/css/annotate.css
+chmod 0777 static/css/annotate.css
+chown 1000 static/css/bootstrap.min.css
+chgrp 1005 static/css/bootstrap.min.css
+touch -c -d "2018-02-08 16:45:48.4208699620" static/css/bootstrap.min.css
+chmod 0777 static/css/bootstrap.min.css
+chown 1000 static/css/cerulean-bootstrap.min.css
+chgrp 1000 static/css/cerulean-bootstrap.min.css
+touch -c -d "2018-02-09 11:35:52.7432482880" static/css/cerulean-bootstrap.min.css
+chmod 0775 static/css/cerulean-bootstrap.min.css
+chown 1000 static/css/dataTables.bootstrap.min.css
+chgrp 1005 static/css/dataTables.bootstrap.min.css
+touch -c -d "2018-02-08 16:45:48.5288709830" static/css/dataTables.bootstrap.min.css
+chmod 0777 static/css/dataTables.bootstrap.min.css
+chown 1000 static/css/font-awesome.min.css
+chgrp 1005 static/css/font-awesome.min.css
+touch -c -d "2018-02-08 16:45:48.5608712850" static/css/font-awesome.min.css
+chmod 0777 static/css/font-awesome.min.css
+chown 1000 static/css/jqcloud.min.css
+chgrp 1000 static/css/jqcloud.min.css
+touch -c -d "2018-02-09 11:35:52.7592484150" static/css/jqcloud.min.css
+chmod 0775 static/css/jqcloud.min.css
+chown 1000 static/css/jquery.tagsinput.css
+chgrp 1000 static/css/jquery.tagsinput.css
+touch -c -d "2018-02-09 11:35:52.7672484760" static/css/jquery.tagsinput.css
+chmod 0775 static/css/jquery.tagsinput.css
+chown 1000 static/css/jquery.toast.min.css
+chgrp 1000 static/css/jquery.toast.min.css
+touch -c -d "2018-02-09 11:35:52.7712485070" static/css/jquery.toast.min.css
+chmod 0775 static/css/jquery.toast.min.css
+chown 1000 static/css/kyc.css
+chgrp 1005 static/css/kyc.css
+touch -c -d "2018-02-08 16:45:48.5808714740" static/css/kyc.css
+chmod 0777 static/css/kyc.css
+chown 1000 static/css/magnifier.css
+chgrp 1005 static/css/magnifier.css
+touch -c -d "2018-02-08 16:45:48.6368720030" static/css/magnifier.css
+chmod 0777 static/css/magnifier.css
+chown 1000 static/css/magnify.css
+chgrp 1005 static/css/magnify.css
+touch -c -d "2018-02-08 16:45:48.6368720030" static/css/magnify.css
+chmod 0777 static/css/magnify.css
+chown 1000 static/css/site.css
+chgrp 1005 static/css/site.css
+touch -c -d "2018-02-08 16:45:48.6368720030" static/css/site.css
+chmod 0777 static/css/site.css
+chown 1000 static/css/spacelab-bootstrap.min.css
+chgrp 1000 static/css/spacelab-bootstrap.min.css
+touch -c -d "2018-02-09 11:35:52.7872486330" static/css/spacelab-bootstrap.min.css
+chmod 0775 static/css/spacelab-bootstrap.min.css
+chown 1000 static/css/style.css
+chgrp 1000 static/css/style.css
+touch -c -d "2018-02-09 11:35:52.7872486330" static/css/style.css
+chmod 0775 static/css/style.css
+chown 1000 static/css/superhero-bootstrap.min.css
+chgrp 1005 static/css/superhero-bootstrap.min.css
+touch -c -d "2018-02-08 16:45:48.6368720030" static/css/superhero-bootstrap.min.css
+chmod 0777 static/css/superhero-bootstrap.min.css
+chown 1000 static/css/token-input/token-input-facebook.css
+chgrp 1000 static/css/token-input/token-input-facebook.css
+touch -c -d "2018-02-09 11:35:52.7872486330" static/css/token-input/token-input-facebook.css
+chmod 0775 static/css/token-input/token-input-facebook.css
+chown 1000 static/css/token-input/token-input.css
+chgrp 1000 static/css/token-input/token-input.css
+touch -c -d "2018-02-09 11:35:52.8032487580" static/css/token-input/token-input.css
+chmod 0775 static/css/token-input/token-input.css
+chown 1000 static/css/zoomy.css/style.css
+chgrp 1005 static/css/zoomy.css/style.css
+touch -c -d "2018-02-08 16:45:48.7448730230" static/css/zoomy.css/style.css
+chmod 0777 static/css/zoomy.css/style.css
+chown 1000 static/fonts/1YwB1sO8YE1Lyjf12WNiUA.woff2
+chgrp 1005 static/fonts/1YwB1sO8YE1Lyjf12WNiUA.woff2
+touch -c -d "2018-02-08 16:45:48.7888734370" static/fonts/1YwB1sO8YE1Lyjf12WNiUA.woff2
+chmod 0777 static/fonts/1YwB1sO8YE1Lyjf12WNiUA.woff2
+chown 1000 static/fonts/EsvMC5un3kjyUhB9ZEPPwg.woff2
+chgrp 1005 static/fonts/EsvMC5un3kjyUhB9ZEPPwg.woff2
+touch -c -d "2018-02-08 16:45:48.8368738910" static/fonts/EsvMC5un3kjyUhB9ZEPPwg.woff2
+chmod 0777 static/fonts/EsvMC5un3kjyUhB9ZEPPwg.woff2
+chown 1000 static/fonts/FontAwesome.otf
+chgrp 1005 static/fonts/FontAwesome.otf
+touch -c -d "2018-02-08 16:45:48.8368738910" static/fonts/FontAwesome.otf
+chmod 0777 static/fonts/FontAwesome.otf
+chown 1000 static/fonts/H2DMvhDLycM56KNuAtbJYA.woff2
+chgrp 1005 static/fonts/H2DMvhDLycM56KNuAtbJYA.woff2
+touch -c -d "2018-02-08 16:45:48.9168746470" static/fonts/H2DMvhDLycM56KNuAtbJYA.woff2
+chmod 0777 static/fonts/H2DMvhDLycM56KNuAtbJYA.woff2
+chown 1000 static/fonts/ObQr5XYcoH0WBoUxiaYK3_Y6323mHUZFJMgTvxaG2iE.woff2
+chgrp 1005 static/fonts/ObQr5XYcoH0WBoUxiaYK3_Y6323mHUZFJMgTvxaG2iE.woff2
+touch -c -d "2018-02-08 16:45:48.9368748350" static/fonts/ObQr5XYcoH0WBoUxiaYK3_Y6323mHUZFJMgTvxaG2iE.woff2
+chmod 0777 static/fonts/ObQr5XYcoH0WBoUxiaYK3_Y6323mHUZFJMgTvxaG2iE.woff2
+chown 1000 static/fonts/UyBMtLsHKBKXelqf4x7VRQ.woff2
+chgrp 1005 static/fonts/UyBMtLsHKBKXelqf4x7VRQ.woff2
+touch -c -d "2018-02-08 16:45:48.9728751750" static/fonts/UyBMtLsHKBKXelqf4x7VRQ.woff2
+chmod 0777 static/fonts/UyBMtLsHKBKXelqf4x7VRQ.woff2
+chown 1000 static/fonts/dPJ5r9gl3kK6ijoeP1IRsvY6323mHUZFJMgTvxaG2iE.woff2
+chgrp 1005 static/fonts/dPJ5r9gl3kK6ijoeP1IRsvY6323mHUZFJMgTvxaG2iE.woff2
+touch -c -d "2018-02-08 16:45:49.0528759300" static/fonts/dPJ5r9gl3kK6ijoeP1IRsvY6323mHUZFJMgTvxaG2iE.woff2
+chmod 0777 static/fonts/dPJ5r9gl3kK6ijoeP1IRsvY6323mHUZFJMgTvxaG2iE.woff2
+chown 1000 static/fonts/fontawesome-webfont.eot
+chgrp 1005 static/fonts/fontawesome-webfont.eot
+touch -c -d "2018-02-08 16:45:49.0528759300" static/fonts/fontawesome-webfont.eot
+chmod 0777 static/fonts/fontawesome-webfont.eot
+chown 1000 static/fonts/fontawesome-webfont.svg
+chgrp 1005 static/fonts/fontawesome-webfont.svg
+touch -c -d "2018-02-08 16:45:49.1928772530" static/fonts/fontawesome-webfont.svg
+chmod 0777 static/fonts/fontawesome-webfont.svg
+chown 1000 static/fonts/fontawesome-webfont.ttf
+chgrp 1005 static/fonts/fontawesome-webfont.ttf
+touch -c -d "2018-02-08 16:45:49.4488796700" static/fonts/fontawesome-webfont.ttf
+chmod 0777 static/fonts/fontawesome-webfont.ttf
+chown 1000 static/fonts/fontawesome-webfont.woff
+chgrp 1005 static/fonts/fontawesome-webfont.woff
+touch -c -d "2018-02-08 16:45:49.5448805770" static/fonts/fontawesome-webfont.woff
+chmod 0777 static/fonts/fontawesome-webfont.woff
+chown 1000 static/fonts/fontawesome-webfont.woff2
+chgrp 1005 static/fonts/fontawesome-webfont.woff2
+touch -c -d "2018-02-08 16:45:49.6448815210" static/fonts/fontawesome-webfont.woff2
+chmod 0777 static/fonts/fontawesome-webfont.woff2
+chown 1000 static/fonts/glyphicons-halflings-regular.eot
+chgrp 1005 static/fonts/glyphicons-halflings-regular.eot
+touch -c -d "2018-02-08 16:45:50.0328851850" static/fonts/glyphicons-halflings-regular.eot
+chmod 0777 static/fonts/glyphicons-halflings-regular.eot
+chown 1000 static/fonts/glyphicons-halflings-regular.svg
+chgrp 1005 static/fonts/glyphicons-halflings-regular.svg
+touch -c -d "2018-02-08 16:45:50.0328851850" static/fonts/glyphicons-halflings-regular.svg
+chmod 0777 static/fonts/glyphicons-halflings-regular.svg
+chown 1000 static/fonts/glyphicons-halflings-regular.ttf
+chgrp 1005 static/fonts/glyphicons-halflings-regular.ttf
+touch -c -d "2018-02-08 16:45:50.1728865060" static/fonts/glyphicons-halflings-regular.ttf
+chmod 0777 static/fonts/glyphicons-halflings-regular.ttf
+chown 1000 static/fonts/glyphicons-halflings-regular.woff
+chgrp 1005 static/fonts/glyphicons-halflings-regular.woff
+touch -c -d "2018-02-08 16:45:50.3888885470" static/fonts/glyphicons-halflings-regular.woff
+chmod 0777 static/fonts/glyphicons-halflings-regular.woff
+chown 1000 static/fonts/glyphicons-halflings-regular.woff2
+chgrp 1005 static/fonts/glyphicons-halflings-regular.woff2
+touch -c -d "2018-02-08 16:45:50.4808894140" static/fonts/glyphicons-halflings-regular.woff2
+chmod 0777 static/fonts/glyphicons-halflings-regular.woff2
+chown 1000 static/images/.keep
+chgrp 1005 static/images/.keep
+touch -c -d "2018-02-08 15:33:27.8856579520" static/images/.keep
+chmod 0777 static/images/.keep
+chown 1000 static/images/app-icon/android-myndpool-icon-144.png
+chgrp 1005 static/images/app-icon/android-myndpool-icon-144.png
+touch -c -d "2018-02-08 16:45:50.5128897170" static/images/app-icon/android-myndpool-icon-144.png
+chmod 0777 static/images/app-icon/android-myndpool-icon-144.png
+chown 1000 static/images/app-icon/android-myndpool-icon-192.png
+chgrp 1005 static/images/app-icon/android-myndpool-icon-192.png
+touch -c -d "2018-02-08 16:45:50.5128897170" static/images/app-icon/android-myndpool-icon-192.png
+chmod 0777 static/images/app-icon/android-myndpool-icon-192.png
+chown 1000 static/images/app-icon/android-myndpool-icon-72.png
+chgrp 1005 static/images/app-icon/android-myndpool-icon-72.png
+touch -c -d "2018-02-08 16:45:50.5568901330" static/images/app-icon/android-myndpool-icon-72.png
+chmod 0777 static/images/app-icon/android-myndpool-icon-72.png
+chown 1000 static/images/app-icon/android-myndpool-icon-96.png
+chgrp 1005 static/images/app-icon/android-myndpool-icon-96.png
+touch -c -d "2018-02-08 16:45:50.5568901330" static/images/app-icon/android-myndpool-icon-96.png
+chmod 0777 static/images/app-icon/android-myndpool-icon-96.png
+chown 1000 static/images/app-icon/favicon-myndpool-icon-16.png
+chgrp 1005 static/images/app-icon/favicon-myndpool-icon-16.png
+touch -c -d "2018-02-08 16:45:50.8408928140" static/images/app-icon/favicon-myndpool-icon-16.png
+chmod 0777 static/images/app-icon/favicon-myndpool-icon-16.png
+chown 1000 static/images/app-icon/favicon-myndpool-icon-32.png
+chgrp 1005 static/images/app-icon/favicon-myndpool-icon-32.png
+touch -c -d "2018-02-08 16:45:50.8408928140" static/images/app-icon/favicon-myndpool-icon-32.png
+chmod 0777 static/images/app-icon/favicon-myndpool-icon-32.png
+chown 1000 static/images/app-icon/iOS-myndpool-icon-120.png
+chgrp 1005 static/images/app-icon/iOS-myndpool-icon-120.png
+touch -c -d "2018-02-08 16:45:50.8968933440" static/images/app-icon/iOS-myndpool-icon-120.png
+chmod 0777 static/images/app-icon/iOS-myndpool-icon-120.png
+chown 1000 static/images/app-icon/iOS-myndpool-icon-180.png
+chgrp 1005 static/images/app-icon/iOS-myndpool-icon-180.png
+touch -c -d "2018-02-08 16:45:50.9968942870" static/images/app-icon/iOS-myndpool-icon-180.png
+chmod 0777 static/images/app-icon/iOS-myndpool-icon-180.png
+chown 1000 static/images/app-icon/iOS-myndpool-icon-40.png
+chgrp 1005 static/images/app-icon/iOS-myndpool-icon-40.png
+touch -c -d "2018-02-08 16:45:51.1088953450" static/images/app-icon/iOS-myndpool-icon-40.png
+chmod 0777 static/images/app-icon/iOS-myndpool-icon-40.png
+chown 1000 static/images/app-icon/iOS-myndpool-icon-60.png
+chgrp 1005 static/images/app-icon/iOS-myndpool-icon-60.png
+touch -c -d "2018-02-08 16:45:51.1688959130" static/images/app-icon/iOS-myndpool-icon-60.png
+chmod 0777 static/images/app-icon/iOS-myndpool-icon-60.png
+chown 1000 static/images/app-icon/iOS-myndpool-icon-80.png
+chgrp 1005 static/images/app-icon/iOS-myndpool-icon-80.png
+touch -c -d "2018-02-08 16:45:51.2208964020" static/images/app-icon/iOS-myndpool-icon-80.png
+chmod 0777 static/images/app-icon/iOS-myndpool-icon-80.png
+chown 1000 static/images/assets/avatar-liz.png
+chgrp 1005 static/images/assets/avatar-liz.png
+touch -c -d "2018-02-08 16:45:51.2768969310" static/images/assets/avatar-liz.png
+chmod 0777 static/images/assets/avatar-liz.png
+chown 1000 static/images/assets/avatar-liz@2x.png
+chgrp 1005 static/images/assets/avatar-liz@2x.png
+touch -c -d "2018-02-08 16:45:51.3328974610" static/images/assets/avatar-liz@2x.png
+chmod 0777 static/images/assets/avatar-liz@2x.png
+chown 1000 static/images/assets/default-user-small.png
+chgrp 1005 static/images/assets/default-user-small.png
+touch -c -d "2018-02-08 16:45:51.3328974610" static/images/assets/default-user-small.png
+chmod 0777 static/images/assets/default-user-small.png
+chown 1000 static/images/assets/default-user.png
+chgrp 1005 static/images/assets/default-user.png
+touch -c -d "2018-02-08 16:45:51.3608977260" static/images/assets/default-user.png
+chmod 0777 static/images/assets/default-user.png
+chown 1000 static/images/assets/photo-aine.png
+chgrp 1005 static/images/assets/photo-aine.png
+touch -c -d "2018-02-08 16:45:51.3608977260" static/images/assets/photo-aine.png
+chmod 0777 static/images/assets/photo-aine.png
+chown 1000 static/images/assets/photo-aine@2x.png
+chgrp 1005 static/images/assets/photo-aine@2x.png
+touch -c -d "2018-02-08 16:45:51.3968980660" static/images/assets/photo-aine@2x.png
+chmod 0777 static/images/assets/photo-aine@2x.png
+chown 1000 static/images/assets/photo-bob.png
+chgrp 1005 static/images/assets/photo-bob.png
+touch -c -d "2018-02-08 16:45:51.4688987460" static/images/assets/photo-bob.png
+chmod 0777 static/images/assets/photo-bob.png
+chown 1000 static/images/assets/photo-bob@2x.png
+chgrp 1005 static/images/assets/photo-bob@2x.png
+touch -c -d "2018-02-08 16:45:51.4688987460" static/images/assets/photo-bob@2x.png
+chmod 0777 static/images/assets/photo-bob@2x.png
+chown 1000 static/images/assets/photo-david@2x.png
+chgrp 1005 static/images/assets/photo-david@2x.png
+touch -c -d "2018-02-08 16:45:51.4968990100" static/images/assets/photo-david@2x.png
+chmod 0777 static/images/assets/photo-david@2x.png
+chown 1000 static/images/assets/photo-eoin.png
+chgrp 1005 static/images/assets/photo-eoin.png
+touch -c -d "2018-02-08 16:45:51.5408994240" static/images/assets/photo-eoin.png
+chmod 0777 static/images/assets/photo-eoin.png
+chown 1000 static/images/assets/photo-eoin@2x.png
+chgrp 1005 static/images/assets/photo-eoin@2x.png
+touch -c -d "2018-02-08 16:45:51.5888998770" static/images/assets/photo-eoin@2x.png
+chmod 0777 static/images/assets/photo-eoin@2x.png
+chown 1000 static/images/assets/photo-kait.png
+chgrp 1005 static/images/assets/photo-kait.png
+touch -c -d "2018-02-08 16:45:51.6449004070" static/images/assets/photo-kait.png
+chmod 0777 static/images/assets/photo-kait.png
+chown 1000 static/images/assets/photo-kait@2x.png
+chgrp 1005 static/images/assets/photo-kait@2x.png
+touch -c -d "2018-02-08 16:45:51.6449004070" static/images/assets/photo-kait@2x.png
+chmod 0777 static/images/assets/photo-kait@2x.png
+chown 1000 static/images/assets/photo-liz.png
+chgrp 1005 static/images/assets/photo-liz.png
+touch -c -d "2018-02-08 16:45:51.6769007090" static/images/assets/photo-liz.png
+chmod 0777 static/images/assets/photo-liz.png
+chown 1000 static/images/assets/photo-liz@2x.png
+chgrp 1005 static/images/assets/photo-liz@2x.png
+touch -c -d "2018-02-08 16:45:51.7209011250" static/images/assets/photo-liz@2x.png
+chmod 0777 static/images/assets/photo-liz@2x.png
+chown 1000 static/images/assets/photo-niamh.png
+chgrp 1005 static/images/assets/photo-niamh.png
+touch -c -d "2018-02-08 16:45:51.7769016530" static/images/assets/photo-niamh.png
+chmod 0777 static/images/assets/photo-niamh.png
+chown 1000 static/images/assets/photo-niamh@2x.png
+chgrp 1005 static/images/assets/photo-niamh@2x.png
+touch -c -d "2018-02-08 16:45:51.8489023330" static/images/assets/photo-niamh@2x.png
+chmod 0777 static/images/assets/photo-niamh@2x.png
+chown 1000 static/images/assets/x.png
+chgrp 1005 static/images/assets/x.png
+touch -c -d "2018-02-08 16:45:51.9209030120" static/images/assets/x.png
+chmod 0777 static/images/assets/x.png
+chown 1000 static/images/elements/button-login.svg
+chgrp 1005 static/images/elements/button-login.svg
+touch -c -d "2018-02-08 16:45:51.9209030120" static/images/elements/button-login.svg
+chmod 0777 static/images/elements/button-login.svg
+chown 1000 static/images/elements/connections.svg
+chgrp 1005 static/images/elements/connections.svg
+touch -c -d "2018-02-08 16:45:51.9209030120" static/images/elements/connections.svg
+chmod 0777 static/images/elements/connections.svg
+chown 1000 static/images/elements/form-eight-id-empty.svg
+chgrp 1005 static/images/elements/form-eight-id-empty.svg
+touch -c -d "2018-02-08 16:45:51.9209030120" static/images/elements/form-eight-id-empty.svg
+chmod 0777 static/images/elements/form-eight-id-empty.svg
+chown 1000 static/images/elements/form-radio-checked.svg
+chgrp 1005 static/images/elements/form-radio-checked.svg
+touch -c -d "2018-02-08 16:45:51.9409032010" static/images/elements/form-radio-checked.svg
+chmod 0777 static/images/elements/form-radio-checked.svg
+chown 1000 static/images/elements/form-radio-empty.svg
+chgrp 1005 static/images/elements/form-radio-empty.svg
+touch -c -d "2018-02-08 16:45:51.9409032010" static/images/elements/form-radio-empty.svg
+chmod 0777 static/images/elements/form-radio-empty.svg
+chown 1000 static/images/elements/form-radio-unchecked.svg
+chgrp 1005 static/images/elements/form-radio-unchecked.svg
+touch -c -d "2018-02-08 16:45:51.9409032010" static/images/elements/form-radio-unchecked.svg
+chmod 0777 static/images/elements/form-radio-unchecked.svg
+chown 1000 static/images/elements/logo-white.svg
+chgrp 1005 static/images/elements/logo-white.svg
+touch -c -d "2018-02-08 16:45:51.9969037300" static/images/elements/logo-white.svg
+chmod 0777 static/images/elements/logo-white.svg
+chown 1000 static/images/elements/logo-with-tagline-blue.svg
+chgrp 1005 static/images/elements/logo-with-tagline-blue.svg
+touch -c -d "2018-02-08 16:45:51.9969037300" static/images/elements/logo-with-tagline-blue.svg
+chmod 0777 static/images/elements/logo-with-tagline-blue.svg
+chown 1000 static/images/elements/logo-with-tagline-grey.svg
+chgrp 1005 static/images/elements/logo-with-tagline-grey.svg
+touch -c -d "2018-02-08 16:45:52.0169039200" static/images/elements/logo-with-tagline-grey.svg
+chmod 0777 static/images/elements/logo-with-tagline-grey.svg
+chown 1000 static/images/elements/logo-with-tagline-white.svg
+chgrp 1005 static/images/elements/logo-with-tagline-white.svg
+touch -c -d "2018-02-08 16:45:52.0169039200" static/images/elements/logo-with-tagline-white.svg
+chmod 0777 static/images/elements/logo-with-tagline-white.svg
+chown 1000 static/images/icons/answer.svg
+chgrp 1005 static/images/icons/answer.svg
+touch -c -d "2018-02-08 16:45:52.0169039200" static/images/icons/answer.svg
+chmod 0777 static/images/icons/answer.svg
+chown 1000 static/images/icons/chat-input-dictate.svg
+chgrp 1005 static/images/icons/chat-input-dictate.svg
+touch -c -d "2018-02-08 16:45:52.0169039200" static/images/icons/chat-input-dictate.svg
+chmod 0777 static/images/icons/chat-input-dictate.svg
+chown 1000 static/images/icons/chat-input-submit.svg
+chgrp 1005 static/images/icons/chat-input-submit.svg
+touch -c -d "2018-02-08 16:45:52.0169039200" static/images/icons/chat-input-submit.svg
+chmod 0777 static/images/icons/chat-input-submit.svg
+chown 1000 static/images/icons/message.svg
+chgrp 1005 static/images/icons/message.svg
+touch -c -d "2018-02-08 16:45:52.0649043720" static/images/icons/message.svg
+chmod 0777 static/images/icons/message.svg
+chown 1000 static/images/icons/navbar/back.svg
+chgrp 1005 static/images/icons/navbar/back.svg
+touch -c -d "2018-02-08 16:45:52.0649043720" static/images/icons/navbar/back.svg
+chmod 0777 static/images/icons/navbar/back.svg
+chown 1000 static/images/icons/navbar/settings-dark.svg
+chgrp 1005 static/images/icons/navbar/settings-dark.svg
+touch -c -d "2018-02-08 16:45:52.0969046750" static/images/icons/navbar/settings-dark.svg
+chmod 0777 static/images/icons/navbar/settings-dark.svg
+chown 1000 static/images/icons/navbar/settings.svg
+chgrp 1005 static/images/icons/navbar/settings.svg
+touch -c -d "2018-02-08 16:45:52.0969046750" static/images/icons/navbar/settings.svg
+chmod 0777 static/images/icons/navbar/settings.svg
+chown 1000 static/images/icons/phone.svg
+chgrp 1005 static/images/icons/phone.svg
+touch -c -d "2018-02-08 16:45:52.1369050530" static/images/icons/phone.svg
+chmod 0777 static/images/icons/phone.svg
+chown 1000 static/images/icons/question-avatar.svg
+chgrp 1005 static/images/icons/question-avatar.svg
+touch -c -d "2018-02-08 16:45:52.1369050530" static/images/icons/question-avatar.svg
+chmod 0777 static/images/icons/question-avatar.svg
+chown 1000 static/images/icons/question.svg
+chgrp 1005 static/images/icons/question.svg
+touch -c -d "2018-02-08 16:45:52.1369050530" static/images/icons/question.svg
+chmod 0777 static/images/icons/question.svg
+chown 1000 static/images/icons/rating-ask_later-selected.svg
+chgrp 1005 static/images/icons/rating-ask_later-selected.svg
+touch -c -d "2018-02-08 16:45:52.1529052040" static/images/icons/rating-ask_later-selected.svg
+chmod 0777 static/images/icons/rating-ask_later-selected.svg
+chown 1000 static/images/icons/rating-ask_later.svg
+chgrp 1005 static/images/icons/rating-ask_later.svg
+touch -c -d "2018-02-08 16:45:52.2049056960" static/images/icons/rating-ask_later.svg
+chmod 0777 static/images/icons/rating-ask_later.svg
+chown 1000 static/images/icons/rating-good-selected.svg
+chgrp 1005 static/images/icons/rating-good-selected.svg
+touch -c -d "2018-02-08 16:45:52.2609062240" static/images/icons/rating-good-selected.svg
+chmod 0777 static/images/icons/rating-good-selected.svg
+chown 1000 static/images/icons/rating-good.svg
+chgrp 1005 static/images/icons/rating-good.svg
+touch -c -d "2018-02-08 16:45:52.3409069780" static/images/icons/rating-good.svg
+chmod 0777 static/images/icons/rating-good.svg
+chown 1000 static/images/icons/rating-not_now-selected.svg
+chgrp 1005 static/images/icons/rating-not_now-selected.svg
+touch -c -d "2018-02-08 16:45:52.3969075070" static/images/icons/rating-not_now-selected.svg
+chmod 0777 static/images/icons/rating-not_now-selected.svg
+chown 1000 static/images/icons/rating-not_now.svg
+chgrp 1005 static/images/icons/rating-not_now.svg
+touch -c -d "2018-02-08 16:45:52.5089085660" static/images/icons/rating-not_now.svg
+chmod 0777 static/images/icons/rating-not_now.svg
+chown 1000 static/images/icons/share-avatar.svg
+chgrp 1005 static/images/icons/share-avatar.svg
+touch -c -d "2018-02-08 16:45:52.5329087920" static/images/icons/share-avatar.svg
+chmod 0777 static/images/icons/share-avatar.svg
+chown 1000 static/img/document-xxl.png
+chgrp 1005 static/img/document-xxl.png
+touch -c -d "2018-02-08 16:45:52.5689091310" static/img/document-xxl.png
+chmod 0777 static/img/document-xxl.png
+chown 1000 static/img/loading.gif
+chgrp 1005 static/img/loading.gif
+touch -c -d "2018-02-08 16:45:52.5689091310" static/img/loading.gif
+chmod 0777 static/img/loading.gif
+chown 1000 static/img/nav-logo.png
+chgrp 1005 static/img/nav-logo.png
+touch -c -d "2018-02-08 16:45:52.7329106810" static/img/nav-logo.png
+chmod 0777 static/img/nav-logo.png
+chown 1000 static/img/stride-badge-original@2x.png
+chgrp 1005 static/img/stride-badge-original@2x.png
+touch -c -d "2018-02-08 16:45:52.7969112840" static/img/stride-badge-original@2x.png
+chmod 0777 static/img/stride-badge-original@2x.png
+chown 1000 static/img/stripe.jpg
+chgrp 1005 static/img/stripe.jpg
+touch -c -d "2018-02-08 16:45:52.9529127580" static/img/stripe.jpg
+chmod 0777 static/img/stripe.jpg
+chown 1000 static/javascripts/api.js
+chgrp 1005 static/javascripts/api.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/api.js
+chmod 0777 static/javascripts/api.js
+chown 1000 static/javascripts/ask.js
+chgrp 1005 static/javascripts/ask.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/ask.js
+chmod 0777 static/javascripts/ask.js
+chown 1000 static/javascripts/auth.js
+chgrp 1005 static/javascripts/auth.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/auth.js
+chmod 0777 static/javascripts/auth.js
+chown 1000 static/javascripts/chat.js
+chgrp 1000 static/javascripts/chat.js
+touch -c -d "2018-02-09 11:35:52.8032487580" static/javascripts/chat.js
+chmod 0775 static/javascripts/chat.js
+chown 1000 static/javascripts/constants.js
+chgrp 1005 static/javascripts/constants.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/constants.js
+chmod 0777 static/javascripts/constants.js
+chown 1000 static/javascripts/home.js
+chgrp 1005 static/javascripts/home.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/home.js
+chmod 0777 static/javascripts/home.js
+chown 1000 static/javascripts/html.js
+chgrp 1005 static/javascripts/html.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/html.js
+chmod 0777 static/javascripts/html.js
+chown 1000 static/javascripts/jquery.js
+chgrp 1005 static/javascripts/jquery.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/jquery.js
+chmod 0777 static/javascripts/jquery.js
+chown 1000 static/javascripts/login.js
+chgrp 1005 static/javascripts/login.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/login.js
+chmod 0777 static/javascripts/login.js
+chown 1000 static/javascripts/navigation.js
+chgrp 1005 static/javascripts/navigation.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/navigation.js
+chmod 0777 static/javascripts/navigation.js
+chown 1000 static/javascripts/share.js
+chgrp 1005 static/javascripts/share.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/share.js
+chmod 0777 static/javascripts/share.js
+chown 1000 static/javascripts/site.js
+chgrp 1005 static/javascripts/site.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/site.js
+chmod 0777 static/javascripts/site.js
+chown 1000 static/javascripts/user.js
+chgrp 1005 static/javascripts/user.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/user.js
+chmod 0777 static/javascripts/user.js
+chown 1000 static/javascripts/vendor/jquery.autogrowtextarea.min.js
+chgrp 1005 static/javascripts/vendor/jquery.autogrowtextarea.min.js
+touch -c -d "2018-02-08 16:45:52.9529127580" static/javascripts/vendor/jquery.autogrowtextarea.min.js
+chmod 0777 static/javascripts/vendor/jquery.autogrowtextarea.min.js
+chown 1000 static/javascripts/vendor/particles-chat.json
+chgrp 1005 static/javascripts/vendor/particles-chat.json
+touch -c -d "2018-02-08 16:45:53.0209134000" static/javascripts/vendor/particles-chat.json
+chmod 0777 static/javascripts/vendor/particles-chat.json
+chown 1000 static/javascripts/vendor/particles-home.json
+chgrp 1005 static/javascripts/vendor/particles-home.json
+touch -c -d "2018-02-08 16:45:53.0649138150" static/javascripts/vendor/particles-home.json
+chmod 0777 static/javascripts/vendor/particles-home.json
+chown 1000 static/javascripts/vendor/particles-login.json
+chgrp 1005 static/javascripts/vendor/particles-login.json
+touch -c -d "2018-02-08 16:45:53.0649138150" static/javascripts/vendor/particles-login.json
+chmod 0777 static/javascripts/vendor/particles-login.json
+chown 1000 static/javascripts/vendor/particles.min.js
+chgrp 1005 static/javascripts/vendor/particles.min.js
+touch -c -d "2018-02-08 16:45:53.0649138150" static/javascripts/vendor/particles.min.js
+chmod 0777 static/javascripts/vendor/particles.min.js
+chown 1000 static/js/Event.js
+chgrp 1005 static/js/Event.js
+touch -c -d "2018-02-08 16:45:53.0929140800" static/js/Event.js
+chmod 0777 static/js/Event.js
+chown 1000 static/js/Magnifier.js
+chgrp 1005 static/js/Magnifier.js
+touch -c -d "2018-02-08 16:45:53.1409145330" static/js/Magnifier.js
+chmod 0777 static/js/Magnifier.js
+chown 1000 static/js/angular.min.js
+chgrp 1005 static/js/angular.min.js
+touch -c -d "2018-02-08 16:45:53.1409145330" static/js/angular.min.js
+chmod 0777 static/js/angular.min.js
+chown 1000 static/js/bootstrap-switch.js
+chgrp 1005 static/js/bootstrap-switch.js
+touch -c -d "2018-02-08 16:45:53.2369154390" static/js/bootstrap-switch.js
+chmod 0777 static/js/bootstrap-switch.js
+chown 1000 static/js/bootstrap.min.js
+chgrp 1005 static/js/bootstrap.min.js
+touch -c -d "2018-02-08 16:45:53.2369154390" static/js/bootstrap.min.js
+chmod 0777 static/js/bootstrap.min.js
+chown 1000 static/js/dataTables.bootstrap.min.js
+chgrp 1005 static/js/dataTables.bootstrap.min.js
+touch -c -d "2018-02-08 16:45:53.3129161580" static/js/dataTables.bootstrap.min.js
+chmod 0777 static/js/dataTables.bootstrap.min.js
+chown 1000 static/js/ddpowerzoomer.js
+chgrp 1005 static/js/ddpowerzoomer.js
+touch -c -d "2018-02-08 16:45:53.3489164970" static/js/ddpowerzoomer.js
+chmod 0777 static/js/ddpowerzoomer.js
+chown 1000 static/js/jqcloud.min.js
+chgrp 1000 static/js/jqcloud.min.js
+touch -c -d "2018-02-09 11:35:52.8232489130" static/js/jqcloud.min.js
+chmod 0775 static/js/jqcloud.min.js
+chown 1000 static/js/jquery-3.1.1.min.js
+chgrp 1005 static/js/jquery-3.1.1.min.js
+touch -c -d "2018-02-08 16:45:53.3529165350" static/js/jquery-3.1.1.min.js
+chmod 0777 static/js/jquery-3.1.1.min.js
+chown 1000 static/js/jquery.dataTables.min.js
+chgrp 1005 static/js/jquery.dataTables.min.js
+touch -c -d "2018-02-08 16:45:53.3529165350" static/js/jquery.dataTables.min.js
+chmod 0777 static/js/jquery.dataTables.min.js
+chown 1000 static/js/jquery.lazyload.js
+chgrp 1005 static/js/jquery.lazyload.js
+touch -c -d "2018-02-08 16:45:53.4129171020" static/js/jquery.lazyload.js
+chmod 0777 static/js/jquery.lazyload.js
+chown 1000 static/js/jquery.magnify.js
+chgrp 1005 static/js/jquery.magnify.js
+touch -c -d "2018-02-08 16:45:53.4529174800" static/js/jquery.magnify.js
+chmod 0777 static/js/jquery.magnify.js
+chown 1000 static/js/jquery.tagsinput.js
+chgrp 1000 static/js/jquery.tagsinput.js
+touch -c -d "2018-02-09 11:35:52.8432490690" static/js/jquery.tagsinput.js
+chmod 0775 static/js/jquery.tagsinput.js
+chown 1000 static/js/jquery.toast.min.js
+chgrp 1000 static/js/jquery.toast.min.js
+touch -c -d "2018-02-09 11:35:52.8832493810" static/js/jquery.toast.min.js
+chmod 0775 static/js/jquery.toast.min.js
+chown 1000 static/js/jquery.zoomy.min.js
+chgrp 1005 static/js/jquery.zoomy.min.js
+touch -c -d "2018-02-08 16:45:53.4849177810" static/js/jquery.zoomy.min.js
+chmod 0777 static/js/jquery.zoomy.min.js
+chown 1000 static/js/nanobar.min.js
+chgrp 1005 static/js/nanobar.min.js
+touch -c -d "2018-02-08 16:45:53.5209181210" static/js/nanobar.min.js
+chmod 0777 static/js/nanobar.min.js
+chown 1000 static/js/pace.min.js
+chgrp 1005 static/js/pace.min.js
+touch -c -d "2018-02-08 16:45:53.5569184620" static/js/pace.min.js
+chmod 0777 static/js/pace.min.js
+chown 1000 static/js/token-input/jquery.tokeninput.js
+chgrp 1000 static/js/token-input/jquery.tokeninput.js
+touch -c -d "2018-02-09 11:35:52.9032495380" static/js/token-input/jquery.tokeninput.js
+chmod 0775 static/js/token-input/jquery.tokeninput.js
+chown 1000 stories.md
+chgrp 1005 stories.md
+touch -c -d "2018-02-08 20:55:26.2876577490" stories.md
+chmod 0777 stories.md
+chown 1000 taxonomy/__init__.py
+chgrp 1000 taxonomy/__init__.py
+touch -c -d "2018-02-09 11:35:49.8432256470" taxonomy/__init__.py
+chmod 0775 taxonomy/__init__.py
+chown 1000 taxonomy/taxonomy.py
+chgrp 1000 taxonomy/taxonomy.py
+touch -c -d "2018-02-09 11:35:52.9392498190" taxonomy/taxonomy.py
+chmod 0775 taxonomy/taxonomy.py
+chown 1000 templates/admin/admin.html
+chgrp 1000 templates/admin/admin.html
+touch -c -d "2018-02-09 11:35:52.9472498820" templates/admin/admin.html
+chmod 0775 templates/admin/admin.html
+chown 1000 templates/admin/taxonomy.html
+chgrp 1000 templates/admin/taxonomy.html
+touch -c -d "2018-02-09 11:35:52.9672500380" templates/admin/taxonomy.html
+chmod 0775 templates/admin/taxonomy.html
+chown 1000 templates/admin/users.html
+chgrp 1000 templates/admin/users.html
+touch -c -d "2018-02-09 11:35:53.1312513180" templates/admin/users.html
+chmod 0775 templates/admin/users.html
+chown 1000 templates/annotate.html
+chgrp 1005 templates/annotate.html
+touch -c -d "2018-02-08 16:45:53.5969188390" templates/annotate.html
+chmod 0777 templates/annotate.html
+chown 1000 templates/ask.html
+chgrp 1005 templates/ask.html
+touch -c -d "2018-02-08 16:45:53.6289191410" templates/ask.html
+chmod 0777 templates/ask.html
+chown 1000 templates/evaluate.html
+chgrp 1005 templates/evaluate.html
+touch -c -d "2018-02-08 16:45:53.6729195570" templates/evaluate.html
+chmod 0777 templates/evaluate.html
+chown 1000 templates/home.html
+chgrp 1005 templates/home.html
+touch -c -d "2018-02-08 16:45:53.7089198980" templates/home.html
+chmod 0777 templates/home.html
+chown 1000 templates/home2.html
+chgrp 1005 templates/home2.html
+touch -c -d "2018-02-08 16:45:53.7089198980" templates/home2.html
+chmod 0777 templates/home2.html
+chown 1000 templates/index.html
+chgrp 1005 templates/index.html
+touch -c -d "2018-02-08 16:45:53.7409201990" templates/index.html
+chmod 0777 templates/index.html
+chown 1000 templates/login.html
+chgrp 1005 templates/login.html
+touch -c -d "2018-02-08 16:45:53.7769205390" templates/login.html
+chmod 0777 templates/login.html
+chown 1000 templates/login2.html
+chgrp 1005 templates/login2.html
+touch -c -d "2018-02-08 16:45:53.7769205390" templates/login2.html
+chmod 0777 templates/login2.html
+chown 1000 templates/message.html
+chgrp 1005 templates/message.html
+touch -c -d "2018-02-08 16:45:53.8009207660" templates/message.html
+chmod 0777 templates/message.html
+chown 1000 templates/result.html
+chgrp 1005 templates/result.html
+touch -c -d "2018-02-08 16:45:53.8289210300" templates/result.html
+chmod 0777 templates/result.html
+chown 1000 templates/selection.html
+chgrp 1005 templates/selection.html
+touch -c -d "2018-02-08 15:33:28.0696596220" templates/selection.html
+chmod 0777 templates/selection.html
+chown 1000 templates/share.html
+chgrp 1005 templates/share.html
+touch -c -d "2018-02-08 16:45:53.8289210300" templates/share.html
+chmod 0777 templates/share.html
+chown 1000 templates/signup.html
+chgrp 1005 templates/signup.html
+touch -c -d "2018-02-08 16:45:53.8609213320" templates/signup.html
+chmod 0777 templates/signup.html
+chown 1000 templates/upload.html
+chgrp 1005 templates/upload.html
+touch -c -d "2018-02-08 16:45:53.8929216340" templates/upload.html
+chmod 0777 templates/upload.html
+chown 1000 train_dialogue.sh
+chgrp 1005 train_dialogue.sh
+touch -c -d "2018-02-08 20:55:26.3396583240" train_dialogue.sh
+chmod 0777 train_dialogue.sh
+chown 1000 train_nlu.sh
+chgrp 1005 train_nlu.sh
+touch -c -d "2018-02-08 20:55:26.3396583240" train_nlu.sh
+chmod 0777 train_nlu.sh
+chown 1000 trends/__init__.py
+chgrp 1000 trends/__init__.py
+touch -c -d "2018-02-09 11:36:00.0113050350" trends/__init__.py
+chmod 0775 trends/__init__.py
+chown 1000 trends/trending.py
+chgrp 1005 trends/trending.py
+touch -c -d "2018-02-08 16:45:53.9689223520" trends/trending.py
+chmod 0777 trends/trending.py
+chown 1000 trends/zscore.py
+chgrp 1000 trends/zscore.py
+touch -c -d "2018-02-09 11:35:53.1312513180" trends/zscore.py
+chmod 0775 trends/zscore.py
+chown 1000 util/__init__.py
+chgrp 1000 util/__init__.py
+touch -c -d "2018-02-09 11:35:50.6832322050" util/__init__.py
+chmod 0777 util/__init__.py
+chown 1000 util/db_utils.py
+chgrp 1000 util/db_utils.py
+touch -c -d "2018-02-09 11:35:50.6832322050" util/db_utils.py
+chmod 0777 util/db_utils.py
+chown 1000 util/sense_utils.py
+chgrp 1000 util/sense_utils.py
+touch -c -d "2018-02-09 11:35:50.6992323300" util/sense_utils.py
+chmod 0777 util/sense_utils.py
+chown 1000 util/topic_utils.py
+chgrp 1000 util/topic_utils.py
+touch -c -d "2018-02-09 11:35:50.6992323300" util/topic_utils.py
+chmod 0777 util/topic_utils.py
