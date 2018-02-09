@@ -54,6 +54,8 @@ class ActionSearchKnowledgeBase(Action):
             (filters.DropItemsBelowSimilarityThreshold,)
         )
 
+        pprint(similarity_map[:5])
+
         dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
             similarity_map[0]['eight_id']))
         response = {'type': 'found', 'top_matches': similarity_map}
