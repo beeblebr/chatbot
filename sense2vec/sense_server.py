@@ -23,6 +23,7 @@ def index():
             similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'], user_defined_taxonomy)
             results.append(similarity_map)
         except KeyError as ke:
+            print(ke)
             results.append(str(0))
 
     return json.dumps({'result' : json.dumps(results)})
