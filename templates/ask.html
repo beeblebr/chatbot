@@ -67,6 +67,18 @@
         <script src="static/javascripts/html.js"></script>
         <script src="static/javascripts/chat.js"></script>
         <script src="static/javascripts/ask.js"></script>
+        <script type="text/javascript">
+            $('#chat-input').keyup(function(e) {
+                if (e.which == 38) {
+                    // e.preventDefault()
+                    var lastAskedQuestionDiv = $('div.user').last()
+                    console.log($(lastAskedQuestionDiv).children('.bubble').html())
+                    var lastAskedQuestion = $(lastAskedQuestionDiv).children('.bubble').html()
+                    $('#chat-input').val(lastAskedQuestion)
+                    return false
+                }
+            })
+        </script>
         <!-- <%= javascript_include_tag "vendor/jquery.autogrowtextarea.min.js" %>
         <%= javascript_include_tag "site" %>
         <%= javascript_include_tag "constants" %>
