@@ -69,10 +69,7 @@ def cluster_result_candidates(candidates):
     print('all_topics')
     print(all_topics)
     embeddings = map(get_embedding, all_topics)
-    try:
-        print(embeddings.shape)
-    except:
-        print('No property called shape')
+    
     af = AffinityPropagation().fit(embeddings)
     predicted = af.labels_
 
