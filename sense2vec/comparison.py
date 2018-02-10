@@ -3,6 +3,7 @@ from itertools import chain, combinations
 from sklearn.metrics.pairwise import cosine_similarity
 
 from topic_utils import generate_variants, weighted_vector_sum, prettify_topic
+from clarify import cluster_result_candidates
 
 
 def powerset(iterable):
@@ -37,7 +38,8 @@ def get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_fr
 
 CUSTOM_TOPIC_SIMILARITY = 0.95  # Custom relationships get a fixed similarity score
 NULL_ENTRY = {
-    'cosine_similarity': str(0)
+    'ki_topics': [],
+    'cosine_similarity': 0
 }
 
 def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
@@ -57,6 +59,25 @@ def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
                         )[0][0]
 
     result = {
-        'cosine_similarity': str(model_similarity)
+        'ki_topics': topics_from_knowledge_item,
+        'cosine_similarity': model_similarity
     }
     return result
+
+
+def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy):
+    results = []
+    for item_topics in corpus_topics_map:
+        similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'], user_defined_taxonomy)
+        results.append(similarity_map)
+
+    results = filter(lambda x : x['cosine_similarity'] > 0.65, results)
+    candidates = cluster_result_candidates(results)
+
+    from pprint import pprint
+    pprint(candidates)
+
+    # Map float to string for JSON conversion
+    for i in range(len(results)):
+        results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
+    return results

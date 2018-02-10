@@ -2,7 +2,7 @@ import json
 
 from flask import Flask, request
 
-from comparison import topic_similarity_map
+from comparison import topic_similarity_map, fetch_search_results
 
 
 app = Flask(__name__)
@@ -17,15 +17,8 @@ def index():
     # User-defined taxonomy
     user_defined_taxonomy = params['user_defined_taxonomy']
 
-    results = []
-    for item_topics in corpus_topics_map:
-        try:
-            similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'], user_defined_taxonomy)
-            results.append(similarity_map)
-        except KeyError as ke:
-            print(ke)
-            results.append(str(0))
-
+    results = fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
+    
     return json.dumps({'result' : json.dumps(results)})
 
 
