@@ -73,8 +73,8 @@ def cluster_result_candidates(candidates):
 
     def get_clusters(all_topics, predicted):
         clusters = []                                                    
-        for i in range(len(set(pred))):
-            cluster = [all_topics[x] for x in range(len(pred)) if pred[x] == i]
+        for i in range(len(set(predicted))):
+            cluster = [all_topics[x] for x in range(len(pred)) if predicted[x] == i]
             clusters.append(cluster)
         return clusters
 
