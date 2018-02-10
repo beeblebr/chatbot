@@ -61,7 +61,7 @@ def cluster_result_candidates(candidates):
     flatten_list = lambda l: [item for sublist in l for item in sublist]
     get_embedding = lambda token : sense_vec_model[token][1].reshape(1, -1)
 
-    all_topics = flatten_list(candidates)
+    all_topics = map(unicode, flatten_list(candidates))
     # Just filter out for now
     all_topics = filter(lambda x : x in sense_vec_model, all_topics)
     embeddings = map(get_embedding, all_topics)
