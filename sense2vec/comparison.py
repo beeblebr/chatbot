@@ -72,7 +72,7 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
         results.append(similarity_map)
 
     results = filter(lambda x : x['cosine_similarity'] > 0.65, results)
-    candidates = cluster_result_candidates(results)
+    candidates = cluster_result_candidates(map(lambda x : x['ki_topics'], results))
 
     from pprint import pprint
     pprint(candidates)
