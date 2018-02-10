@@ -66,7 +66,12 @@ def cluster_result_candidates(candidates):
     all_topics = map(unicode, flatten_list(candidates))
     # Just filter out for now
     all_topics = filter(lambda x : x in sense_vec_model, all_topics)
+    print(all_topics)
     embeddings = map(get_embedding, all_topics)
+    try:
+        print(embeddings.shape)
+    except:
+        print('No property called shape')
     af = AffinityPropagation().fit(embeddings)
     predicted = af.labels_
 
