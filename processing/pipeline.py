@@ -1,6 +1,5 @@
 def execute_pipeline(similarity_map, *blocks):
 	for block in blocks:
-		print(block)
 		try:
 			if len(block) > 1:
 				fn, params = block

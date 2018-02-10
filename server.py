@@ -197,7 +197,6 @@ def add_to_k():
     k['timestamp'] = datetime.now()
     k['text'] = k['text']
     k['type'] = 'text'
-    pprint(k)
     insert_knowledge(k)
     return jsonify({'success': True})
 
@@ -223,6 +222,7 @@ def query():
             return jsonify({'type': info['type'], 'before_message': 'Nothing found'})
     except Exception as e:
         print(e)
+        print('===END EXCEPTION===')
 
     return jsonify({'type': 'unknown'})
 
