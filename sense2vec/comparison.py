@@ -1,19 +1,22 @@
-from itertools import chain, combinations
-
 from sklearn.metrics.pairwise import cosine_similarity
 
 from topic_utils import generate_variants, weighted_vector_sum, prettify_topic
 from clarify import cluster_result_candidates
 
 
-def powerset(iterable):
-    s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
-
-
 QUERY = 1
 KNOWLEDGE_ITEM = 2
 def populate_with_variants(topics, user_defined_taxonomy, query_or_knowledge_item):
+    """Fetches all possible variants for topics that are part of Sense2Vec vocabulary and populates topics necessary for user-defined taxonomy matching.
+
+    Args:
+        topics: List of topics directly extracted from either query or knowledge item sentence.
+        user_defined_taxonomy: Dict mapping each query topic to list of user-defined connections.
+        query_or_knowledge_item: `QUERY` if topics are from query and `KNOWLEDGE_ITEM` if topics are from knowledge item.
+
+    Returns:
+        List of dicts with each topic labelled as `in_vocab` or not.
+    """
     all_topics = []
     for topic in topics:
         variants = generate_variants(topic)
@@ -42,9 +45,19 @@ NULL_ENTRY = {
     'cosine_similarity': 0
 }
 
-def topic_similarity_map(topics1, topics2, user_defined_taxonomy):
-    topics_from_query = populate_with_variants(topics1, user_defined_taxonomy, QUERY)
-    topics_from_knowledge_item = populate_with_variants(topics2, user_defined_taxonomy, KNOWLEDGE_ITEM)
+def topic_similarity_map(topics_from_query, topics_from_knowledge_item, user_defined_taxonomy):
+    """Augments each knowledge item with cosine similarity score against query topics.
+
+    Args:
+        topics_from_query: List of topics from user's question.
+        topics_from_knowledge_item: List of topics from a single knowledge item.
+        user_defined_taxonomy: Dict mapping each query topic to list of user-defined connections.
+
+    Returns:
+        Dict containing knowledge item topics and similarity score.
+    """
+    topics_from_query = populate_with_variants(topics_from_query, user_defined_taxonomy, QUERY)
+    topics_from_knowledge_item = populate_with_variants(topics_from_knowledge_item, user_defined_taxonomy, KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
         return NULL_ENTRY
 
@@ -72,12 +85,8 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
         results.append(similarity_map)
 
     results = filter(lambda x : x['cosine_similarity'] > 0.65, results)
-    candidates = cluster_result_candidates(map(lambda x : x['ki_topics'], results))
+    clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], results))
 
-    from pprint import pprint
-    pprint(candidates)
-
-    # Map float to string for JSON conversion
-    for i in range(len(results)):
-        results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
+    
+    
     return results

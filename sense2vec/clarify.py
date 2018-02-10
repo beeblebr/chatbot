@@ -1,5 +1,5 @@
-from sklearn.cluster import AffinityPropagation
 import numpy as np
+from sklearn.cluster import AffinityPropagation
 
 from sense import sense_vec_model
 
@@ -60,9 +60,9 @@ def cluster_result_candidates(candidates, summary_type='abstractive_summary'):
     # Two possible approaches to finding representative topics
     # 1. Extractive
     # 2. Abstractive
-    extractive_summary = map(lambda i : (all_topics[af.cluster_centers_indices_[i]], clusters[i]), range(len(clusters)))
-    abstractive_summary = map(lambda x : (find_most_representative_topic(x), x), clusters)
-    return {
-        'extractive_summary': extractive_summary,
-        'abstractive_summary': abstractive_summary
-    }[summary_type]
+    if summary_type == 'extractive_summary':
+        extractive_summary = map(lambda i : (all_topics[af.cluster_centers_indices_[i]], clusters[i]), range(len(clusters)))
+        return extractive_summary
+    elif summary_type == 'abstractive_summary':
+        abstractive_summary = map(lambda x : (find_most_representative_topic(x), x), clusters)
+        return abstractive_summary
