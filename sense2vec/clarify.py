@@ -59,7 +59,9 @@ def vector_difference(a, b):
 def cluster_result_candidates(candidates):
     """Clusters a list of candidates (obtained from first-level filtering) into a set of top-level topics for secondary questioning."""
     flatten_list = lambda l: [item for sublist in l for item in sublist]
-    get_embedding = lambda token : sense_vec_model[token][1].reshape(1, -1)
+    def get_embedding(token):
+        print(token)
+        return sense_vec_model[token][1].reshape(1, -1)
 
     all_topics = map(unicode, flatten_list(candidates))
     # Just filter out for now
