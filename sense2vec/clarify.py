@@ -66,10 +66,3 @@ def cluster_result_candidates(candidates, summary_type='abstractive_summary'):
         'extractive_summary': extractive_summary,
         'abstractive_summary': abstractive_summary
     }[summary_type]
-
-
-def find_omitted_topic(query_topics, knowledge_item_topics):
-    query_topics = map(unicode, query_topics)
-    knowledge_item_topics = map(unicode, knowledge_item_topics)
-    diff = vector_difference(topic_sum_unit_vector(query_topics), topic_sum_unit_vector(knowledge_item_topics))
-    return find_most_representative_topic(sense_vec_model.most_similar(diff, 1000)[0])
