@@ -1,7 +1,6 @@
 def ZipWithCorpus(similarity_map, *corpus):
     for i in range(len(corpus)):
         similarity_map[i].update(corpus[i])
-	assert len(similarity_map) > 300
     return similarity_map
 
 

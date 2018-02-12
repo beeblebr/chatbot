@@ -79,12 +79,12 @@ def topic_similarity_map(topics_from_query, topics_from_knowledge_item, user_def
 
 
 def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy):
-    results = []
+    all_results = []
     for item_topics in corpus_topics_map:
         similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'], user_defined_taxonomy)
-        results.append(similarity_map)
+        all_results.append(similarity_map)
 
-    results = filter(lambda x : x['cosine_similarity'] > 0.65, results)
-    clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], results))
+    relevant_results = filter(lambda x : x['cosine_similarity'] > 0.65, results)
+    clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], relevant_results))
     
-    return results, clusters
+    return all_results, clusters
