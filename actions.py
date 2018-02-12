@@ -62,14 +62,16 @@ class ActionSearchKnowledgeBase(Action):
             (transforms.ZipWithCorpus, corpus)
         )
 
-        pprint(similarity_map)
-    
-        dispatcher.utter_template(
-            'utter_can_help_you_with_that', 
-            name=get_name_from_id(similarity_map[0]['eight_id'])
-        )
-        response = {
-            'type': 'found', 
-            'top_matches': similarity_map
-        }
+        pprint(clusters)
+
+        if len(similarity_map) > 1:
+            response = {
+                'type': 'clarify',
+                'specify': [prettify_topic(x[0]) for x in clusters]
+            }
+        else:
+            response = {
+                'type': 'found', 
+                'top_matches': similarity_map
+            }
         return [SlotSet('response_metadata', response)]

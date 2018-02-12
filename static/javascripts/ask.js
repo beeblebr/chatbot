@@ -85,6 +85,9 @@ function AskChat (parseContentToHtml) {
         case 'nothing_found':
             chat.addBotMessage(getDidNotFindText());
             break;
+        case 'clarify':
+            ChatUI.disableChatInput();
+            that.specifyRequest(response.specify, getClarifyQuestion)
         /*case 'clarify_case':
             ChatUI.disableChatInput();
             that.specifyRequest(response.specify, getClarifyCaseQuestion);
@@ -153,9 +156,9 @@ function getSpecifyQuestion () {
         'Could you give me more information?'])
 }
 
-function getClarifyCaseQuestion() {
+function getClarifyQuestion() {
     return getRandomText([
-        'I noticed that some of the words have been capitalized, but they do not seem to be proper nouns. Which of these did you really mean to capitalize?'
+        'In which context do you mean?\n Select all that apply and press "Done".'
     ])
 }
 

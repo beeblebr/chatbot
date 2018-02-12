@@ -216,6 +216,8 @@ def query():
         elif info['type'] == 'found':
             eight_id = info['top_matches'][0]['eight_id']
             return jsonify({'type': info['type'], 'match': {'user_id': eight_id}})
+        elif info['type'] == 'clarify':
+            return jsonify({'type': info['type'], 'specify': info['specify']})
         elif info['type'] == 'nothing_found':
             return jsonify({'type': info['type'], 'before_message': 'Nothing found'})
     except Exception as e:
