@@ -44,10 +44,10 @@ def cluster_result_candidates(candidates):
     flatten_list = lambda l: [item for sublist in l for item in sublist]
     get_embedding = lambda token: sense_vec_model[token][1]
 
-    all_topics = map(lambda x: unicode(x['topic']), all_topics)
+    candidates = map(lambda x: unicode(x['topic']), candidates)
     # Just filter out for now
-    all_topics = filter(lambda x: x in sense_vec_model, all_topics)
-    embeddings = map(get_embedding, all_topics)
+    candidates = filter(lambda x: x in sense_vec_model, candidates)
+    embeddings = map(get_embedding, candidates)
 
     af = AffinityPropagation().fit(embeddings)
     return af
