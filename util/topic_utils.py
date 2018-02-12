@@ -2,7 +2,6 @@ import operator
 import functools
 import re
 
-from util.db_utils import *
 from util.sense_utils import _transform_doc_nltk
 
 # Custom stopwords list
