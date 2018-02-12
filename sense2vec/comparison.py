@@ -83,7 +83,7 @@ def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonom
 
 
 def bucketize_into_similarity_intervals(results):
-    intervals = reversed(np.arange(0.65, 1.0, 0.05))  # Divide (0.65, 1.0) into intervals of 0.05 (in reverse order)
+    intervals = reversed(np.arange(0.65, 1.0, 0.1))  # Divide (0.65, 1.0) into intervals of 0.05 (in reverse order)
     buckets = []
     for lower_bound in intervals:
         bucket = [ki for ki in results if ki['cosine_similarity'] > lower_bound]

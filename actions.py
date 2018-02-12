@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import pickle
 import itertools
+import sys
 import operator
 from collections import defaultdict
 from datetime import datetime
@@ -54,20 +55,15 @@ class ActionSearchKnowledgeBase(Action):
             'user_defined_taxonomy': user_defined_taxonomy
         })
 
-        pprint(similarity_map)
-        print('\n')
-        pprint(clusters)
-        print('wtf')
-        
         similarity_map = pipeline.execute_pipeline(
             similarity_map,
 
-            (transforms.ConvertSimilarityToFloat,)
-            (transforms.ZipWithCorpus,)
+            (transforms.ConvertSimilarityToFloat,),
+            (transforms.ZipWithCorpus, corpus)
         )
 
         pprint(similarity_map)
-
+    
         dispatcher.utter_template(
             'utter_can_help_you_with_that', 
             name=get_name_from_id(similarity_map[0]['eight_id'])
