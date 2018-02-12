@@ -1,8 +1,7 @@
 from pymongo import MongoClient
 from datetime import datetime
 
-from util.topic_utils import get_all_topics
-from util.sense_utils import _transform_doc_nltk
+from util.topic_utils import get_all_topics, transform_doc_nltk
 
 import conf
 
@@ -24,7 +23,7 @@ def get_knowledge_corpus(exclude_user=None):
 
 def insert_knowledge(k, transform_text=True):
     if transform_text:
-        transformed_text = _transform_doc_nltk(k['text'])
+        transformed_text = transform_doc_nltk(k['text'])
         k['transformed_text'] = transformed_text
     db.knowledge.insert_one(k)
 
@@ -34,7 +33,7 @@ def delete_knowledge_item(eight_id, item_text):
 
 
 def update_knowledge_item(eight_id, original_text, updated_text):
-    transformed_text = _transform_doc_nltk(updated_text)
+    transformed_text = transform_doc_nltk(updated_text)
     db.knowledge.update({'eight_id': eight_id, 'text': original_text}, {'$set': {'text': updated_text, 'transformed_text': transformed_text}})
 
 

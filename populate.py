@@ -2,9 +2,10 @@ import cPickle as pickle
 import string
 from random import *
 from string import digits
-from util.sense_utils import _transform_doc_nltk
 from datetime import datetime
 from pymongo import MongoClient
+
+from util.topic_utils import transform_doc_nltk
 
 k = pickle.load(open('k', 'rb'))
 # q = pickle.load(open('q_processed', 'rb'))
@@ -51,7 +52,7 @@ def cache_transformation_of_knowledge_items():
     for k in corpus:
         try:
             print(k['_id'])
-            transformed_text = _transform_doc_nltk(k['text'])
+            transformed_text = transform_doc_nltk(k['text'])
             db.knowledge.update_one(
                 {'_id': k['_id']}, {'$set': {'transformed_text': transformed_text}})
         except Exception as e:
