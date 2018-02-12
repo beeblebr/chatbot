@@ -55,7 +55,7 @@ def cluster_result_candidates(candidates):
 
 
 def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
-    topic_combinations = product(candidates)
+    topic_combinations = product(*candidates)
     clusters = []
     for comb in topic_combinations:
         af = cluster_result_candidates(comb)
