@@ -61,7 +61,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
         af = cluster_result_candidates(comb)
         embeddings = map(lambda x: sense_vec_model[unicode(x['topic'])][1], comb)
         # If only one cluster, then silhouette_score cannot be calculated
-        if len(cluster_centers_indices_) == 1:
+        if len(af.cluster_centers_indices_) == 1:
             cluster_score = -1
         else:
             cluster_score = silhouette_score(embeddings, af.labels_, metric='cosine')
