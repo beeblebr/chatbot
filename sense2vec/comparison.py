@@ -102,5 +102,6 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
     first_non_empty_bucket = [bucket for bucket in buckets if bucket][0]
     print(first_non_empty_bucket)
     clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], first_non_empty_bucket))
+    print(clusters)
     print('DONE')
     return first_non_empty_bucket, clusters
