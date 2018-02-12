@@ -67,6 +67,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
             cluster_score = -1
         else:
             cluster_score = silhouette_score(embeddings, af.labels_, metric='cosine')
+            print(cluster_score)
         clusters.append((cluster_score, af, comb))
 
     optimal_cluster = sorted(clusters, reverse=True)[0]
