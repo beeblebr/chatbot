@@ -58,8 +58,9 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
     topic_combinations = product(*candidates)
     clusters = []
     for comb in topic_combinations:
+        comb = map(lambda x: unicode(x['topic']), comb)
         af = cluster_result_candidates(comb)
-        embeddings = map(lambda x: sense_vec_model[unicode(x['topic'])][1], comb)
+        embeddings = map(lambda x: sense_vec_model[x][1], comb)
         # If only one cluster, then silhouette_score cannot be calculated
         if len(af.cluster_centers_indices_) == 1:
             cluster_score = -1
