@@ -1,9 +1,5 @@
 import requests
 import json
-import re
-from pprint import pprint
-import numpy as np
-import warnings
 import conf
 
 from util.topic_utils import uglify_topic

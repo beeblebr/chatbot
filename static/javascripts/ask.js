@@ -8,7 +8,7 @@ function AskChat (parseContentToHtml) {
         ChatUI.addChatInputKeyListener(that.listenChatInputKeyup);
         ChatUI.addSubmitButtonOnClickHandler(that.handleSubmit);
         ChatUI.addOptionsHandler(that.handleSpecifyOptionSelect);
-        // ChatUI.addOptionsSubmitHandler(that.handleOptionsSubmit);
+        ChatUI.addOptionsSubmitHandler(that.handleOptionsSubmit);
 
         that.startConversation();
     }
@@ -47,8 +47,8 @@ function AskChat (parseContentToHtml) {
                 selected.push(messageOption.text)
             }
         }
-
-        that.sendQueryToApi(selected.join(','))
+        console.log(selected)
+        that.sendSelectedOptionsToApi(selected.join('|'))
         // that.sendQueryToApi($(this).context.innerHTML);
 
         lastMessageOptions.active = false;
@@ -68,6 +68,12 @@ function AskChat (parseContentToHtml) {
     this.sendQueryToApi = function (message) {
         ChatUtils.validateUserInput(message);
         Api.sendQuery(message, User.getId())
+        .then(that.handleUserInputApiSuccess)
+        .catch(that.handleUserInputApiFailure);
+    }
+
+    this.sendSelectedOptionsToApi = function(options) {
+        Api.sendSelectedOptions(options, User.getId())
         .then(that.handleUserInputApiSuccess)
         .catch(that.handleUserInputApiFailure);
     }

@@ -20,7 +20,7 @@ def ConvertSimilarityToFloat(similarity_map):
 
 
 def SortBySimilarityDesc(similarity_map):
-    similarity_map = sorted(similarity_map, key=lambda x : x['cosine_similarity'], reverse=True)
+    similarity_map = sorted(similarity_map, key=lambda x: x['cosine_similarity'], reverse=True)
     return similarity_map
 
 
@@ -32,4 +32,3 @@ def BucketizeIntoSimilarityIntervals(similarity_map):
         buckets.append(bucket)
         similarity_map = [ki for ki in similarity_map if ki not in bucket]
     return buckets
-    

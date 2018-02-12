@@ -25,10 +25,12 @@ from processing import filters, transforms, pipeline
 class ActionSearchKnowledgeBase(Action):
     """Handles intent to query knowledge base"""
 
-    def name(self): return 'action_search_knowledge_base'
+    @staticmethod
+    def name():
+        return 'action_search_knowledge_base'
 
-
-    def run(self, dispatcher, tracker, domain):
+    @staticmethod
+    def run(dispatcher, tracker, domain):
         user_id = tracker.slots['user_id'].value
         message = tracker.latest_message.text
 
@@ -38,20 +40,21 @@ class ActionSearchKnowledgeBase(Action):
         query_topics = {
             'text': get_all_topics(message)
         }
-        
+
         corpus = list(get_knowledge_corpus(exclude_user=user_id))
         corpus_topics_map = [{
-            '_id': str(item['_id']), 
+            '_id': str(item['_id']),
             'text': get_all_topics(item['transformed_text'], transformed=True)
         } for item in corpus]
 
         # Fetch custom taxonomy for all topics in `query_topics`
-        user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in query_topics['text']}
+        user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in
+                                 query_topics['text']}
 
         # Perform network request
         similarity_map, clusters = perform_batch_call({
-            'query_topics': query_topics, 
-            'corpus_topics_map': corpus_topics_map, 
+            'query_topics': query_topics,
+            'corpus_topics_map': corpus_topics_map,
             'user_defined_taxonomy': user_defined_taxonomy
         })
 
@@ -71,7 +74,7 @@ class ActionSearchKnowledgeBase(Action):
             }
         else:
             response = {
-                'type': 'found', 
+                'type': 'found',
                 'top_matches': similarity_map
             }
         return [SlotSet('response_metadata', response)]

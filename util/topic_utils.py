@@ -8,7 +8,38 @@ from nltk import pos_tag
 stop = map(lambda x : x.strip(), open('code/data/words.txt', 'rb').readlines())
 
 
-def transform_doc_nltk(doc, maintain_case=False):  
+def prettify_topic(x):
+    """Converts tokens in Sense2Vec compatible format to human readable format.
+
+    For example, "machine_learning|NOUN" to "machine learning".
+    """
+    return x.split('|')[0].replace('_', ' ')
+
+def uglify_topic(x):
+    """Converts a phrase (or word) to Sense2Vec compatible format noun.
+
+    For example, "machine learning" to "machine_learning|NOUN". 
+    NOTE: This method does not infer the POS tag. It always appends "|NOUN".
+    """
+    return x.replace(' ', '_') + '|NOUN'
+
+def split_tokens(x):
+    """Splits token in Sense2Vec compatible format into individual words.
+
+    For example, it splits "machine_learning|NOUN" into the list ["machine", "learning"].
+    """
+    return x.split('|')[0].split('_')
+
+def merge_tokens(x):
+    """Combines list of words into Sense2Vec compatible format noun.
+
+    For example, it combines the list ["machine", "learning"] to "machine_learning|NOUN".
+    NOTE: This method does not infer the POS tag. It always appends "|NOUN".
+    """
+    return '_'.join(x) + '|NOUN'
+
+
+def transform_doc_nltk(doc):
     doc = re.sub(r'[^\w\s]', '', doc).lower()
     tagged = pos_tag(doc.split())
     tags = ' '.join([x[1] for x in tagged])
@@ -22,14 +53,6 @@ def transform_doc_nltk(doc, maintain_case=False):
         chain = '_'.join([x[0] for x in chain]) + '|NOUN'
         noun_phrases.append(chain)
     return ' '.join(noun_phrases)
-
-
-def prettify_topic(x):
-    return x.split('|')[0].replace('_', ' ')
-
-
-def uglify_topic(x):
-    return x.replace(' ', '_') + '|NOUN'
 
 
 def get_all_topics(message, transformed=False):

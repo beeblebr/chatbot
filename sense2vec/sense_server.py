@@ -4,7 +4,6 @@ from flask import Flask, request
 
 from comparison import topic_similarity_map, fetch_search_results
 
-
 app = Flask(__name__)
 
 
@@ -22,7 +21,7 @@ def index():
     for i in range(len(results)):
         results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
     return json.dumps({
-        'results' : json.dumps(results), 
+        'results': json.dumps(results),
         'clusters': json.dumps(clusters)
     })
 

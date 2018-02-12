@@ -724,6 +724,13 @@ body.chat section.chat .bot ul li {
   border-radius: 25px;
   text-align: left;
 }
+body.chat section.chat .bot ul.options li {
+  display: inline-block;
+  width: 100px;
+  height: 80px;
+  vertical-align: middle;
+  margin: 5px;
+}
 body.chat section.chat .bot ul.choices li {
   background: white url(../images/elements/form-radio-unchecked.svg) no-repeat;
   background-position: 12px 11px;

@@ -12,6 +12,7 @@ def prettify_topic(x):
     """
     return x.split('|')[0].replace('_', ' ')
 
+
 def uglify_topic(x):
     """Converts a phrase (or word) to Sense2Vec compatible format noun.
 
@@ -20,12 +21,14 @@ def uglify_topic(x):
     """
     return x.replace(' ', '_') + '|NOUN'
 
+
 def split_tokens(x):
     """Splits token in Sense2Vec compatible format into individual words.
 
     For example, it splits "machine_learning|NOUN" into the list ["machine", "learning"].
     """
     return x.split('|')[0].split('_')
+
 
 def merge_tokens(x):
     """Combines list of words into Sense2Vec compatible format noun.
@@ -45,9 +48,9 @@ def weighted_vector_sum(topics):
     Returns:
         Vector sum of embeddings.
     """
-    topics = map(lambda x : x['topic'], topics)
-    max_rank = max(map(lambda x : sense_vec_model[x][0], topics))
-    weight_term = lambda topic : sense_vec_model[topic][1] #/ max_rank
+    topics = map(lambda x: x['topic'], topics)
+    max_rank = max(map(lambda x: sense_vec_model[x][0], topics))
+    weight_term = lambda topic: sense_vec_model[topic][1]  # / max_rank
     result = sum(map(weight_term, topics))
     result /= np.linalg.norm(result)
     return result
@@ -97,8 +100,8 @@ def generate_variants(topic):
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
-    variants = map(lambda x : find_best_casing(merge_tokens(x)), variants)
-    variants = filter(lambda x : x and x != '|NOUN', variants)
+    variants = map(lambda x: find_best_casing(merge_tokens(x)), variants)
+    variants = filter(lambda x: x and x != '|NOUN', variants)
     variants = map(split_tokens, variants)
 
     # Remove proper subsets
@@ -108,4 +111,4 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x : len(split_tokens(x)), reverse=True)
+    return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x: len(split_tokens(x)), reverse=True)

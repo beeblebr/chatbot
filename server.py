@@ -8,7 +8,7 @@ import requests
 from util.db_utils import *
 from util.sense_utils import get_closest_sense_items
 
-from bot_wrapper import handle_message
+from bot_wrapper import handle_message, get_slots_of_user
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -199,6 +199,14 @@ def add_to_k():
     insert_knowledge(k)
     return jsonify({'success': True})
 
+
+@app.route('/api/clarify')
+def clarify():
+    user_id = request.args.get('user_id')
+    selected_options = request.args.get('options').split('|')
+    slots = get_slots_of_user(user_id)
+    
+    
 
 @app.route('/api/query')
 def query():

@@ -4,9 +4,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 from topic_utils import generate_variants, weighted_vector_sum, prettify_topic
 from clarify import cluster_result_candidates
 
-
 QUERY = 1
 KNOWLEDGE_ITEM = 2
+
+
 def populate_with_variants(topics, user_defined_taxonomy, query_or_knowledge_item):
     """Fetches all possible variants for topics that are part of Sense2Vec vocabulary and populates topics necessary for user-defined taxonomy matching.
 
@@ -35,9 +36,9 @@ def get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_fr
     matches = []
     for query_topic in topics_from_query:
         if not query_topic['in_vocab']:
-            matches.extend([knowledge_item_topic['topic'] for knowledge_item_topic in topics_from_knowledge_item if knowledge_item_topic['topic'] in user_defined_taxonomy[query_topic['topic']]])
+            matches.extend([knowledge_item_topic['topic'] for knowledge_item_topic in topics_from_knowledge_item if
+                            knowledge_item_topic['topic'] in user_defined_taxonomy[query_topic['topic']]])
     return matches
-
 
 
 CUSTOM_TOPIC_SIMILARITY = 0.95  # Custom relationships get a fixed similarity score
@@ -45,6 +46,7 @@ NULL_ENTRY = {
     'ki_topics': [],
     'cosine_similarity': 0
 }
+
 
 def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonomy):
     """Augments each knowledge item with cosine similarity score against query topics.
@@ -60,19 +62,21 @@ def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonom
     topics_from_knowledge_item = knowledge_item['text']
 
     topics_from_query = populate_with_variants(topics_from_query, user_defined_taxonomy, QUERY)
-    topics_from_knowledge_item = populate_with_variants(topics_from_knowledge_item, user_defined_taxonomy, KNOWLEDGE_ITEM)
+    topics_from_knowledge_item = populate_with_variants(topics_from_knowledge_item, user_defined_taxonomy,
+                                                        KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
         return NULL_ENTRY
 
-    custom_topic_matches = get_custom_topic_matches(user_defined_taxonomy, topics_from_query, topics_from_knowledge_item)
+    custom_topic_matches = get_custom_topic_matches(user_defined_taxonomy, topics_from_query,
+                                                    topics_from_knowledge_item)
     custom_topic_similarity = CUSTOM_TOPIC_SIMILARITY if custom_topic_matches else 0
 
-    topics_from_query = filter(lambda x : x['in_vocab'], topics_from_query)
-    topics_from_knowledge_item = filter(lambda x : x['in_vocab'], topics_from_knowledge_item)
+    topics_from_query = filter(lambda x: x['in_vocab'], topics_from_query)
+    topics_from_knowledge_item = filter(lambda x: x['in_vocab'], topics_from_knowledge_item)
     model_similarity = cosine_similarity(
-                            weighted_vector_sum(topics_from_query).reshape(1, -1), 
-                            weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
-                        )[0][0]
+        weighted_vector_sum(topics_from_query).reshape(1, -1),
+        weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
+    )[0][0]
 
     result = {
         'ki_topics': topics_from_knowledge_item,
@@ -101,7 +105,7 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
     buckets = bucketize_into_similarity_intervals(all_results)
     first_non_empty_bucket = [bucket for bucket in buckets if bucket][0]
     print(first_non_empty_bucket)
-    clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], first_non_empty_bucket))
+    clusters = cluster_result_candidates(map(lambda x: x['ki_topics'], first_non_empty_bucket))
     print(clusters)
     print('DONE')
     return first_non_empty_bucket, clusters
