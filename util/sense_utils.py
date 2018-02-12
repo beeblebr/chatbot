@@ -7,6 +7,7 @@ import warnings
 import conf
 
 from nltk import pos_tag
+from util.topic_utils import uglify_topic
 
 
 def _transform_doc_nltk(doc, maintain_case=False):  
@@ -29,20 +30,16 @@ def perform_batch_call(calls):
     headers = {'content-type': 'application/json'}
     url = conf.SENSE_SERVER_URL
     response = json.loads(requests.post(url, data=json.dumps(calls), headers=headers).text)
-    print('RESPONSE')
-    print(response)
     results = json.loads(response['results'])
     clusters = json.loads(response['clusters'])
-    pprint(clusters)
-    print('===========================')
     return results, clusters
 
 
 def get_closest_sense_items(topic):
-    topic = topic.lower().replace(' ', '_') + '|NOUN'
     headers = {'content-type': 'application/json'}
     url = conf.SENSE_SERVER_URL
-    result = requests.post(url + '/top_related_items', data=json.dumps({'topic': topic}), headers=headers).text
-    res = json.loads(json.loads(result)['result'])
-    return res
+    topic = uglify_topic(topic.lower())
+    response = requests.post(url + '/top_related_items', data=json.dumps({'topic': topic}), headers=headers).text
+    response = json.loads(json.loads(response)['result'])
+    return response
 

@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from topic_utils import generate_variants, weighted_vector_sum, prettify_topic
@@ -45,17 +46,19 @@ NULL_ENTRY = {
     'cosine_similarity': 0
 }
 
-def topic_similarity_map(topics_from_query, topics_from_knowledge_item, user_defined_taxonomy):
+def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonomy):
     """Augments each knowledge item with cosine similarity score against query topics.
 
     Args:
         topics_from_query: List of topics from user's question.
-        topics_from_knowledge_item: List of topics from a single knowledge item.
+        knowledge_item: A single knowledge item.
         user_defined_taxonomy: Dict mapping each query topic to list of user-defined connections.
 
     Returns:
-        Dict containing knowledge item topics and similarity score.
+        Dict containing knowledge item and similarity score.
     """
+    topics_from_knowledge_item = knowledge_item['text']
+
     topics_from_query = populate_with_variants(topics_from_query, user_defined_taxonomy, QUERY)
     topics_from_knowledge_item = populate_with_variants(topics_from_knowledge_item, user_defined_taxonomy, KNOWLEDGE_ITEM)
     if not (topics_from_query and topics_from_knowledge_item):
@@ -73,17 +76,29 @@ def topic_similarity_map(topics_from_query, topics_from_knowledge_item, user_def
 
     result = {
         'ki_topics': topics_from_knowledge_item,
+        '_id': knowledge_item['_id'],
         'cosine_similarity': model_similarity
     }
     return result
 
 
+def bucketize_into_similarity_intervals(results):
+    intervals = reversed(np.arange(0.65, 1.0, 0.05))  # Divide (0.65, 1.0) into intervals of 0.05 (in reverse order)
+    buckets = []
+    for lower_bound in intervals:
+        bucket = [ki for ki in results if ki['cosine_similarity'] > lower_bound]
+        buckets.append(bucket)
+        results = [ki for ki in results if ki not in bucket]
+    return buckets
+
+
 def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy):
     all_results = []
-    for item_topics in corpus_topics_map:
-        similarity_map = topic_similarity_map(query_topics['text'], item_topics['text'], user_defined_taxonomy)
+    for knowledge_item in corpus_topics_map:
+        similarity_map = topic_similarity_map(query_topics['text'], knowledge_item, user_defined_taxonomy)
         all_results.append(similarity_map)
 
-    relevant_results = filter(lambda x : x['cosine_similarity'] > 0.65, all_results)
-    clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], relevant_results))
-    return all_results, clusters
+    buckets = bucketize_into_similarity_intervals(all_results)
+    first_non_empty_bucket = [bucket for bucket in buckets if bucket][0]
+    clusters = cluster_result_candidates(map(lambda x : x['ki_topics'], first_non_empty_bucket))
+    return first_non_empty_bucket, clusters
