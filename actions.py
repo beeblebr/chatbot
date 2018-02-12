@@ -43,9 +43,6 @@ class ActionSearchKnowledgeBase(Action):
 
         # Perform network request
         similarity_map, clusters = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
-
-        pprint(clusters)
-        print('okkkkkkkkkkkkkk')
         
         similarity_map = pipeline.execute_pipeline(
             similarity_map,
@@ -56,24 +53,8 @@ class ActionSearchKnowledgeBase(Action):
             (filters.DropItemsBelowSimilarityThreshold,)
         )
 
-        pprint(similarity_map)
-        print('>>>><<<<')
-
         dispatcher.utter_template('utter_can_help_you_with_that', name=get_name_from_id(
             similarity_map[0]['eight_id']))
         response = {'type': 'found', 'top_matches': similarity_map}
 
         return [SlotSet('response_metadata', response)]
-
-
-class ActionInsertKnowledge(Action):
-
-    def name(self): return 'action_insert_knowledge'
-
-    def run(self, dispatcher, tracker, domain):
-        message = tracker.latest_message
-        insert_knowledge({
-            'timestamp': datetime.now(),
-            'text': message.text
-        })
-        return []
