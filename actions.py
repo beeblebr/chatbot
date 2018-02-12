@@ -37,6 +37,7 @@ class ActionSearchKnowledgeBase(Action):
         query_topics = {
             'text': get_all_topics(message)
         }
+        
         corpus = list(get_knowledge_corpus(exclude_user=user_id))
         corpus_topics_map = [{
             '_id': str(item['_id']), 
@@ -46,12 +47,16 @@ class ActionSearchKnowledgeBase(Action):
         # Fetch custom taxonomy for all topics in `query_topics`
         user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in query_topics['text']}
 
+        print('1')
         # Perform network request
         similarity_map, clusters = perform_batch_call({
             'query_topics': query_topics, 
             'corpus_topics_map': corpus_topics_map, 
             'user_defined_taxonomy': user_defined_taxonomy
         })
+
+        print('2')
+        pprint(similarity_map)
         
         similarity_map = pipeline.execute_pipeline(
             similarity_map,
@@ -59,6 +64,8 @@ class ActionSearchKnowledgeBase(Action):
             (transforms.ConvertSimilarityToFloat,)
             (transforms.ZipWithCorpus,)
         )
+
+        pprint(similarity_map)
 
         dispatcher.utter_template(
             'utter_can_help_you_with_that', 

@@ -8,6 +8,9 @@ import requests
 from util.db_utils import *
 from util.sense_utils import get_closest_sense_items
 
+from bot_wrapper import handle_message
+
+
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'super-secrfeet'
 
@@ -189,17 +192,12 @@ def get_user_knowledge(eight_id):
     return jsonify({'text': knowledge['text']})
 
 
-from bot_wrapper import handle_message
-
 @app.route('/api/knowledges/', methods=['POST'])
 def add_to_k():
     k = request.get_json()
-    k['timestamp'] = datetime.now()
-    k['text'] = k['text']
-    k['type'] = 'text'
+    k.update(timestamp=datetime.now)
     insert_knowledge(k)
     return jsonify({'success': True})
-
 
 
 @app.route('/api/query')

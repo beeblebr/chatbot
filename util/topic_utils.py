@@ -2,6 +2,7 @@ import operator
 import functools
 import re
 
+from nltk import pos_tag
 
 # Custom stopwords list
 stop = map(lambda x : x.strip(), open('code/data/words.txt', 'rb').readlines())

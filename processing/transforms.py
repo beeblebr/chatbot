@@ -5,12 +5,14 @@ def ZipWithCorpus(similarity_map, *corpus):
     for i in range(len(similarity_map)):
         corresponding_knowledge_item = [item for item in corpus if str(item['_id']) == similarity_map[i]['_id']]
         similarity_map[i].update(corresponding_knowledge_item)
+    print(2)
     return similarity_map
 
 
 def ConvertSimilarityToFloat(similarity_map):
     for i in range(len(similarity_map)):
         similarity_map[i]['cosine_similarity'] = float(similarity_map[i]['cosine_similarity'])
+    print(1)
     return similarity_map
 
 
