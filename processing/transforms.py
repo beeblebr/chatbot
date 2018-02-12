@@ -1,7 +1,5 @@
 import numpy as np
 
-from pymongo.objectid import ObjectId
-
 
 def ZipWithCorpus(similarity_map, *corpus):
     for i in range(len(similarity_map)):
