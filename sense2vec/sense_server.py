@@ -17,11 +17,14 @@ def index():
     corpus_topics_map = params['corpus_topics_map']
     user_defined_taxonomy = params['user_defined_taxonomy']
 
-    results = fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
+    results, clusters = fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
     # Map float to string for JSON conversion
     for i in range(len(results)):
         results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
-    return json.dumps({'result' : json.dumps(results)})
+    return json.dumps({
+        'results' : json.dumps(results), 
+        'clusters': clusters
+    })
 
 
 @app.route('/top_related_items', methods=['POST'])

@@ -6,19 +6,45 @@ from sense import sense_vec_model
 
 
 def prettify_topic(x):
+    """Converts tokens in Sense2Vec compatible format to human readable format.
+
+    For example, "machine_learning|NOUN" to "machine learning".
+    """
     return x.split('|')[0].replace('_', ' ')
 
 def uglify_topic(x):
+    """Converts a phrase (or word) to Sense2Vec compatible format noun.
+
+    For example, "machine learning" to "machine_learning|NOUN". 
+    NOTE: This method does not infer the POS tag. It always appends "|NOUN".
+    """
     return x.replace(' ', '_') + '|NOUN'
 
 def split_tokens(x):
+    """Splits token in Sense2Vec compatible format into individual words.
+
+    For example, it splits "machine_learning|NOUN" into the list ["machine", "learning"].
+    """
     return x.split('|')[0].split('_')
 
 def merge_tokens(x):
+    """Combines list of words into Sense2Vec compatible format noun.
+
+    For example, it combines the list ["machine", "learning"] to "machine_learning|NOUN".
+    NOTE: This method does not infer the POS tag. It always appends "|NOUN".
+    """
     return '_'.join(x) + '|NOUN'
 
 
 def weighted_vector_sum(topics):
+    """Calculates sum of Sense2Vec embeddings of the topics.
+
+    Args:
+        topics: List of dicts, each topic represented by a dict.
+
+    Returns:
+        Vector sum of embeddings.
+    """
     topics = map(lambda x : x['topic'], topics)
     max_rank = max(map(lambda x : sense_vec_model[x][0], topics))
     weight_term = lambda topic : sense_vec_model[topic][1] #/ max_rank
@@ -28,7 +54,16 @@ def weighted_vector_sum(topics):
 
 
 def find_best_casing(topic):
-    """If the originally entered case-variant is not available, it looks for the most frequently occuring case-variant. It is greedy towards lowercase variants. Returns None if none of them are valid."""
+    """Returns casing variant of a topic that the user most likely meant.
+
+    If the originally entered casing is not in Sense2Vec, it looks for the casing that's most frequently occuring.
+
+    Args:
+        topic: Topic in Sense2Vec compatible format.
+
+    Returns:
+        Most frequently occuring valid variant. None if no valid variants.
+    """
     topic = unicode(topic)
     if topic in sense_vec_model:
         return topic
@@ -47,6 +82,14 @@ def find_best_casing(topic):
 
 
 def generate_variants(topic):
+    """Generates topic variants.
+
+    Args:
+        topic: Topic in Sense2Vec compatible format.
+
+    Returns:
+        list: List of non-overlapping variants.
+    """
     if '|' not in topic:
         return []
     tokens = split_tokens(topic)

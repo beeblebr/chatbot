@@ -42,8 +42,9 @@ class ActionSearchKnowledgeBase(Action):
         user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in query_topics['text']}
 
         # Perform network request
-        similarity_map = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
+        similarity_map, clusters = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
 
+        pprint(clusters)
         
         similarity_map = pipeline.execute_pipeline(
             similarity_map,
