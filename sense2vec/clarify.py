@@ -50,7 +50,7 @@ def cluster_result_candidates(candidates, summary_type='abstractive_summary'):
 
     def get_clusters(all_topics, predicted):
         clusters = []
-        for i in range(len(set(predicted))):
+        for i in range(len(set(list(predicted)))):
             cluster = [all_topics[x] for x in range(len(predicted)) if predicted[x] == i]
             clusters.append(cluster)
         return clusters
