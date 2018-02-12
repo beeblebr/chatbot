@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from topic_utils import generate_variants, weighted_vector_sum, prettify_topic, vector_cosine_similarity
-from clarify import cluster_result_candidates
+from clarify import find_optimal_cluster
 
 QUERY = 1
 KNOWLEDGE_ITEM = 2
