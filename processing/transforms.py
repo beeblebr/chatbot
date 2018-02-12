@@ -1,18 +1,27 @@
-import numpy as np
+from __future__ import print_function
 
+import numpy as np
+import sys
 
 def ZipWithCorpus(similarity_map, *corpus):
-    for i in range(len(similarity_map)):
-        corresponding_knowledge_item = [item for item in corpus if str(item['_id']) == similarity_map[i]['_id']]
-        similarity_map[i].update(corresponding_knowledge_item)
-    print(2)
+    print('ok')
+    try:
+        for i in range(len(similarity_map)):
+            corresponding_knowledge_item = [item for item in corpus if str(item['_id']) == similarity_map[i]['_id']][0]
+            corresponding_knowledge_item.update(similarity_map[i])
+            similarity_map[i] = corresponding_knowledge_item
+    except Exception as e:
+        print(e, file=sys.stderr)
+        print('sorted', file=sys.stderr)
     return similarity_map
 
 
 def ConvertSimilarityToFloat(similarity_map):
+    print('okk')
     for i in range(len(similarity_map)):
+        print(similarity_map[i], file=sys.stderr)
         similarity_map[i]['cosine_similarity'] = float(similarity_map[i]['cosine_similarity'])
-    print(1)
+    print(666, file=sys.stderr)
     return similarity_map
 
 

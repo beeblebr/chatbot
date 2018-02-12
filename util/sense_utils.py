@@ -14,10 +14,8 @@ def perform_batch_call(calls):
     url = conf.SENSE_SERVER_URL
 
     response = json.loads(requests.post(url, data=json.dumps(calls), headers=headers).text)
-    pprint(response)
     results = json.loads(response['results'])
     clusters = json.loads(response['clusters'])
-    print('333')
     return results, clusters
 
 
