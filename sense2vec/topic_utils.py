@@ -115,7 +115,7 @@ def generate_variants(topic):
     return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x: len(split_tokens(x)), reverse=True)
 
 
-def vector_cosine_similarity(vector1, vector):
+def vector_cosine_similarity(vector1, vector2):
     return cosine_similarity(vector1.reshape(1, -1), vector2.reshape(1, -1))[0][0]
 
 
