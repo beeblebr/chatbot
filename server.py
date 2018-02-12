@@ -7,6 +7,7 @@ import requests
 
 from util.db_utils import *
 from util.sense_utils import get_closest_sense_items
+from util.topic_utils import prettify_topic, uglify_topic
 
 from bot_wrapper import handle_message, get_slots_of_user
 
@@ -189,7 +190,6 @@ def signup():
 
 """API Endpoints"""
 
-
 @app.route('/api/users/<eight_id>')
 def get_user_from_id(eight_id):
     user = get_user_from_eight_id(str(eight_id).zfill(8))
@@ -217,7 +217,32 @@ def add_to_k():
 def clarify():
     user_id = request.args.get('user_id')
     selected_options = request.args.get('options').split('|')
-    slots = get_slots_of_user(user_id)
+
+    info = get_slots_of_user(user_id)['response_metadata'].value
+    clusters = info['clusters']
+    similarity_map = info['similarity_map']
+
+    # Get all topics that come under selected clusters
+    selected_options = map(uglify_topic, selected_options)
+    relevant_topics = []
+    for option in selected_options:
+        cluster = [c for c in clusters if c[0] == option][0]
+        topics = [topic for topic in cluster[1]]
+        relevant_topics.extend(topics)
+
+    # Iterate through similarity_map to find the knowledge items tagged with any of relevant_topics
+    relevant_knowledge_items = []
+    for knowledge_item in similarity_map:
+        topics = map(lambda x: x['topic'], knowledge_item['ki_topics'])
+        if (set(topics) & set(relevant_topics)):
+            relevant_knowledge_items.append(knowledge_item)
+
+    return jsonify({
+        'type': 'found',
+        'match': {
+            'user_id': relevant_knowledge_items[0]['eight_id']
+        }
+    })
 
 
 @app.route('/api/query')
@@ -231,16 +256,17 @@ def query():
 
     try:
         if info['type'] == 'compromise':
-            eight_id = info['top_matches'][0]['eight_id']
+            eight_id = info['similarity_map'][0]['eight_id']
             return jsonify(
                 {'type': info['type'], 'before_message': response[0],
                  'match': {'user_id': eight_id}})
         elif info['type'] == 'found':
-            eight_id = info['top_matches'][0]['eight_id']
+            eight_id = info['similarity_map'][0]['eight_id']
             return jsonify(
                 {'type': info['type'], 'match': {'user_id': eight_id}})
         elif info['type'] == 'clarify':
-            return jsonify({'type': info['type'], 'specify': info['specify']})
+            cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
+            return jsonify({'type': info['type'], 'specify': cluster_heads})
         elif info['type'] == 'nothing_found':
             return jsonify(
                 {'type': info['type'], 'before_message': 'Nothing found'})

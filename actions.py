@@ -71,11 +71,12 @@ class ActionSearchKnowledgeBase(Action):
         if len(similarity_map) > 1:
             response = {
                 'type': 'clarify',
-                'specify': [prettify_topic(x[0]) for x in clusters]
+                'similarity_map': similarity_map,
+                'clusters': clusters
             }
         else:
             response = {
                 'type': 'found',
-                'top_matches': similarity_map
+                'similarity_map': similarity_map
             }
         return [SlotSet('response_metadata', response)]

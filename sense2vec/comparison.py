@@ -49,15 +49,18 @@ NULL_ENTRY = {
 
 
 def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonomy):
-    """Augments each knowledge item with cosine similarity score against query topics.
+    """Augments each knowledge item with cosine similarity score calculated against query topics.
 
     Args:
-        topics_from_query: List of topics from user's question.
-        knowledge_item: A single knowledge item.
-        user_defined_taxonomy: Dict mapping each query topic to list of user-defined connections.
+        topics_from_query: list
+            The list of topics from user's question.
+        knowledge_item: dict
+            A single knowledge item.
+        user_defined_taxonomy: dict
+            A mapping of each query topic to list of user-defined connections associated with it.
 
     Returns:
-        Dict containing knowledge item and similarity score.
+        dict: Dict containing knowledge item and similarity score.
     """
     topics_from_knowledge_item = knowledge_item['text']
 
@@ -86,8 +89,8 @@ def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonom
     return result
 
 
-def bucketize_into_similarity_intervals(results):
-    intervals = reversed(np.arange(0.65, 1.0, 0.15))  # Divide (0.65, 1.0) into intervals of 0.05 (in reverse order)
+def bucketize_into_similarity_intervals(results, min_score=0.65, interval_size=0.05):
+    intervals = reversed(np.arange(min_score, 1.0, interval_size))  # Divide (min_score, 1) into intervals of interval_size (in reverse order)
     buckets = []
     for lower_bound in intervals:
         bucket = [ki for ki in results if ki['cosine_similarity'] > lower_bound]
@@ -104,8 +107,5 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
 
     buckets = bucketize_into_similarity_intervals(all_results)
     first_non_empty_bucket = [bucket for bucket in buckets if bucket][0]
-    print(first_non_empty_bucket)
     clusters = cluster_result_candidates(map(lambda x: x['ki_topics'], first_non_empty_bucket))
-    print(clusters)
-    print('DONE')
     return first_non_empty_bucket, clusters

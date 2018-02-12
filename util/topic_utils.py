@@ -1,12 +1,9 @@
-import operator
-import functools
 import re
 
 from nltk import pos_tag
 
 # Custom stopwords list
 stop = map(lambda x: x.strip(), open('code/data/words.txt', 'rb').readlines())
-
 
 def prettify_topic(x):
     """Converts tokens in Sense2Vec compatible format to human readable format.
@@ -43,6 +40,15 @@ def merge_tokens(x):
 
 
 def transform_doc_nltk(doc):
+    """Returns transformed version of text where noun phrases are POS tagged in Sense2Vec compatible format.
+
+    Args:
+        doc: str
+            Text to be transformed.
+
+    Returns:
+        str: The original text, with noun phrases tagged.
+    """
     doc = re.sub(r'[^\w\s]', '', doc).lower()
     tagged = pos_tag(doc.split())
     tags = ' '.join([x[1] for x in tagged])
@@ -50,15 +56,28 @@ def transform_doc_nltk(doc):
     matches = list(re.finditer('((JJ[A-Z]? )?)((NN[A-Z]? ?)+)', tags))
     noun_phrases = []
     for match in matches:
-        chain_start_index = tags[:match.start() + 1].strip().count(' ')  # 4
-        chain_end_index = tags[:match.end()].strip().count(' ')  #
+        chain_start_index = tags[:match.start() + 1].strip().count(' ')
+        chain_end_index = tags[:match.end()].strip().count(' ')
         chain = tagged[chain_start_index: chain_end_index + 1]
-        chain = '_'.join([x[0] for x in chain]) + '|NOUN'
+        chain = merge_tokens([x[0] for x in chain])
         noun_phrases.append(chain)
     return ' '.join(noun_phrases)
 
 
 def get_all_topics(message, transformed=False):
+    """Returns list of potential topics from the given text.
+
+    Topics are words / phrases extracted from the text according to the noun chaining algorithm in `transform_doc_nltk`. Stopwords are filtered out.
+
+    Args:
+        message: str
+            User query.
+        transformed: bool
+            True if `message` is already POS-tagged, False otherwise.
+
+    Returns:
+        list: Potential topics.
+    """
     message = message.encode('ascii', 'ignore')
     if not transformed:
         pos = transform_doc_nltk(message).split()

@@ -87,6 +87,7 @@ function AskChat (parseContentToHtml) {
             break;
         case 'found':
             that.getUserFromApi(response.match.user_id);
+            console.log(response.match.user_id);
             break;
         case 'nothing_found':
             chat.addBotMessage(getDidNotFindText());
