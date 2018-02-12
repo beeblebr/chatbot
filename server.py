@@ -10,24 +10,26 @@ from util.sense_utils import get_closest_sense_items
 
 from bot_wrapper import handle_message, get_slots_of_user
 
-
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'super-secrfeet'
 
-
 """Admin routes"""
+
+
 def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
     return username == 'admin' and password == 's3cret'
 
+
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
-    'Could not verify your access level for that URL.\n'
-    'You have to login with proper credentials', 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
 
 def requires_auth(f):
     @wraps(f)
@@ -36,11 +38,12 @@ def requires_auth(f):
         if not auth or not check_auth(auth.username, auth.password):
             return authenticate()
         return f(*args, **kwargs)
+
     return decorated
 
 
-
 """Taxonomy related routes."""
+
 
 @app.route('/admin/taxonomy')
 @requires_auth
@@ -53,7 +56,8 @@ def taxonomy_builder():
 def fetch_related_topics():
     topic = request.form.get('topic')
     related_topics = get_closest_sense_items(topic)
-    return jsonify([{'name': topic['text'], 'similarity': (1)} for topic in related_topics])
+    return jsonify([{'name': topic['text'], 'similarity': (1)} for topic in
+                    related_topics])
 
 
 @app.route('/admin/taxonomy/related_custom', methods=['POST'])
@@ -75,6 +79,7 @@ def set_custom_topics():
 
 """User related routes."""
 
+
 @app.route('/admin/users/delete_knowledge_item', methods=['POST'])
 @requires_auth
 def remove_knowledge_item():
@@ -91,7 +96,7 @@ def edit_knowledge_item():
     original_text = request.form.get('originalText')
     updated_text = request.form.get('updatedText')
     update_knowledge_item(user_id, original_text, updated_text)
-    return jsonify({'success': True})    
+    return jsonify({'success': True})
 
 
 @app.route('/admin/users')
@@ -124,6 +129,7 @@ def user_delete():
 
 """Webpage routes"""
 
+
 @app.route('/admin')
 @requires_auth
 def admin():
@@ -134,13 +140,17 @@ def admin():
 def index():
     return render_template('login2.html')
 
-    
+
 @app.route('/home')
 def home():
     from trends.trending import identify_trending_topics
     trending_topics = identify_trending_topics()
-    trending_topics = {topic.split('|')[0].replace('_', ' '): trending_topics[topic] for topic in trending_topics}
-    trending_topics = dict(sorted(trending_topics.iteritems(), key=lambda (k,v): (v,k), reverse=True))
+    trending_topics = {
+    topic.split('|')[0].replace('_', ' '): trending_topics[topic] for topic in
+    trending_topics}
+    trending_topics = dict(
+        sorted(trending_topics.iteritems(), key=lambda (k, v): (v, k),
+               reverse=True))
     return render_template('home2.html', trending_topics=trending_topics)
 
 
@@ -152,6 +162,7 @@ def trending():
 @app.route('/ask')
 def ask():
     return render_template('ask.html', action='ask')
+
 
 @app.route('/share')
 def share():
@@ -172,11 +183,13 @@ def signup():
             return redirect('/admin/signup')
         else:
             db.users.insert_one({'name': name, 'eight_id': eight_id})
-        
+
         return redirect('/admin/users')
 
 
 """API Endpoints"""
+
+
 @app.route('/api/users/<eight_id>')
 def get_user_from_id(eight_id):
     user = get_user_from_eight_id(str(eight_id).zfill(8))
@@ -205,14 +218,13 @@ def clarify():
     user_id = request.args.get('user_id')
     selected_options = request.args.get('options').split('|')
     slots = get_slots_of_user(user_id)
-    
-    
+
 
 @app.route('/api/query')
 def query():
     q = request.args.get('text')
     user_id = request.args.get('user_id')
-    
+
     # Send message to bot, and retrieve response_metadata
     response, slots = handle_message(user_id, unicode(q))
     info = slots['response_metadata'].value
@@ -220,14 +232,18 @@ def query():
     try:
         if info['type'] == 'compromise':
             eight_id = info['top_matches'][0]['eight_id']
-            return jsonify({'type': info['type'], 'before_message': response[0], 'match': {'user_id': eight_id}})
+            return jsonify(
+                {'type': info['type'], 'before_message': response[0],
+                 'match': {'user_id': eight_id}})
         elif info['type'] == 'found':
             eight_id = info['top_matches'][0]['eight_id']
-            return jsonify({'type': info['type'], 'match': {'user_id': eight_id}})
+            return jsonify(
+                {'type': info['type'], 'match': {'user_id': eight_id}})
         elif info['type'] == 'clarify':
             return jsonify({'type': info['type'], 'specify': info['specify']})
         elif info['type'] == 'nothing_found':
-            return jsonify({'type': info['type'], 'before_message': 'Nothing found'})
+            return jsonify(
+                {'type': info['type'], 'before_message': 'Nothing found'})
     except Exception as e:
         print(e)
         print('===END EXCEPTION===')

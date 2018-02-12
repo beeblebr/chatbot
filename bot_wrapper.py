@@ -1,6 +1,7 @@
 """Helper functions to interact with the bot.
 
-This module initializes the `Agent` and provides functions to abstract away concerns regarding the fetching of trackers and slots.
+This module initializes the `Agent` and provides functions to abstract away concerns regarding
+the fetching of trackers and slots.
 
 """
 
@@ -11,12 +12,14 @@ from rasa_core.events import SlotSet
 
 from search_knowledge_policy import SearchKnowledgePolicy
 
-agent = Agent(TemplateDomain.load('domain.yml'), policies=[SearchKnowledgePolicy()],
+agent = Agent(TemplateDomain.load('domain.yml'),
+              policies=[SearchKnowledgePolicy()],
               interpreter=RasaNLUInterpreter("models/default/current"))
 
 
 def handle_message(user_id, q):
-    """Calls `agent.handle_message` with the `user_id` populated into the slot and returns the response.
+    """Calls `agent.handle_message` with the `user_id` populated into the slot and returns the
+    response.
 
     Args:
         user_id: Eight ID of user.

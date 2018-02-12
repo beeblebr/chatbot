@@ -48,8 +48,11 @@ class ActionSearchKnowledgeBase(Action):
         } for item in corpus]
 
         # Fetch custom taxonomy for all topics in `query_topics`
-        user_defined_taxonomy = {prettify_topic(topic): get_relations(prettify_topic(topic)) for topic in
-                                 query_topics['text']}
+        user_defined_taxonomy = {
+            prettify_topic(topic): get_relations(prettify_topic(topic)) for
+            topic
+            in
+            query_topics['text']}
 
         # Perform network request
         similarity_map, clusters = perform_batch_call({
@@ -64,7 +67,6 @@ class ActionSearchKnowledgeBase(Action):
             (transforms.ConvertSimilarityToFloat,),
             (transforms.ZipWithCorpus, corpus)
         )
-
 
         if len(similarity_map) > 1:
             response = {
