@@ -108,6 +108,8 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
     buckets = bucketize_into_similarity_intervals(all_results)
     try:
         first_non_empty_bucket = [bucket for bucket in buckets if bucket][0]
+        if len(first_non_empty_bucket) == 1:
+            return first_non_empty_bucket, []
     except:
         return [], []
     clusters = find_optimal_cluster(map(lambda x: x['ki_topics'], first_non_empty_bucket))
