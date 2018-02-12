@@ -56,7 +56,7 @@ def cluster_result_candidates(candidates):
 
 def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
     topic_combinations = product(*candidates)
-    pprint(topic_combinations)
+    pprint(list(topic_combinations))
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
