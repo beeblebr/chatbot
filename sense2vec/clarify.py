@@ -74,6 +74,9 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
 
     optimal_cluster = sorted(clusters, reverse=True)[0]
     _, af, all_topics = optimal_cluster
+    print('THE CHOSEN ONE!!!!')
+    print(all_topics)
+    print('</THE CHOSEN ONE>')
     predicted = af.labels_
 
     def get_clusters(all_topics, predicted):
