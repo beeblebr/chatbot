@@ -1,4 +1,5 @@
 from itertools import product
+from pprint import pprint
 
 import numpy as np
 from sklearn.cluster import AffinityPropagation
@@ -51,7 +52,6 @@ def cluster_result_candidates(candidates):
 
     af = AffinityPropagation().fit(embeddings)
     return af
-
 
 
 def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
