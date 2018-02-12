@@ -61,22 +61,27 @@ class ActionSearchKnowledgeBase(Action):
             'user_defined_taxonomy': user_defined_taxonomy
         })
 
-        similarity_map = pipeline.execute_pipeline(
-            similarity_map,
-
-            (transforms.ConvertSimilarityToFloat,),
-            (transforms.ZipWithCorpus, corpus)
-        )
-
-        if len(similarity_map) > 1:
+        if not similarity_map:
             response = {
-                'type': 'clarify',
-                'similarity_map': similarity_map,
-                'clusters': clusters
+                'type': 'nothing_found'
             }
         else:
-            response = {
-                'type': 'found',
-                'similarity_map': similarity_map
-            }
+            similarity_map = pipeline.execute_pipeline(
+                similarity_map,
+
+                (transforms.ConvertSimilarityToFloat,),
+                (transforms.ZipWithCorpus, corpus)
+            )
+
+            if len(similarity_map) > 1:
+                response = {
+                    'type': 'clarify',
+                    'similarity_map': similarity_map,
+                    'clusters': clusters
+                }
+            else:
+                response = {
+                    'type': 'found',
+                    'similarity_map': similarity_map
+                }
         return [SlotSet('response_metadata', response)]
