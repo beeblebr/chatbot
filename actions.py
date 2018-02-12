@@ -65,7 +65,6 @@ class ActionSearchKnowledgeBase(Action):
             (transforms.ZipWithCorpus, corpus)
         )
 
-        pprint(clusters)
 
         if len(similarity_map) > 1:
             response = {
