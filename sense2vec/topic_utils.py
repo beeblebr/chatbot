@@ -1,6 +1,5 @@
-from itertools import product
-
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
 from sense import sense_vec_model
 
@@ -112,3 +111,13 @@ def generate_variants(topic):
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
     return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x: len(split_tokens(x)), reverse=True)
+
+
+def vector_cosine_similarity(vector1, vector):
+    return cosine_similarity(vector1.reshape(1, -1), vector2.reshape(1, -1))[0][0]
+
+
+def topic_cosine_similarity(topic1, topic2):
+    return vector_cosine_similarity(
+            sense_vec_model[unicode(topic1)][1],
+            sense_vec_model[unicode(topic2)][1])

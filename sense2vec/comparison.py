@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-from topic_utils import generate_variants, weighted_vector_sum, prettify_topic
+from topic_utils import generate_variants, weighted_vector_sum, prettify_topic, vector_cosine_similarity
 from clarify import cluster_result_candidates
 
 QUERY = 1
@@ -76,11 +76,11 @@ def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonom
 
     topics_from_query = filter(lambda x: x['in_vocab'], topics_from_query)
     topics_from_knowledge_item = filter(lambda x: x['in_vocab'], topics_from_knowledge_item)
-    model_similarity = cosine_similarity(
-        weighted_vector_sum(topics_from_query).reshape(1, -1),
-        weighted_vector_sum(topics_from_knowledge_item).reshape(1, -1)
-    )[0][0]
-
+    model_similarity = vector_cosine_similarity(
+        weighted_vector_sum(topics_from_query),
+        weighted_vector_sum(topics_from_knowledge_item)
+    )
+    
     result = {
         'ki_topics': topics_from_knowledge_item,
         '_id': knowledge_item['_id'],
@@ -110,5 +110,5 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
         first_non_empty_bucket = [bucket for bucket in buckets if bucket][0]
     except:
         return [], []
-    clusters = cluster_result_candidates(map(lambda x: x['ki_topics'], first_non_empty_bucket))
+    clusters = find_optimal_cluster(map(lambda x: x['ki_topics'], first_non_empty_bucket))
     return first_non_empty_bucket, clusters

@@ -1,7 +1,12 @@
+from itertools import product
+
 import numpy as np
 from sklearn.cluster import AffinityPropagation
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import silhouette_score
 
 from sense import sense_vec_model
+from topic_utils import topic_cosine_similarity, vector_cosine_similarity
 
 
 def find_most_representative_topic(candidate_topics, generality_threshold=1000, window_size=10, patience=300):
@@ -25,7 +30,7 @@ def find_most_representative_topic(candidate_topics, generality_threshold=1000, 
     return max(map(lambda topic: (sense_vec_model[topic][0], topic), candidate_topics[:max(40, flag)]))[1]
 
 
-def cluster_result_candidates(candidates, summary_type='abstractive_summary'):
+def cluster_result_candidates(candidates):
     """Clusters a list of candidates (obtained from first-level filtering) into a set of top-level topics for secondary questioning.
 
     Args:
@@ -39,13 +44,27 @@ def cluster_result_candidates(candidates, summary_type='abstractive_summary'):
     flatten_list = lambda l: [item for sublist in l for item in sublist]
     get_embedding = lambda token: sense_vec_model[token][1]
 
-    all_topics = flatten_list(candidates)
     all_topics = map(lambda x: unicode(x['topic']), all_topics)
     # Just filter out for now
     all_topics = filter(lambda x: x in sense_vec_model, all_topics)
     embeddings = map(get_embedding, all_topics)
 
     af = AffinityPropagation().fit(embeddings)
+    return af
+
+
+
+def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
+    topic_combinations = product(candidates)
+    clusters = []
+    for comb in topic_combinations:
+        af = cluster_result_candidates(comb)
+        embeddings = map(lambda x: sense_vec_model[unicode(x)], comb)
+        cluster_score = silhouette_score(embeddings, af.labels_, metric='cosine')
+        clusters.append((cluster_score, af, comb))
+
+    optimal_cluster = sorted(clusters, reverse=True)[0]
+    _, af, all_topics = optimal_cluster
     predicted = af.labels_
 
     def get_clusters(all_topics, predicted):
