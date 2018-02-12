@@ -23,7 +23,7 @@ def index():
         results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
     return json.dumps({
         'results' : json.dumps(results), 
-        'clusters': clusters
+        'clusters': json.dumps(clusters)
     })
 
 

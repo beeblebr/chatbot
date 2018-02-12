@@ -45,6 +45,7 @@ class ActionSearchKnowledgeBase(Action):
         similarity_map, clusters = perform_batch_call({'query_topics': query_topics, 'corpus_topics_map': corpus_topics_map, 'user_defined_taxonomy': user_defined_taxonomy})
 
         pprint(clusters)
+        print('okkkkkkkkkkkkkk')
         
         similarity_map = pipeline.execute_pipeline(
             similarity_map,

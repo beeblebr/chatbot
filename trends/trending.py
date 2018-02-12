@@ -20,7 +20,6 @@ def bucketize_history(history, start_date):
     buckets = [[] for _ in range(NUM_DAYS_HISTORY * 24 * 60 / WINDOW_IN_MINUTES)]
     for h in history:
         periods_passed = int((h['timestamp'] - start_date).total_seconds() / 60) / WINDOW_IN_MINUTES 
-        print()
         buckets[periods_passed].append(h)
     return buckets
 
