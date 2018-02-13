@@ -42,6 +42,7 @@ def find_most_representative_topic(
     )
     total = sum(embeddings)
     total /= np.linalg.norm(total)
+    pprint(total)
     candidate_topics = sense_vec_model.most_similar(total, 600)[0]
 
     for i in range(min(len(candidate_topics), patience)):
