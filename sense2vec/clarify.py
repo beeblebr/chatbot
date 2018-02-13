@@ -40,7 +40,6 @@ def find_most_representative_topic(
         among the candidates or a topic that roughly represents the general
         direction the vector is in.
     """
-
     # Find most general topic in the direction of sum vector of
     # candidate_topics
     embeddings = map(
@@ -66,19 +65,17 @@ def find_most_representative_topic(
     ))[1]
 
 
-def cluster_result_candidates(candidates):
-    """Cluster a list of candidates (obtained from first-level filtering)
-    into a set of top-level topics for secondary questioning.
+def fit_affinity_propagation_model(candidates):
+    """Fit an Affinity Propagation model to the list of topics.
+
+    The topics' Sense2Vec embeddings are used for clustering.
 
     Args:
-        candidates: Knowledge items classified as similar from (n-1)th pass.
-        summary_type: 'abstractive_summary' can use a representative topic
-        that is not part of the cluster.
-        'extractive_summary' picks a representative topic from the cluster.
+        candidates: list
+            List of topics to cluster.
 
     Returns:
-        list: List of tuples (representative topic, list of topics in the
-        cluster).
+        af: The AffinityPropagation model fitted on the list.
     """
     candidates = map(lambda x: unicode(x), candidates)
     # Just filter out for now
@@ -90,11 +87,21 @@ def cluster_result_candidates(candidates):
 
 
 def get_possible_clusterings(search_results_topics):
+    """Return all possible clusterings by picking one topic from each
+    knowledge item at a time.
+
+    Args:
+        search_results_topics: list of lists
+            Each sublist contains all topics from a knowledge item.
+
+    Returns:
+        clusters: Possible clusterings.
+    """
     topic_combinations = product(*search_results_topics)
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
-        af = cluster_result_candidates(comb)
+        af = fit_affinity_propagation_model(comb)
         converged = af.n_iter_ != 200
         if not converged:
             print('Did not converge')
@@ -129,13 +136,25 @@ def get_possible_clusterings(search_results_topics):
     return clusters
 
 
-def get_cluster_members(topic_combination, predicted):
+def group_samples_by_label(samples, labels):
+    """Group samples by their cluster labels.
+
+    Args:
+        samples: list
+            List of topics.
+        labels: list
+            Label map.
+
+    Returns:
+        clusters: list of lists
+            Each sublist contains members of a cluster.
+    """
     clusters = []
-    for i in range(len(np.unique(predicted))):
+    for i in range(len(np.unique(labels))):
         cluster = [
-            topic_combination[x]
-            for x in range(len(predicted))
-            if predicted[x] == i
+            samples[x]
+            for x in range(len(labels))
+            if labels[x] == i
         ]
         clusters.append(cluster)
     return clusters
@@ -146,21 +165,39 @@ def find_optimal_cluster(
     search_results_topics,
     summary_type='abstractive_summary'
 ):
+    """Return optimal cluster with an appropriate cluster head.
+
+    This gives the cluster with the highest `cluster_score`.
+    `cluster_score` is the equal to the `silhouette_score` of a cluster
+    except in cases where `cluster_score` is not defined due to an inability
+    to calculate `silhouette_score`.
+
+    Args:
+        query_topics: list
+            Topics from query text.
+        search_result_topics: list of lists
+            Each sublist contains topics from a single knowledge item.
+        summary_type: str
+            `abstractive_summary` or `extractive_summary`.
+
+    Returns:
+        summary: tuple
+            Tuple containing the cluster head and the topics under cluster.
+    """
     possible_clusterings = get_possible_clusterings(search_results_topics)
     if not possible_clusterings:
         return None
 
     # Choose cluster with the highest score
     optimal_cluster = sorted(possible_clusterings, reverse=True)[0]
-    cluster_score, af, topic_combination = optimal_cluster
-    # Assume that non-convergence is due to single, repeated topic
-    predicted = af.labels_
-    clusters = get_cluster_members(topic_combination, predicted)
+    cluster_score, af, samples = optimal_cluster
+
+    clusters = group_samples_by_label(samples, af.labels_)
     pprint(clusters)
 
     if summary_type == 'extractive_summary':
         extractive_summary = [
-            (topic_combination[af.cluster_centers_indices_[i]], clusters[i])
+            (samples[af.cluster_centers_indices_[i]], clusters[i])
             for i in range(len(clusters))
         ]
         return extractive_summary

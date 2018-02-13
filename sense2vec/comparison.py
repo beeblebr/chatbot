@@ -12,7 +12,7 @@ def populate_with_variants(
     user_defined_taxonomy,
     query_or_knowledge_item
 ):
-    """Fetches all possible variants for topics that are part of Sense2Vec vocabulary and populates topics necessary for user-defined taxonomy matching.
+    """Fetch all possible variants for topics that are part of Sense2Vec vocabulary and populates topics necessary for user-defined taxonomy matching.
 
     Args:
         topics: List of topics directly extracted from either query or knowledge item sentence.
@@ -25,12 +25,15 @@ def populate_with_variants(
     all_topics = []
     for topic in topics:
         variants = generate_variants(topic)
-        all_topics.extend([{'topic': variant, 'in_vocab': True} for variant in variants])
+        all_topics.extend([{'topic': variant, 'in_vocab': True}
+                           for variant in variants])
         if query_or_knowledge_item == KNOWLEDGE_ITEM and not variants:
-            all_topics.append({'topic': prettify_topic(topic), 'in_vocab': False})
+            all_topics.append(
+                {'topic': prettify_topic(topic), 'in_vocab': False})
     # Augment all_topics with user-defined taxonomy
     if query_or_knowledge_item == QUERY:
-        all_topics.extend([{'topic': topic, 'in_vocab': False} for topic in user_defined_taxonomy])
+        all_topics.extend([{'topic': topic, 'in_vocab': False}
+                           for topic in user_defined_taxonomy])
     return all_topics
 
 

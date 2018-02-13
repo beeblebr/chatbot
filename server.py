@@ -147,8 +147,8 @@ def home():
     from trends.trending import identify_trending_topics
     trending_topics = identify_trending_topics()
     trending_topics = {
-    topic.split('|')[0].replace('_', ' '): trending_topics[topic] for topic in
-    trending_topics}
+        topic.split('|')[0].replace('_', ' '): trending_topics[topic] for topic in
+        trending_topics}
     trending_topics = dict(
         sorted(trending_topics.iteritems(), key=lambda (k, v): (v, k),
                reverse=True))
@@ -189,6 +189,8 @@ def signup():
 
 
 """API Endpoints"""
+
+
 @app.route('/api/users/<eight_id>')
 def get_user_from_id(eight_id):
     user = get_user_from_eight_id(str(eight_id).zfill(8))
