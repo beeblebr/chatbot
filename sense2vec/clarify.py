@@ -10,7 +10,10 @@ from sklearn.cluster import AffinityPropagation
 from sklearn.metrics import silhouette_score
 
 
-# Cluster = namedtuple('Cluster', ['silhouette_score', 'af_model', ''])
+Cluster = namedtuple(
+    'Cluster',
+    ['converged', 'silhouette_score', 'af_model', 'topic_combination']
+)
 
 
 def find_most_representative_topic(
@@ -94,11 +97,9 @@ def get_possible_clusterings(search_results_topics):
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
         af = cluster_result_candidates(comb)
-        print(af.n_iter_)
-        print(af.cluster_centers_indices_)
-        print(af.cluster_centers_)
-        print(af.labels_)
-        print(af.affinity_matrix_)
+        converged = af.n_iter_ != 200
+        if not converged:
+            continue
         # If only one cluster, then silhouette_score cannot be calculated,
         # so just use -1 for now. Ideally should be calculated using
         # intra-cluster distance.
@@ -119,9 +120,27 @@ def get_possible_clusterings(search_results_topics):
                 af.labels_,
                 metric='cosine'
             )
-        clusters.append((cluster_score, af, comb))
+        clusters.append(Cluster(
+            converged=converged,
+            silhouette_score=cluster_score,
+            af_model=af,
+            topic_combination=comb
+        ))
+        # clusters.append((cluster_score, af, comb))
     print('Clusters final')
     pprint(clusters)
+    return clusters
+
+
+def get_cluster_members(topic_combination, predicted):
+    clusters = []
+    for i in range(len(np.unique(predicted))):
+        cluster = [
+            topic_combination[x]
+            for x in range(len(predicted))
+            if predicted[x] == i
+        ]
+        clusters.append(cluster)
     return clusters
 
 
@@ -134,28 +153,17 @@ def find_optimal_cluster(
 
     # Choose cluster with the highest score
     optimal_cluster = sorted(possible_clusterings, reverse=True)[0]
-    _, af, all_topics = optimal_cluster
+    converged, cluster_score, af, topic_combination = optimal_cluster
+    # Assume that non-convergence is due to single, repeated topic
     print('Optimal cluster')
-    print(all_topics)
+    print(topic_combination)
     predicted = af.labels_
-
-    def get_cluster_members(all_topics, predicted):
-        clusters = []
-        for i in range(len(np.unique(predicted))):
-            cluster = [
-                all_topics[x]
-                for x in range(len(predicted))
-                if predicted[x] == i
-            ]
-            clusters.append(cluster)
-        return clusters
-
-    clusters = get_cluster_members(all_topics, predicted)
+    clusters = get_cluster_members(topic_combination, predicted)
     pprint(clusters)
 
     if summary_type == 'extractive_summary':
         extractive_summary = [
-            (all_topics[af.cluster_centers_indices_[i]], clusters[i])
+            (topic_combination[af.cluster_centers_indices_[i]], clusters[i])
             for i in range(len(clusters))
         ]
         return extractive_summary
