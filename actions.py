@@ -62,6 +62,8 @@ class ActionSearchKnowledgeBase(Action):
         })
 
         pprint(similarity_map)
+        pprint('\n\n')
+        pprint(clusters)
 
         if not similarity_map:
             response = {

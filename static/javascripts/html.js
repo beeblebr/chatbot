@@ -44,7 +44,7 @@ function ContentToHTMLParser () {
             return '<ul class="choices options"' + activeId + '>' +
                 options.optionsList.map(function(option) {
                     var selected = option.selected ? 'selected' : '';
-                    return '<li class="' + selected + '" ' + disabledClass + '>' + capitalizeFirstLetter(option.text) + '</li>';
+                    return '<li class="' + selected + '" ' + disabledClass + '>' + option.text + '</li>';
                 }).join('')
             + '</ul>'
             + '<button class="done">Done</button><br /><br />';
