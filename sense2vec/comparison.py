@@ -105,6 +105,8 @@ def topic_similarity_map(
         lambda x: x['in_vocab'],
         topics_from_knowledge_item
     )
+    print(topics_from_query)
+    print(topics_from_knowledge_item)
     if topics_from_query and topics_from_knowledge_item:
         model_similarity = vector_cosine_similarity(
             weighted_vector_sum(topics_from_query),
