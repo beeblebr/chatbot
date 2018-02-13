@@ -61,7 +61,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
         comb = map(lambda x: unicode(x['topic']), comb)
         af = cluster_result_candidates(comb)
         # If only one cluster, then silhouette_score cannot be calculated, so just use -1 for now. Ideally should be calculated using intra-cluster distance.
-        n_clusters = len(np.unique(af.labels_)
+        n_clusters = len(np.unique(af.labels_))
         # Order of precedence of situations is as follows:
         # Silhouette score calculatable > Number of clusters same as samples > One cluster
         if not 1 < n_clusters < len(comb):
