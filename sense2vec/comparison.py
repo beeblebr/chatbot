@@ -153,7 +153,7 @@ def fetch_search_results(
         )
         all_results.append(similarity_map)
 
-    max_similarity = sorted(all_results, key=lambda x: x['cosine_similarity'], reverse=True)[0]
+    max_similarity = sorted(all_results, key=lambda x: x['cosine_similarity'], reverse=True)[0]['cosine_similarity']
     for i in range(len(all_results)):
         all_results[i]['normalized_cosine_similarity'] = all_results[i]['cosine_similarity'] / max_similarity
     subjective_ranking = sorted(all_results, key=lambda x: x['normalized_cosine_similarity'], reverse=True)
