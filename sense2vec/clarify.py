@@ -50,7 +50,6 @@ def cluster_result_candidates(candidates):
     candidates = filter(lambda x: x in sense_vec_model, candidates)
     embeddings = map(get_embedding, candidates)
 
-    print('clustering...')
     af = AffinityPropagation(verbose=True).fit(embeddings)
     return af
 
@@ -87,6 +86,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
         return clusters
 
     clusters = get_clusters(all_topics, predicted)
+    pprint(clusters)
 
     if summary_type == 'extractive_summary':
         extractive_summary = map(lambda i: (all_topics[af.cluster_centers_indices_[i]], clusters[i]),
