@@ -202,7 +202,9 @@ def get_user_from_id(eight_id):
 @app.route('/api/knowledge/<eight_id>')
 def get_user_knowledge(eight_id):
     knowledge = get_knowledge_by_eight_id(str(eight_id).zfill(8))
-    return jsonify({'text': knowledge['text']})
+    return jsonify({
+        'text': knowledge['text']
+    })
 
 
 @app.route('/api/knowledges/', methods=['POST'])
@@ -210,7 +212,9 @@ def add_to_k():
     k = request.get_json()
     k.update(timestamp=datetime.now)
     insert_knowledge(k)
-    return jsonify({'success': True})
+    return jsonify({
+        'success': True
+    })
 
 
 @app.route('/api/clarify')
@@ -240,7 +244,8 @@ def clarify():
     return jsonify({
         'type': 'found',
         'match': {
-            'user_id': relevant_knowledge_items[0]['eight_id']
+            'user_id': relevant_knowledge_items[0]['eight_id'],
+            'knowledge': relevant_knowledge_items[0]['text']
         }
     })
 
@@ -257,24 +262,42 @@ def query():
     try:
         if info['type'] == 'compromise':
             eight_id = info['similarity_map'][0]['eight_id']
-            return jsonify(
-                {'type': info['type'], 'before_message': response[0],
-                 'match': {'user_id': eight_id}})
+            return jsonify({
+                'type': info['type'], 
+                'before_message': response[0],
+                'match': {'user_id': eight_id}
+            })
+
         elif info['type'] == 'found':
             eight_id = info['similarity_map'][0]['eight_id']
-            return jsonify(
-                {'type': info['type'], 'match': {'user_id': eight_id}})
+            knowledge = info['similarity_map'][0]['text']
+            return jsonify({
+                'type': info['type'], 
+                'match': {
+                    'user_id': eight_id,
+                    'knowledge': knowledge
+                }
+            })
+
         elif info['type'] == 'clarify':
             cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
-            return jsonify({'type': info['type'], 'specify': cluster_heads})
+            return jsonify({
+                'type': info['type'], 
+                'specify': cluster_heads
+            })
+
         elif info['type'] == 'nothing_found':
-            return jsonify(
-                {'type': info['type'], 'before_message': 'Nothing found'})
+            return jsonify({
+                'type': info['type'], 
+                'before_message': 'Nothing found'
+            })
     except Exception as e:
         print(e)
         print('===END EXCEPTION===')
 
-    return jsonify({'type': 'unknown'})
+    return jsonify({
+        'type': 'unknown'
+    })
 
 
 app.run('0.0.0.0', port=8002, threaded=True, debug=True)

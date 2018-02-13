@@ -57,8 +57,8 @@ function Chat (parseContentToHtml) {
         );
     }
 
-    this.updateHtmlState = function () {
-        ChatUI.setContentHTML(parseContentToHtml(that.chatContent.content))
+    this.updateHtmlState = function (knowledge) {
+        ChatUI.setContentHTML(parseContentToHtml(that.chatContent.content, knowledge))
     }
 
     this.addBotMessage = function (message) {
@@ -79,10 +79,12 @@ function Chat (parseContentToHtml) {
         .then(that.updateHtmlState);
     }
 
-    this.addCard = function (message, card) {
+    this.addCard = function (message, knowledge, card) {
         that.chatContent.addCard(message, card);
         ChatUI.mockBotTyping(message.length)
-        .then(that.updateHtmlState);
+        .then(function(response) {
+            that.updateHtmlState(knowledge)
+        });
     }
 }
 

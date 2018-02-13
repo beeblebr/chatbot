@@ -86,7 +86,7 @@ function AskChat (parseContentToHtml) {
             that.getUserFromApi(response.match.user_id);
             break;
         case 'found':
-            that.getUserFromApi(response.match.user_id);
+            that.getUserFromApi(response.match.user_id, response.match.knowledge);
             console.log(response.match.user_id);
             break;
         case 'nothing_found':
@@ -95,31 +95,25 @@ function AskChat (parseContentToHtml) {
         case 'clarify':
             ChatUI.disableChatInput();
             that.specifyRequest(response.specify, getClarifyQuestion)
-        /*case 'clarify_case':
-            ChatUI.disableChatInput();
-            that.specifyRequest(response.specify, getClarifyCaseQuestion);
-            break;*/
         }
-        /*if (!!response.match) {
-            that.getUserFromApi(response.match.user_id);
-        } else {
-            that.specifyRequest(response.specify);
-        }*/
     }
 
     this.handleUserInputApiFailure = function (response) {
         console.log('Failed to send data to server!', response)
     }
 
-    this.getUserFromApi = function (userId) {
+    this.getUserFromApi = function (userId, knowledge) {
         Api.getUser(userId)
-        .then(that.handleGetUserApiSucess)
+        .then(function(response) {
+            that.handleGetUserApiSucess(response, knowledge)
+        })
         .catch(that.handleGetUserApiFailure);
     }
 
-    this.handleGetUserApiSucess = function (response) {
+    this.handleGetUserApiSucess = function (response, knowledge) {
         chat.addCard(
             getUserFoundText(response.name),
+            knowledge,
             response
         );
     }

@@ -1,6 +1,6 @@
 
 function ContentToHTMLParser () {
-    this.generateHTML = function (content) {
+    this.generateHTML = function (content, knowledge) {
         var messageIndex = 0;
         var numberOfMessages = content.length
         return content.reduce(function(html, message) {
@@ -10,7 +10,7 @@ function ContentToHTMLParser () {
                 '<div class="' + message.author + '">' +
                     addMessageToHtml(message.message, message.author) +
                     addOptionsToHtml(message.options, isLastElement) + 
-                    addUserCardToHtml(message.card) +
+                    addUserCardToHtml(message.card, knowledge) +
                 '</div>'
             );
         }, '');
@@ -53,7 +53,7 @@ function ContentToHTMLParser () {
         }
     }
 
-    var addUserCardToHtml = function (user) {
+    var addUserCardToHtml = function (user, knowledge) {
         if (!!user) {
             return '<div class="results">\
                 <div class="result">\
@@ -64,8 +64,7 @@ function ContentToHTMLParser () {
                                 <p class="name">' + user.name + '</p>\
                                 ' + getUserPositionElement(
                                     UserUtils.getUserPosition(user)) + '\
-                                ' + getUserSharedElement(
-                                    UserUtils.getUserSharedMessage(user)) + '\
+                                ' + getUserSharedElement(knowledge) + '\
                             </div>\
                         </li>\
                     </ul>\
