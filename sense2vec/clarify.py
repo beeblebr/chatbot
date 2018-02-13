@@ -40,7 +40,7 @@ def find_most_representative_topic(
         lambda token: sense_vec_model[token][1],
         candidate_topics
     )
-    candidate_topics = sense_vec_model[sum(embeddings), 1000][0]
+    candidate_topics = sense_vec_model.most_similar(sum(embeddings), 1000)[0]
 
     for i in range(min(len(candidate_topics), patience)):
         if sense_vec_model[candidate_topics[i]][0] > generality_threshold:
