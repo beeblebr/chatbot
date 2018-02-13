@@ -152,8 +152,8 @@ def fetch_search_results(
         all_results.append(similarity_map)
 
     from pprint import pprint
-
     buckets = bucketize_into_similarity_intervals(all_results)
+    pprint(buckets)
     non_empty_buckets = [bucket for bucket in buckets if bucket]
     if len(non_empty_buckets) == 0:
         return [], []
