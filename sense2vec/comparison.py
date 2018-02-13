@@ -89,7 +89,7 @@ def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonom
     return result
 
 
-def bucketize_into_similarity_intervals(results, min_score=0.65, interval_size=0.05):
+def bucketize_into_similarity_intervals(results, min_score=0.7, interval_size=0.05):
     intervals = reversed(np.arange(min_score, 1.0, interval_size))  # Divide (min_score, 1) into intervals of interval_size (in reverse order)
     buckets = []
     for lower_bound in intervals:

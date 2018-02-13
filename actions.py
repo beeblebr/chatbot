@@ -61,6 +61,8 @@ class ActionSearchKnowledgeBase(Action):
             'user_defined_taxonomy': user_defined_taxonomy
         })
 
+        pprint(similarity_map)
+
         if not similarity_map:
             response = {
                 'type': 'nothing_found'

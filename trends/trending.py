@@ -63,21 +63,21 @@ def identify_trending_topics():
         topic_wise_counts[topic] = num_mentions
 
     from pprint import pprint
-    for topic in topic_wise_counts:
-        print(topic)
-        print('============================')
-        print(['_' if x == 0 else x for x in topic_wise_counts[topic]])
-        print('\n\n\n')
+    # for topic in topic_wise_counts:
+    #     print(topic)
+    #     print('============================')
+    #     print(['_' if x == 0 else x for x in topic_wise_counts[topic]])
+    #     print('\n\n\n')
 
     topic_wise_scores = {}
     for topic in topic_wise_counts:
         counts = topic_wise_counts[topic]
         z_model = zscore(counts)
-        print(topic)
-        print('==========')
-        print(z_model.avg())
-        print(weighted_decay_sum(counts, 'chair' in topic))
-        print('\n\n')
+        # print(topic)
+        # print('==========')
+        # print(z_model.avg())
+        # print(weighted_decay_sum(counts, 'chair' in topic))
+        # print('\n\n')
         topic_wise_scores[topic] = z_model.score(weighted_decay_sum(counts))
 
     return topic_wise_scores
