@@ -5,6 +5,7 @@ from nltk import pos_tag
 # Custom stopwords list
 stop = map(lambda x: x.strip(), open('code/data/words.txt', 'rb').readlines())
 
+
 def prettify_topic(x):
     """Converts tokens in Sense2Vec compatible format to human readable format.
 
@@ -16,7 +17,7 @@ def prettify_topic(x):
 def uglify_topic(x):
     """Converts a phrase (or word) to Sense2Vec compatible format noun.
 
-    For example, "machine learning" to "machine_learning|NOUN". 
+    For example, "machine learning" to "machine_learning|NOUN".
     NOTE: This method does not infer the POS tag. It always appends "|NOUN".
     """
     return x.replace(' ', '_') + '|NOUN'

@@ -3,23 +3,19 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import pickle
-import itertools
-import sys
-import operator
-from collections import defaultdict
-from datetime import datetime
 from pprint import pprint
+
+from processing import pipeline, transforms
+
+from rasa_config import *
 
 from rasa_core.actions.action import Action
 from rasa_core.events import SlotSet
-from rasa_config import *
 
-from util.sense_utils import perform_batch_call
-from util.topic_utils import get_all_topics, prettify_topic, uglify_topic
 from util.db_utils import *
 
-from processing import filters, transforms, pipeline
+from util.sense_utils import perform_batch_call
+from util.topic_utils import get_all_topics, prettify_topic
 
 
 class ActionSearchKnowledgeBase(Action):

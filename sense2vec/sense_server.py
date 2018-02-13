@@ -1,8 +1,8 @@
 import json
 
-from flask import Flask, request
+from comparison import fetch_search_results
 
-from comparison import topic_similarity_map, fetch_search_results
+from flask import Flask, request
 
 app = Flask(__name__)
 

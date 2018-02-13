@@ -1,9 +1,10 @@
 from itertools import product
 
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 
 from sense import sense_vec_model, stop
+
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 def prettify_topic(x):
@@ -17,7 +18,7 @@ def prettify_topic(x):
 def uglify_topic(x):
     """Converts a phrase (or word) to Sense2Vec compatible format noun.
 
-    For example, "machine learning" to "machine_learning|NOUN". 
+    For example, "machine learning" to "machine_learning|NOUN".
     NOTE: This method does not infer the POS tag. It always appends "|NOUN".
     """
     return x.replace(' ', '_') + '|NOUN'
@@ -26,7 +27,8 @@ def uglify_topic(x):
 def split_tokens(x):
     """Splits token in Sense2Vec compatible format into individual words.
 
-    For example, it splits "machine_learning|NOUN" into the list ["machine", "learning"].
+    For example, it splits "machine_learning|NOUN" into the list ["machine",
+    "learning"].
     """
     return x.split('|')[0].split('_')
 
@@ -34,7 +36,8 @@ def split_tokens(x):
 def merge_tokens(x):
     """Combines list of words into Sense2Vec compatible format noun.
 
-    For example, it combines the list ["machine", "learning"] to "machine_learning|NOUN".
+    For example, it combines the list ["machine", "learning"] to
+    "machine_learning|NOUN".
     NOTE: This method does not infer the POS tag. It always appends "|NOUN".
     """
     return '_'.join(x) + '|NOUN'
@@ -61,7 +64,8 @@ def weighted_vector_sum(topics):
 def find_best_casing(topic):
     """Returns casing variant of a topic that the user most likely meant.
 
-    If the originally entered casing is not in Sense2Vec, it looks for the casing that's most frequently occuring.
+    If the originally entered casing is not in Sense2Vec, it looks for the
+    casing that's most frequently occuring.
 
     Args:
         topic: Topic in Sense2Vec compatible format.
@@ -79,7 +83,10 @@ def find_best_casing(topic):
     param_for_product = [[0, 1]] * len(tokens)
 
     for casing_combination in product(*param_for_product):
-        casing = [tokens[i].title() if casing_combination[i] else tokens[i].lower() for i in range(len(tokens))]
+        casing = [
+            tokens[i].title() if casing_combination[i] else tokens[i].lower()
+            for i in range(len(tokens))
+        ]
         repr = merge_tokens(casing)
         if repr in sense_vec_model:
             freqs.append((sense_vec_model[repr][0], repr))
@@ -113,17 +120,28 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    unique_merged = sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x: len(split_tokens(x)), reverse=True)
+    unique_merged = sorted(
+        [unicode(merge_tokens(x)) for x in unique],
+        key=lambda x: len(split_tokens(x)),
+        reverse=True
+    )
     # Remove stopwords
-    unique_merged = filter(lambda x : prettify_topic(x) not in stop, unique_merged)
+    unique_merged = filter(
+        lambda x: prettify_topic(x) not in stop,
+        unique_merged
+    )
     return unique_merged
 
 
 def vector_cosine_similarity(vector1, vector2):
-    return cosine_similarity(vector1.reshape(1, -1), vector2.reshape(1, -1))[0][0]
+    return cosine_similarity(
+        vector1.reshape(1, -1),
+        vector2.reshape(1, -1)
+    )[0][0]
 
 
 def topic_cosine_similarity(topic1, topic2):
     return vector_cosine_similarity(
-            sense_vec_model[unicode(topic1)][1],
-            sense_vec_model[unicode(topic2)][1])
+        sense_vec_model[unicode(topic1)][1],
+        sense_vec_model[unicode(topic2)][1]
+    )
