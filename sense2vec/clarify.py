@@ -121,7 +121,7 @@ def find_optimal_cluster(
 
     def get_clusters(all_topics, predicted):
         clusters = []
-        for i in range(len(set(predicted))):
+        for i in range(len(np.unique(predicted))):
             cluster = [
                 all_topics[x]
                 for x in range(len(predicted))

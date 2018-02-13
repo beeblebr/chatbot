@@ -189,7 +189,6 @@ def signup():
 
 
 """API Endpoints"""
-
 @app.route('/api/users/<eight_id>')
 def get_user_from_id(eight_id):
     user = get_user_from_eight_id(str(eight_id).zfill(8))
@@ -209,9 +208,13 @@ def get_user_knowledge(eight_id):
 
 @app.route('/api/knowledges/', methods=['POST'])
 def add_to_k():
+    print(1)
     k = request.get_json()
-    k.update(timestamp=datetime.now)
+    print(2)
+    k['timestamp'] = datetime.now()
+    print(3)
     insert_knowledge(k)
+    print(4)
     return jsonify({
         'success': True
     })

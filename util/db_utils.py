@@ -22,6 +22,7 @@ def get_knowledge_corpus(exclude_user=None):
 
 
 def insert_knowledge(k, transform_text=True):
+    print('Inserting')
     if transform_text:
         transformed_text = transform_doc_nltk(k['text'])
         k['transformed_text'] = transformed_text
