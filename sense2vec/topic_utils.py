@@ -3,7 +3,7 @@ from itertools import product
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-from sense import sense_vec_model
+from sense import sense_vec_model, stop
 
 
 def prettify_topic(x):
@@ -113,7 +113,10 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    return sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x: len(split_tokens(x)), reverse=True)
+    unique_merged = sorted([unicode(merge_tokens(x)) for x in unique], key=lambda x: len(split_tokens(x)), reverse=True)
+    # Remove stopwords
+    unique_merged = filter(lambda x : prettify_topic(x) not in stop, unique_merged)
+    return unique_merged
 
 
 def vector_cosine_similarity(vector1, vector2):

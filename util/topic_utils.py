@@ -85,4 +85,6 @@ def get_all_topics(message, transformed=False):
         pos = message.split()
     topics = filter(lambda x: x.split('|')[1] == 'NOUN', pos)
     topics = filter(lambda x: prettify_topic(x) not in stop, topics)
+    print('TOPICSSSSSS')
+    print(topics)
     return topics
