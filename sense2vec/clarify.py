@@ -80,18 +80,6 @@ def cluster_result_candidates(candidates):
     return af
 
 
-def vector_difference(a, b):
-    """Returns a - b.
-    Args:
-        a: Vector 1.
-        b: Vector 2.
-    Returns:
-        Unit vector in the direction of (a - b).
-    """
-    diff = a - b
-    return diff / np.linalg.norm(diff)
-
-
 def find_optimal_cluster(
     query_topics,
     search_results_topics,
@@ -101,6 +89,7 @@ def find_optimal_cluster(
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
+        print(query_topics)
         print(comb)
         af = cluster_result_candidates(comb)
         # If only one cluster, then silhouette_score cannot be calculated,
@@ -126,6 +115,8 @@ def find_optimal_cluster(
 
     optimal_cluster = sorted(clusters, reverse=True)[0]
     _, af, all_topics = optimal_cluster
+    print('Optimal cluster')
+    print(all_topics)
     predicted = af.labels_
 
     def get_clusters(all_topics, predicted):
