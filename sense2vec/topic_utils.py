@@ -106,6 +106,7 @@ def generate_variants(topic):
         return []
     tokens = split_tokens(topic)
 
+    verbose = False
     if 'water_wastage|NOUN' in topic:
         verbose = True
 
