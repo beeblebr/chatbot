@@ -96,6 +96,7 @@ def get_possible_clusterings(search_results_topics):
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
+        print(comb)
         af = cluster_result_candidates(comb)
         converged = af.n_iter_ != 200
         if not converged:
