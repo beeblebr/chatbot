@@ -53,7 +53,7 @@ def weighted_vector_sum(topics):
     weight_term = lambda topic: sense_vec_model[topic][1]
     result = sum(map(weight_term, topics))
     norm = np.linalg.norm(result)
-    if norm:
+    if norm != 0:
         result /= norm
     return result
 

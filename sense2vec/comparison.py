@@ -101,6 +101,8 @@ def bucketize_into_similarity_intervals(results, min_score=0.7, interval_size=0.
 
 def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy):
     all_results = []
+    if not query_topics['text']:
+        return [], []
     for knowledge_item in corpus_topics_map:
         similarity_map = topic_similarity_map(query_topics['text'], knowledge_item, user_defined_taxonomy)
         all_results.append(similarity_map)
