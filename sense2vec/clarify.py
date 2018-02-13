@@ -152,6 +152,8 @@ def find_optimal_cluster(
     summary_type='abstractive_summary'
 ):
     possible_clusterings = get_possible_clusterings(search_results_topics)
+    if not possible_clusterings:
+        return []
 
     # Choose cluster with the highest score
     optimal_cluster = sorted(possible_clusterings, reverse=True)[0]
