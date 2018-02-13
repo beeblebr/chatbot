@@ -9,7 +9,7 @@ from pprint import pprint
 
 import numpy as np
 
-from sense import sense_vec_model
+from sense import sense_vec_model, stop
 
 from sklearn.cluster import AffinityPropagation
 from sklearn.metrics import silhouette_score
@@ -61,10 +61,14 @@ def find_most_representative_topic(
             lambda topic: (sense_vec_model[topic][0], topic),
             candidate_topics
         ))[1]
-    return max(map(
+
+    # Remove stopwords
+    results = map(
         lambda topic: (sense_vec_model[topic][0], topic),
         candidate_topics[:max(40, flag)]
-    ))[1]
+    )
+    results = filter(lambda x: x[1] not in stop, results)
+    return max(results)[1]
 
 
 def fit_affinity_propagation_model(candidates):

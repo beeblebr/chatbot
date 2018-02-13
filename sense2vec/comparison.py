@@ -121,7 +121,7 @@ def topic_similarity_map(
 
 def bucketize_into_similarity_intervals(
     results,
-    min_score=0.7,
+    min_score=0.75,
     interval_size=0.05
 ):
 
