@@ -95,6 +95,10 @@ def get_possible_clusterings(search_results_topics):
         comb = map(lambda x: unicode(x['topic']), comb)
         af = cluster_result_candidates(comb)
         print(af.n_iter_)
+        print(af.cluster_centers_indices_)
+        print(af.cluster_centers_)
+        print(af.labels_)
+        print(af.affinity_matrix_)
         # If only one cluster, then silhouette_score cannot be calculated,
         # so just use -1 for now. Ideally should be calculated using
         # intra-cluster distance.
