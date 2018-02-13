@@ -98,6 +98,7 @@ def find_optimal_cluster(
         # so just use -1 for now. Ideally should be calculated using
         # intra-cluster distance.
         n_clusters = len(np.unique(af.labels_))
+        print('n_clusters = ' + str(n_clusters))
         # Order of precedence of situations is as follows:
         # Silhouette score calculatable > Number of clusters same as samples
         # > One cluster
