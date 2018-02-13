@@ -24,7 +24,6 @@ def find_most_representative_topic(candidate_topics, generality_threshold=1000, 
         str: Expected to return a topic which is either the most general among the candidates or a topic that roughly represents the general direction the vector is in.
     """
     # Remove stopwords from candidate_topics
-    candidate_topics = [topic for topic in candidate_topics if prettify_topic(topic) not in stop]
     for i in range(min(len(candidate_topics), patience)):
         if sense_vec_model[candidate_topics[i]][0] > generality_threshold:
             flag = i
@@ -62,6 +61,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
+        print(comb)
         af = cluster_result_candidates(comb)
         # If only one cluster, then silhouette_score cannot be calculated, so just use -1 for now. Ideally should be calculated using intra-cluster distance.
         n_clusters = len(np.unique(af.labels_))
