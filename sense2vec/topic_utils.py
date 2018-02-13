@@ -105,6 +105,11 @@ def generate_variants(topic):
     if '|' not in topic:
         return []
     tokens = split_tokens(topic)
+
+    if 'water_wastage|NOUN' in topic:
+        verbose = True
+
+
     variants = []
     for i in range(len(tokens)):
         variants.append(tokens[i:])
@@ -120,21 +125,27 @@ def generate_variants(topic):
             if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
                 proper_subsets.append(variants[j])
     unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
+    if verbose:
+        print(unique)
     unique_merged = sorted(
         [unicode(merge_tokens(x)) for x in unique],
         key=lambda x: len(split_tokens(x)),
         reverse=True
     )
+    if verbose:
+        print(unique_merged)
     # Remove stopwords
     unique_merged = filter(
         lambda x: prettify_topic(x) not in stop,
         unique_merged
     )
+    if verbose:
+        print(unique_merged)
     return unique_merged
 
 
 def get_top_items(topic, n=1000):
-    topic = find_valid_case_combination(unicode(topic))
+    topic = find_best_casing(unicode(topic))
     try:
         token = sense_vec_model[topic][1]
         related_items = sense_vec_model.most_similar(token, n)[0]
