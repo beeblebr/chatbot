@@ -141,8 +141,7 @@ def generate_variants(topic):
     )
     if verbose:
         print(unique_merged)
-    print('baaa')
-    print(unique_merged)
+
     return unique_merged
 
 
