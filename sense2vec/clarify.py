@@ -66,7 +66,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
         # Silhouette score calculatable > Number of clusters same as samples > One cluster
         if not 1 < n_clusters < len(comb):
             if n_clusters > 1:
-                cluster_score = -0.99
+                cluster_score = 1
             else:
                 cluster_score = -1
         else:
