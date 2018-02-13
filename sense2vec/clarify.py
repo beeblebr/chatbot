@@ -36,10 +36,12 @@ def find_most_representative_topic(
 
     # Find most general topic in the direction of sum vector of
     # candidate_topics
+    print(candidate_topics)
     embeddings = map(
         lambda token: sense_vec_model[token][1],
         candidate_topics
     )
+    print(embeddings)
     total = sum(embeddings)
     total /= np.linalg.norm(total)
     pprint(total)
