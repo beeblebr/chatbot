@@ -15,6 +15,7 @@ def index():
     params = json.loads(request.data)
 
     query_topics = params['query_topics']
+    print(query_topics)
     corpus_topics_map = params['corpus_topics_map']
     user_defined_taxonomy = params['user_defined_taxonomy']
 
