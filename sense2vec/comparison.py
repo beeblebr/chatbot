@@ -76,11 +76,14 @@ def topic_similarity_map(topics_from_query, knowledge_item, user_defined_taxonom
 
     topics_from_query = filter(lambda x: x['in_vocab'], topics_from_query)
     topics_from_knowledge_item = filter(lambda x: x['in_vocab'], topics_from_knowledge_item)
-    model_similarity = vector_cosine_similarity(
-        weighted_vector_sum(topics_from_query),
-        weighted_vector_sum(topics_from_knowledge_item)
-    )
-    
+    if topics_from_query and topics_from_knowledge_item:
+        model_similarity = vector_cosine_similarity(
+            weighted_vector_sum(topics_from_query),
+            weighted_vector_sum(topics_from_knowledge_item)
+        )
+    else:
+        model_similarity = 0
+
     result = {
         'ki_topics': topics_from_knowledge_item,
         '_id': knowledge_item['_id'],
@@ -101,8 +104,6 @@ def bucketize_into_similarity_intervals(results, min_score=0.7, interval_size=0.
 
 def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy):
     all_results = []
-    if not query_topics['text'].strip():
-        return [], []
     for knowledge_item in corpus_topics_map:
         similarity_map = topic_similarity_map(query_topics['text'], knowledge_item, user_defined_taxonomy)
         all_results.append(similarity_map)
