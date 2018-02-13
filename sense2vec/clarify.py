@@ -6,8 +6,9 @@ from sklearn.cluster import AffinityPropagation
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import silhouette_score
 
-from sense import sense_vec_model
+from sense import sense_vec_model, stop
 from topic_utils import topic_cosine_similarity, vector_cosine_similarity
+from topic_utils import prettify_topic
 
 
 def find_most_representative_topic(candidate_topics, generality_threshold=1000, window_size=10, patience=300):
@@ -22,6 +23,8 @@ def find_most_representative_topic(candidate_topics, generality_threshold=1000, 
     Returns:
         str: Expected to return a topic which is either the most general among the candidates or a topic that roughly represents the general direction the vector is in.
     """
+    # Remove stopwords from candidate_topics
+    candidate_topics = [topic for topic in candidate_topics if prettify_topic(topic) not in stop]
     for i in range(min(len(candidate_topics), patience)):
         if sense_vec_model[candidate_topics[i]][0] > generality_threshold:
             flag = i
