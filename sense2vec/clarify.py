@@ -75,7 +75,7 @@ def find_optimal_cluster(candidates, summary_type='abstractive_summary'):
         clusters.append((cluster_score, af, comb))
 
     optimal_cluster = sorted(clusters, reverse=True)[0]
-    _, af, all_topics = optimal_clusters
+    _, af, all_topics = optimal_cluster
     predicted = af.labels_
 
     def get_clusters(all_topics, predicted):
