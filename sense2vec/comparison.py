@@ -158,6 +158,6 @@ def fetch_search_results(
         clusters = find_optimal_cluster(
             query_topics['text'],
             map(lambda x: x['ki_topics'], first_non_empty_bucket),
-            summary_type='extractive_summary'
+            summary_type='abstractive_summary'
         )
         return first_non_empty_bucket, clusters
