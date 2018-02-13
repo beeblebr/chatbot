@@ -50,10 +50,11 @@ def weighted_vector_sum(topics):
         Vector sum of embeddings.
     """
     topics = map(lambda x: x['topic'], topics)
-    max_rank = max(map(lambda x: sense_vec_model[x][0], topics))
-    weight_term = lambda topic: sense_vec_model[topic][1]  # / max_rank
+    weight_term = lambda topic: sense_vec_model[topic][1]
     result = sum(map(weight_term, topics))
-    result /= np.linalg.norm(result)
+    norm = np.linalg.norm(result)
+    if norm:
+        result /= norm
     return result
 
 
