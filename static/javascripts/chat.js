@@ -57,8 +57,8 @@ function Chat (parseContentToHtml) {
         );
     }
 
-    this.updateHtmlState = function (knowledge) {
-        ChatUI.setContentHTML(parseContentToHtml(that.chatContent.content, knowledge))
+    this.updateHtmlState = function () {
+        ChatUI.setContentHTML(parseContentToHtml(that.chatContent.content))
     }
 
     this.addBotMessage = function (message) {
@@ -80,11 +80,9 @@ function Chat (parseContentToHtml) {
     }
 
     this.addCard = function (message, knowledge, card) {
-        that.chatContent.addCard(message, card);
+        that.chatContent.addCard(message, card, knowledge);
         ChatUI.mockBotTyping(message.length)
-        .then(function(response) {
-            that.updateHtmlState(knowledge)
-        });
+        .then(that.updateHtmlState);
     }
 }
 
@@ -126,10 +124,11 @@ function ChatContent () {
         });
     }
 
-    this.addCard = function (message, card) {
+    this.addCard = function (message, card, knowledge) {
         that.content.push({ 
             author: 'bot',
             message: message,
+            knowledge: knowledge,
             card: card 
         });
     }

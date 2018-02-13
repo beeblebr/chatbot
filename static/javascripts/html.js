@@ -10,7 +10,7 @@ function ContentToHTMLParser () {
                 '<div class="' + message.author + '">' +
                     addMessageToHtml(message.message, message.author) +
                     addOptionsToHtml(message.options, isLastElement) + 
-                    addUserCardToHtml(message.card, knowledge) +
+                    addUserCardToHtml(message.card, message.knowledge) +
                 '</div>'
             );
         }, '');
