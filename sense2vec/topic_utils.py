@@ -110,7 +110,6 @@ def generate_variants(topic):
     if 'water_wastage|NOUN' in topic:
         verbose = True
 
-
     variants = []
     for i in range(len(tokens)):
         variants.append(tokens[i:])
@@ -142,6 +141,8 @@ def generate_variants(topic):
     )
     if verbose:
         print(unique_merged)
+    print('baaa')
+    print(unique_merged)
     return unique_merged
 
 
