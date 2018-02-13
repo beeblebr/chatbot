@@ -115,5 +115,5 @@ def fetch_search_results(query_topics, corpus_topics_map, user_defined_taxonomy)
             return first_non_empty_bucket, []
     except:
         return [], []
-    clusters = find_optimal_cluster(map(lambda x: x['ki_topics'], first_non_empty_bucket))
+    clusters = find_optimal_cluster(map(lambda x: x['ki_topics'], first_non_empty_bucket), summary_type='extractive_summary')
     return first_non_empty_bucket, clusters
