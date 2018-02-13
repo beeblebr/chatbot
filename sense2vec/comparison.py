@@ -155,9 +155,12 @@ def fetch_search_results(
     if len(first_non_empty_bucket) == 1:
         return first_non_empty_bucket, []
     else:
-        clusters = find_optimal_cluster(
+        cluster = find_optimal_cluster(
             query_topics['text'],
             map(lambda x: x['ki_topics'], first_non_empty_bucket),
             summary_type='abstractive_summary'
         )
-        return first_non_empty_bucket, clusters
+        # Return a single element array if AF did not converge
+        if not cluster:
+            return [first_non_empty_bucket[0]], cluster
+        return first_non_empty_bucket, cluster

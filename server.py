@@ -237,7 +237,8 @@ def clarify():
         topics = [topic for topic in cluster[1]]
         relevant_topics.extend(topics)
 
-    # Iterate through similarity_map to find the knowledge items tagged with any of relevant_topics
+    # Iterate through similarity_map to find the knowledge items tagged with
+    # any of relevant_topics
     relevant_knowledge_items = []
     for knowledge_item in similarity_map:
         topics = map(lambda x: x['topic'], knowledge_item['ki_topics'])
@@ -266,7 +267,7 @@ def query():
         if info['type'] == 'compromise':
             eight_id = info['similarity_map'][0]['eight_id']
             return jsonify({
-                'type': info['type'], 
+                'type': info['type'],
                 'before_message': response[0],
                 'match': {'user_id': eight_id}
             })
@@ -275,7 +276,7 @@ def query():
             eight_id = info['similarity_map'][0]['eight_id']
             knowledge = info['similarity_map'][0]['text']
             return jsonify({
-                'type': info['type'], 
+                'type': info['type'],
                 'match': {
                     'user_id': eight_id,
                     'knowledge': knowledge
@@ -285,13 +286,13 @@ def query():
         elif info['type'] == 'clarify':
             cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
             return jsonify({
-                'type': info['type'], 
+                'type': info['type'],
                 'specify': cluster_heads
             })
 
         elif info['type'] == 'nothing_found':
             return jsonify({
-                'type': info['type'], 
+                'type': info['type'],
                 'before_message': 'Nothing found'
             })
     except Exception as e:

@@ -12,7 +12,7 @@ from sklearn.metrics import silhouette_score
 
 Cluster = namedtuple(
     'Cluster',
-    ['converged', 'silhouette_score', 'af_model', 'topic_combination']
+    ['silhouette_score', 'af_model', 'topic_combination']
 )
 
 
@@ -43,14 +43,12 @@ def find_most_representative_topic(
 
     # Find most general topic in the direction of sum vector of
     # candidate_topics
-    print(candidate_topics)
     embeddings = map(
         lambda token: sense_vec_model[token][1],
         candidate_topics
     )
     total = sum(embeddings)
     total /= np.linalg.norm(total)
-    pprint(total)
     candidate_topics = sense_vec_model.most_similar(total, 600)[0]
 
     for i in range(min(len(candidate_topics), patience)):
@@ -96,20 +94,20 @@ def get_possible_clusterings(search_results_topics):
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
-        print(comb)
         af = cluster_result_candidates(comb)
         converged = af.n_iter_ != 200
         if not converged:
             print('Did not converge')
             continue
+
         # If only one cluster, then silhouette_score cannot be calculated,
         # so just use -1 for now. Ideally should be calculated using
         # intra-cluster distance.
-        n_clusters = len(np.unique(af.labels_))
-        print('n_clusters = ' + str(n_clusters))
+        #
         # Order of precedence of situations is as follows:
         # Silhouette score calculatable > Number of clusters same as samples
         # > One cluster
+        n_clusters = len(np.unique(af.labels_))
         if not 1 < n_clusters < len(comb):
             if n_clusters > 1:
                 cluster_score = 1
@@ -123,13 +121,10 @@ def get_possible_clusterings(search_results_topics):
                 metric='cosine'
             )
         clusters.append(Cluster(
-            converged=converged,
             silhouette_score=cluster_score,
             af_model=af,
             topic_combination=comb
         ))
-        # clusters.append((cluster_score, af, comb))
-    print('Clusters final')
     pprint(clusters)
     return clusters
 
@@ -153,14 +148,12 @@ def find_optimal_cluster(
 ):
     possible_clusterings = get_possible_clusterings(search_results_topics)
     if not possible_clusterings:
-        return []
+        return None
 
     # Choose cluster with the highest score
     optimal_cluster = sorted(possible_clusterings, reverse=True)[0]
-    converged, cluster_score, af, topic_combination = optimal_cluster
+    cluster_score, af, topic_combination = optimal_cluster
     # Assume that non-convergence is due to single, repeated topic
-    print('Optimal cluster')
-    print(topic_combination)
     predicted = af.labels_
     clusters = get_cluster_members(topic_combination, predicted)
     pprint(clusters)
