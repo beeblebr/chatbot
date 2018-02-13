@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import numpy as np
 
 from topic_utils import generate_variants, prettify_topic, vector_cosine_similarity, weighted_vector_sum
@@ -151,7 +153,12 @@ def fetch_search_results(
         )
         all_results.append(similarity_map)
 
-    from pprint import pprint
+    max_similarity = sorted(all_results, key=lambda x: x['cosine_similarity'], reverse=True)[0]
+    for i in range(len(all_results)):
+        all_results[i]['normalized_cosine_similarity'] = all_results[i]['cosine_similarity'] / max_similarity
+    subjective_ranking = sorted(all_results, key=lambda x: x['normalized_cosine_similarity'], reverse=True)
+    pprint(subjective_ranking[:5])
+
     buckets = bucketize_into_similarity_intervals(all_results)
     pprint(buckets)
     non_empty_buckets = [bucket for bucket in buckets if bucket]
