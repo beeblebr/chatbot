@@ -24,6 +24,7 @@ def index():
     # Map float to string for JSON conversion
     for i in range(len(results)):
         results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
+        results[i]['normalized_cosine_similarity'] = str(results[i]['normalized_cosine_similarity'])
     return json.dumps({
         'results': json.dumps(results),
         'clusters': json.dumps(clusters)
