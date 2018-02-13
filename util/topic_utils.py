@@ -7,7 +7,7 @@ stop = map(lambda x: x.strip(), open('code/data/words.txt', 'rb').readlines())
 
 
 def prettify_topic(x):
-    """Converts tokens in Sense2Vec compatible format to human readable format.
+    """Convert tokens in Sense2Vec compatible format to human readable format.
 
     For example, "machine_learning|NOUN" to "machine learning".
     """
@@ -15,7 +15,7 @@ def prettify_topic(x):
 
 
 def uglify_topic(x):
-    """Converts a phrase (or word) to Sense2Vec compatible format noun.
+    """Convert a phrase (or word) to Sense2Vec compatible format noun.
 
     For example, "machine learning" to "machine_learning|NOUN".
     NOTE: This method does not infer the POS tag. It always appends "|NOUN".
@@ -24,7 +24,7 @@ def uglify_topic(x):
 
 
 def split_tokens(x):
-    """Splits token in Sense2Vec compatible format into individual words.
+    """Split token in Sense2Vec compatible format into individual words.
 
     For example, it splits "machine_learning|NOUN" into the list ["machine", "learning"].
     """
@@ -32,7 +32,7 @@ def split_tokens(x):
 
 
 def merge_tokens(x):
-    """Combines list of words into Sense2Vec compatible format noun.
+    """Combine list of words into Sense2Vec compatible format noun.
 
     For example, it combines the list ["machine", "learning"] to "machine_learning|NOUN".
     NOTE: This method does not infer the POS tag. It always appends "|NOUN".
@@ -41,7 +41,7 @@ def merge_tokens(x):
 
 
 def transform_doc_nltk(doc):
-    """Returns transformed version of text where noun phrases are POS tagged in Sense2Vec compatible format.
+    """Return transformed version of text where noun phrases are POS tagged in Sense2Vec compatible format.
 
     Args:
         doc: str
@@ -66,7 +66,7 @@ def transform_doc_nltk(doc):
 
 
 def get_all_topics(message, transformed=False):
-    """Returns list of potential topics from the given text.
+    """Return list of potential topics from the given text.
 
     Topics are words / phrases extracted from the text according to the noun chaining algorithm in `transform_doc_nltk`. Stopwords are filtered out.
 

@@ -1,3 +1,8 @@
+"""Secondary questioning system.
+
+This modules helps the user narrow down the target by clustering the initial search results into similar topics.
+"""
+
 from itertools import product
 from collections import namedtuple
 from pprint import pprint
@@ -19,7 +24,6 @@ Cluster = namedtuple(
 def find_most_representative_topic(
         candidate_topics,
         generality_threshold=1000,
-        window_size=10,
         patience=300
 ):
     """Return the topic most representative of a set of topics.
@@ -28,9 +32,7 @@ def find_most_representative_topic(
         candidate_topics: List of topic names (typically obtained from
         sense_vec_model.most_similar).
         generality_threshold: Frequency score above which a topic is
-        considered to be "general".
-        window_size: Size of window examined before returning most general
-        topic.
+        considered to be general enough to be potentially representative.
         patience: Number of topics examined before blindly returning the
         topic with the most frequency (even if it doesn't exceed the
         `generality_threshold`).
@@ -87,8 +89,7 @@ def fit_affinity_propagation_model(candidates):
 
 
 def get_possible_clusterings(search_results_topics):
-    """Return all possible clusterings by picking one topic from each
-    knowledge item at a time.
+    """Return all possible clusterings by picking one topic from each knowledge item at a time.
 
     Args:
         search_results_topics: list of lists

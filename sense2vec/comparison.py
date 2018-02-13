@@ -42,7 +42,7 @@ def get_custom_topic_matches(
     topics_from_query,
     topics_from_knowledge_item
 ):
-    """Returns topics in topics_from_knowledge_item that match any user-defined taxonomy matches."""
+    """Return topics in topics_from_knowledge_item that match any user-defined taxonomy matches."""
     matches = []
     for query_topic in topics_from_query:
         if not query_topic['in_vocab']:
@@ -63,7 +63,7 @@ def topic_similarity_map(
     knowledge_item,
     user_defined_taxonomy
 ):
-    """Augments each knowledge item with cosine similarity score calculated against query topics.
+    """Augment each knowledge item with cosine similarity score calculated against query topics.
 
     Args:
         topics_from_query: list
@@ -124,6 +124,7 @@ def bucketize_into_similarity_intervals(
     min_score=0.7,
     interval_size=0.05
 ):
+
     # Divide (min_score, 1) into intervals of interval_size (in reverse order
     intervals = reversed(np.arange(min_score, 1.0, interval_size))
     buckets = []
@@ -149,6 +150,9 @@ def fetch_search_results(
             user_defined_taxonomy
         )
         all_results.append(similarity_map)
+
+    from pprint import pprint
+    pprint(all_results)
 
     buckets = bucketize_into_similarity_intervals(all_results)
     non_empty_buckets = [bucket for bucket in buckets if bucket]

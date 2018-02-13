@@ -1,3 +1,5 @@
+"""Endpoints for all computations that the require Sense2Vec model."""
+
 import json
 
 from comparison import fetch_search_results

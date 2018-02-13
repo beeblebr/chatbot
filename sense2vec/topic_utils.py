@@ -53,8 +53,7 @@ def weighted_vector_sum(topics):
         Vector sum of embeddings.
     """
     topics = map(lambda x: x['topic'], topics)
-
-    def weight_term(topic): return sense_vec_model[topic][1]
+    weight_term = lambda topic: sense_vec_model[topic][1]
     result = sum(map(weight_term, topics))
     norm = np.linalg.norm(result)
     if norm != 0:
@@ -132,6 +131,22 @@ def generate_variants(topic):
         unique_merged
     )
     return unique_merged
+
+
+def get_top_items(topic, n=1000):
+    topic = find_valid_case_combination(unicode(topic))
+    try:
+        token = sense_vec_model[topic][1]
+        related_items = sense_vec_model.most_similar(token, n)[0]
+    except Exception as e:
+        return []
+
+    for i in range(len(related_items)):
+        related_items[i] = {'text': prettify_topic(related_items[i]), 'similarity': sense_vec_model_similarity(topic, related_items[i]).similarity}
+        if related_items[i]['similarity'] < 0.6:
+            break
+
+    return related_items[:i]
 
 
 def vector_cosine_similarity(vector1, vector2):
