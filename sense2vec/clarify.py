@@ -99,6 +99,7 @@ def get_possible_clusterings(search_results_topics):
         af = cluster_result_candidates(comb)
         converged = af.n_iter_ != 200
         if not converged:
+            print('Did not converge')
             continue
         # If only one cluster, then silhouette_score cannot be calculated,
         # so just use -1 for now. Ideally should be calculated using
