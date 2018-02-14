@@ -71,7 +71,7 @@ def find_most_representative_topic(
         candidate_topics[:max(40, flag)]
     )
     results = filter(lambda x: x[1] not in stop_words, results)
-    return max(results)[1]
+    return unicode(max(results)[1])
 
 
 def fit_affinity_propagation_model(candidates):
