@@ -2,13 +2,15 @@ from itertools import product
 
 import numpy as np
 
+from cluster import Cluster, fit_affinity_propagation_model, group_samples_by_label
 from sense import sense_vec_model
 
+from sklearn.cluster import AffinityPropagation
 from sklearn.metrics.pairwise import cosine_similarity
 
 
 def prettify_topic(x):
-    """Converts tokens in Sense2Vec compatible format to human readable format.
+    """Convert tokens in Sense2Vec compatible format to human readable format.
 
     For example, "machine_learning|NOUN" to "machine learning".
     """
@@ -16,7 +18,7 @@ def prettify_topic(x):
 
 
 def uglify_topic(x):
-    """Converts a phrase (or word) to Sense2Vec compatible format noun.
+    """Convert a phrase (or word) to Sense2Vec compatible format noun.
 
     For example, "machine learning" to "machine_learning|NOUN".
     NOTE: This method does not infer the POS tag. It always appends "|NOUN".
@@ -25,7 +27,7 @@ def uglify_topic(x):
 
 
 def split_tokens(x):
-    """Splits token in Sense2Vec compatible format into individual words.
+    """Split token in Sense2Vec compatible format into individual words.
 
     For example, it splits "machine_learning|NOUN" into the list ["machine",
     "learning"].
@@ -34,7 +36,7 @@ def split_tokens(x):
 
 
 def merge_tokens(x):
-    """Combines list of words into Sense2Vec compatible format noun.
+    """Combine list of words into Sense2Vec compatible format noun.
 
     For example, it combines the list ["machine", "learning"] to
     "machine_learning|NOUN".
@@ -44,7 +46,7 @@ def merge_tokens(x):
 
 
 def weighted_vector_sum(topics):
-    """Calculates sum of Sense2Vec embeddings of the topics.
+    """Calculate sum of Sense2Vec embeddings of the topics.
 
     Args:
         topics: List of dicts, each topic represented by a dict.
@@ -62,7 +64,7 @@ def weighted_vector_sum(topics):
 
 
 def find_best_casing(topic):
-    """Returns casing variant of a topic that the user most likely meant.
+    """Return casing variant of a topic that the user most likely meant.
 
     If the originally entered casing is not in Sense2Vec, it looks for the
     casing that's most frequently occuring.
@@ -93,8 +95,18 @@ def find_best_casing(topic):
     return max(freqs)[1] if freqs else None
 
 
-def generate_variants(topic, stop_words):
-    """Generates topic variants.
+def remove_proper_subsets(subsets):
+    proper_subsets = []
+    for i in range(len(subsets) - 1):
+        for j in range(i + 1, len(subsets)):
+            if ' '.join(subsets[j]).lower() in ' '.join(subsets[i]).lower():
+                proper_subsets.append(subsets[j])
+    unique = set(map(tuple, subsets)) - set(map(tuple, proper_subsets))
+    return unique
+
+
+def generate_potential_variants(topic, stop_words):
+    """Generate topic variants.
 
     Args:
         topic: Topic in Sense2Vec compatible format.
@@ -106,43 +118,40 @@ def generate_variants(topic, stop_words):
         return []
     tokens = split_tokens(topic)
 
-    verbose = False
-    if 'water_wastage|NOUN' in topic:
-        verbose = True
-
     variants = []
     for i in range(len(tokens)):
         variants.append(tokens[i:])
         variants.append(tokens[:-i])
+
     variants = map(lambda x: find_best_casing(merge_tokens(x)), variants)
     variants = filter(lambda x: x and x != '|NOUN', variants)
-    variants = map(split_tokens, variants)
 
-    # Remove proper subsets
-    proper_subsets = []
-    for i in range(len(variants) - 1):
-        for j in range(i + 1, len(variants)):
-            if ' '.join(variants[j]).lower() in ' '.join(variants[i]).lower():
-                proper_subsets.append(variants[j])
-    unique = set(map(tuple, variants)) - set(map(tuple, proper_subsets))
-    if verbose:
-        print(unique)
-    unique_merged = sorted(
-        [unicode(merge_tokens(x)) for x in unique],
-        key=lambda x: len(split_tokens(x)),
-        reverse=True
-    )
-    if verbose:
-        print(unique_merged)
-    # Remove stopwords
-    unique_merged = filter(
-        lambda x: prettify_topic(x) not in stop_words,
-        unique_merged
-    )
-    if verbose:
-        print(unique_merged)
+    # variants = map(split_tokens, variants)
+    # unique = remove_proper_subsets(variants)
+    # unique_merged = map(lambda x: merge_tokens, unique)
+    # unique_merged = filter(
+    #     lambda x: prettify_topic(x) not in stop_words,
+    #     unique_merged
+    # )
+    # return unique_merged
+    return variants
 
-    return unique_merged
+
+def generate_variants(potential_variants):
+    """Remove outlier variants.
+
+    Some potential variants might be subsets of the original topic, but mean something completely different.
+    For example, if `generate_variants("cost_cutting_variants|NOUN")` returns `['cost_cutting|NOUN', 'cutting_variants|NOUN']`. """
+
+    # If    
+
+    af = fit_affinity_propagation_model(potential_variants)
+    converged = af.n_iter_ != 200
+    if not converged:
+        pass
+    n_clusters = len(np.unique(af.labels_))
+    if n_clusters > 1:
+        pass
 
 
 def get_top_items(topic, n=1000):

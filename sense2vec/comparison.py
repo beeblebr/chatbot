@@ -30,7 +30,7 @@ def populate_with_variants(
     """
     all_topics = []
     for topic in topics:
-        variants = generate_variants(topic)
+        variants = generate_variants(topic, stop_words)
         all_topics.extend([{'topic': variant, 'in_vocab': True}
                            for variant in variants])
         if query_or_knowledge_item == KNOWLEDGE_ITEM and not variants:

@@ -4,21 +4,14 @@ This modules helps the user narrow down the target by clustering the initial sea
 """
 
 from itertools import product
-from collections import namedtuple
 from pprint import pprint
 
 import numpy as np
 
+from cluster import Cluster, fit_affinity_propagation_model, group_samples_by_label
 from sense import sense_vec_model, get_stop_words_list
 
-from sklearn.cluster import AffinityPropagation
 from sklearn.metrics import silhouette_score
-
-
-Cluster = namedtuple(
-    'Cluster',
-    ['silhouette_score', 'af_model', 'topic_combination']
-)
 
 
 stop_words = get_stop_words_list()
@@ -54,6 +47,7 @@ def find_most_representative_topic(
     total = sum(embeddings)
     total /= np.linalg.norm(total)
     candidate_topics = sense_vec_model.most_similar(total, 600)[0]
+    candidate_topics = filter(lambda x: '|' in x and x.split('|')[1] == 'NOUN', candidate_topics)
 
     for i in range(min(len(candidate_topics), patience)):
         if sense_vec_model[candidate_topics[i]][0] > generality_threshold:
@@ -65,34 +59,13 @@ def find_most_representative_topic(
             candidate_topics
         ))[1]
 
-    # Remove stopwords
     results = map(
         lambda topic: (sense_vec_model[topic][0], topic),
         candidate_topics[:max(40, flag)]
     )
+    # Remove stopwords
     results = filter(lambda x: x[1] not in stop_words, results)
     return max(results)[1]
-
-
-def fit_affinity_propagation_model(candidates):
-    """Fit an Affinity Propagation model to the list of topics.
-
-    The topics' Sense2Vec embeddings are used for clustering.
-
-    Args:
-        candidates: list
-            List of topics to cluster.
-
-    Returns:
-        af: The AffinityPropagation model fitted on the list.
-    """
-    candidates = map(lambda x: unicode(x), candidates)
-    # Just filter out for now
-    candidates = filter(lambda x: x in sense_vec_model, candidates)
-    embeddings = map(lambda token: sense_vec_model[token][1], candidates)
-
-    af = AffinityPropagation(verbose=True).fit(embeddings)
-    return af
 
 
 def get_possible_clusterings(search_results_topics):
@@ -141,30 +114,6 @@ def get_possible_clusterings(search_results_topics):
             topic_combination=comb
         ))
     pprint(clusters)
-    return clusters
-
-
-def group_samples_by_label(samples, labels):
-    """Group samples by their cluster labels.
-
-    Args:
-        samples: list
-            List of topics.
-        labels: list
-            Label map.
-
-    Returns:
-        clusters: list of lists
-            Each sublist contains members of a cluster.
-    """
-    clusters = []
-    for i in range(len(np.unique(labels))):
-        cluster = [
-            samples[x]
-            for x in range(len(labels))
-            if labels[x] == i
-        ]
-        clusters.append(cluster)
     return clusters
 
 

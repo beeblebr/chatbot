@@ -6,6 +6,7 @@ from sklearn.cluster import AffinityPropagation
 
 from sense import sense_vec_model
 
+
 Cluster = namedtuple(
     'Cluster',
     ['silhouette_score', 'af_model', 'topic_combination']
