@@ -2,10 +2,12 @@ from itertools import product
 
 import numpy as np
 
-from sense import sense_vec_model, stop_words
+from sense import sense_vec_model, get_stop_words_list
 
 from sklearn.metrics.pairwise import cosine_similarity
 
+
+stop_words = get_stop_words_list()
 
 
 def prettify_topic(x):

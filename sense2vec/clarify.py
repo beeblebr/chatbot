@@ -9,10 +9,13 @@ from pprint import pprint
 
 import numpy as np
 
-from sense import sense_vec_model, stop_words
+from sense import sense_vec_model, get_stop_words_list
 
 from sklearn.cluster import AffinityPropagation
 from sklearn.metrics import silhouette_score
+
+
+stop_words = get_stop_words_list()
 
 
 Cluster = namedtuple(
