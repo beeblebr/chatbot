@@ -9,8 +9,6 @@ def stop_words():
 
 def test_find_most_representative_topic(tmpdir):
     words_txt = open('words.txt', 'rb').read()
-    p = tmpdir.mkdir('code').join('words.txt')
-    p.write(words_txt)
 
     print(os.listdir('.'))
     print(os.listdir('code'))
