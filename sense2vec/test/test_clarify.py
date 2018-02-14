@@ -6,7 +6,7 @@ from ..sense import get_stop_words_list, sense_vec_model
 
 @pytest.fixture(scope='function')
 def stop_words():
-    return get_stop_words_list('code/words.txt')
+    return get_stop_words_list()
 
 
 def test_find_most_representative_topic(stop_words):
