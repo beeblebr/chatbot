@@ -87,13 +87,11 @@ def topic_similarity_map(
     topics_from_query = populate_with_variants(
         topics_from_query,
         user_defined_taxonomy,
-        stop_words,
         QUERY
     )
     topics_from_knowledge_item = populate_with_variants(
         topics_from_knowledge_item,
         user_defined_taxonomy,
-        stop_words,
         KNOWLEDGE_ITEM
     )
     if not (topics_from_query and topics_from_knowledge_item):
