@@ -1,5 +1,7 @@
-import os
 import pytest
+
+from .. import clarify
+from ..sense import get_stop_words_list, sense_vec_model
 
 
 @pytest.fixture(scope='function')
@@ -7,17 +9,7 @@ def stop_words():
     return get_stop_words_list('words.txt')
 
 
-def test_find_most_representative_topic(tmpdir):
-    words_txt = open('words.txt', 'rb').read()
-
-    print(os.listdir('.'))
-    print(os.listdir('code'))
-    print(open('code/words.txt', 'rb').read())
-
-
-    from .. import clarify
-    from ..sense import get_stop_words_list, sense_vec_model
-
+def test_find_most_representative_topic():
     candidate_topics = [
         'machine_learning|NOUN',
         'natural_language_processing|NOUN'
