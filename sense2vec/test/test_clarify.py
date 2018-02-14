@@ -1,6 +1,6 @@
 import pytest
 
-from clarify import find_most_representative_topic
+from code.clarify import find_most_representative_topic
 
 
 def test_find_most_representative_topic():
@@ -11,4 +11,3 @@ def test_find_most_representative_topic():
     representative_topic = find_most_representative_topic(candidate_topics)
 
     assert len(representative_topic) == 1
-    
