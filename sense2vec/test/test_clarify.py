@@ -9,7 +9,7 @@ def stop_words():
     return get_stop_words_list('words.txt')
 
 
-def test_find_most_representative_topic():
+def test_find_most_representative_topic(stop_words):
     candidate_topics = [
         u'machine_learning|NOUN',
         u'natural_language_processing|NOUN'
