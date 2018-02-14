@@ -2,9 +2,10 @@ from itertools import product
 
 import numpy as np
 
-from sense import sense_vec_model, stop
+from sense import sense_vec_model, stop_words
 
 from sklearn.metrics.pairwise import cosine_similarity
+
 
 
 def prettify_topic(x):
@@ -136,7 +137,7 @@ def generate_variants(topic):
         print(unique_merged)
     # Remove stopwords
     unique_merged = filter(
-        lambda x: prettify_topic(x) not in stop,
+        lambda x: prettify_topic(x) not in stop_words,
         unique_merged
     )
     if verbose:
