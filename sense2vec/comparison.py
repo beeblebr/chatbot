@@ -10,10 +10,12 @@ QUERY = 1
 KNOWLEDGE_ITEM = 2
 
 
+stop_words = get_stop_words_list()
+
+
 def populate_with_variants(
     topics,
     user_defined_taxonomy,
-    stop_words,
     query_or_knowledge_item
 ):
     """Fetch all possible variants for topics that are part of Sense2Vec vocabulary and populates topics necessary for user-defined taxonomy matching.
@@ -28,7 +30,7 @@ def populate_with_variants(
     """
     all_topics = []
     for topic in topics:
-        variants = generate_variants(topic, stop_words)
+        variants = generate_variants(topic)
         all_topics.extend([{'topic': variant, 'in_vocab': True}
                            for variant in variants])
         if query_or_knowledge_item == KNOWLEDGE_ITEM and not variants:
@@ -80,8 +82,6 @@ def topic_similarity_map(
     Returns:
         dict: Dict containing knowledge item and similarity score.
     """
-    stop_words = get_stop_words_list()
-
     topics_from_knowledge_item = knowledge_item['text']
 
     topics_from_query = populate_with_variants(
@@ -165,7 +165,7 @@ def fetch_search_results(
     pprint(max_similarity)
     max_similarity = max_similarity[0]['cosine_similarity']
     for i in range(len(all_results)):
-        all_results[i]['normalized_cosine_similarity'] = all_results[i]['cosine_similarity'] / max_similarity
+        all_results[i]['normalized_cosine_similarity'] = all_results[i]['cosine_similarity'] / min(1, max_similarity)
     subjective_ranking = sorted(all_results, key=lambda x: x['normalized_cosine_similarity'], reverse=True)
     pprint(subjective_ranking[:5])
 
