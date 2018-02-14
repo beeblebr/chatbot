@@ -11,8 +11,8 @@ def stop_words():
 
 def test_find_most_representative_topic():
     candidate_topics = [
-        'machine_learning|NOUN',
-        'natural_language_processing|NOUN'
+        u'machine_learning|NOUN',
+        u'natural_language_processing|NOUN'
     ]
     representative_topic = clarify.find_most_representative_topic(candidate_topics)
 
