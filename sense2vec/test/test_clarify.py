@@ -1,7 +1,7 @@
 import pytest
 
 from .. import clarify
-from sense import get_stop_words_list
+from ..sense import get_stop_words_list
 
 
 @pytest.fixture(scope='module')
