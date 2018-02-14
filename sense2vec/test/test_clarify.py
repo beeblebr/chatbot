@@ -12,9 +12,11 @@ def test_find_most_representative_topic(tmpdir):
     p = tmpdir.mkdir('code').join('words.txt')
     p.write(words_txt)
 
-    print(os.listdir())
+    print(os.listdir('.'))
+    print(os.listdir('code'))
+    print(open('code/words.txt', 'rb').read())
 
-    
+
     from .. import clarify
     from ..sense import get_stop_words_list, sense_vec_model
 
