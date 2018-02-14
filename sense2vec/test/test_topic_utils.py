@@ -22,5 +22,5 @@ def test_generate_variants(stop_words):
 		])
 	]
 	for phrase, variants in input_output_pairs:
-		assert set(generate_variants(phrase)) == set(variants)
+		assert set(generate_variants(phrase, stop_words)) == set(variants)
 	
