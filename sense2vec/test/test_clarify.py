@@ -1,6 +1,6 @@
 import pytest
 
-import clarify
+from .. import clarify
 from sense import get_stop_words_list
 
 

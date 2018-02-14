@@ -7,9 +7,6 @@ from sense import sense_vec_model, get_stop_words_list
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-stop_words = get_stop_words_list()
-
-
 def prettify_topic(x):
     """Converts tokens in Sense2Vec compatible format to human readable format.
 
@@ -96,7 +93,7 @@ def find_best_casing(topic):
     return max(freqs)[1] if freqs else None
 
 
-def generate_variants(topic):
+def generate_variants(topic, stop_words):
     """Generates topic variants.
 
     Args:
