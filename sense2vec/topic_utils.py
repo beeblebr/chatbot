@@ -105,7 +105,7 @@ def remove_proper_subsets(subsets):
     return unique
 
 
-def generate_potential_variants(topic, stop_words):
+def generate_variants(topic, stop_words):
     """Generate topic variants.
 
     Args:
@@ -126,18 +126,18 @@ def generate_potential_variants(topic, stop_words):
     variants = map(lambda x: find_best_casing(merge_tokens(x)), variants)
     variants = filter(lambda x: x and x != '|NOUN', variants)
 
-    # variants = map(split_tokens, variants)
-    # unique = remove_proper_subsets(variants)
-    # unique_merged = map(lambda x: merge_tokens, unique)
-    # unique_merged = filter(
-    #     lambda x: prettify_topic(x) not in stop_words,
-    #     unique_merged
-    # )
-    # return unique_merged
+    variants = map(split_tokens, variants)
+    unique = remove_proper_subsets(variants)
+    unique_merged = map(lambda x: merge_tokens, unique)
+    unique_merged = filter(
+        lambda x: prettify_topic(x) not in stop_words,
+        unique_merged
+    )
+    return unique_merged
     return variants
 
 
-def generate_variants(potential_variants):
+def generate_variants_1(potential_variants):
     """Remove outlier variants.
 
     Some potential variants might be subsets of the original topic, but mean something completely different.
