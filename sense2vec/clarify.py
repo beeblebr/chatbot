@@ -60,10 +60,10 @@ def find_most_representative_topic(
             flag = i
             break
     else:
-        return unicode(max(map(
+        return max(map(
             lambda topic: (sense_vec_model[topic][0], topic),
             candidate_topics
-        ))[1])
+        ))[1]
 
     # Remove stopwords
     results = map(
@@ -71,7 +71,7 @@ def find_most_representative_topic(
         candidate_topics[:max(40, flag)]
     )
     results = filter(lambda x: x[1] not in stop_words, results)
-    return unicode(max(results)[1])
+    return max(results)[1]
 
 
 def fit_affinity_propagation_model(candidates):
