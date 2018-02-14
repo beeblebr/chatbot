@@ -1,3 +1,4 @@
+import os
 import pytest
 
 from .. import clarify
@@ -13,6 +14,8 @@ def test_find_most_representative_topic(tmpdir):
     words_txt = open('words.txt', 'rb').read()
     p = tmpdir.mkdir('code').join('words.txt')
     p.write(words_txt)
+
+    print(os.listdir())
 
     candidate_topics = [
         'machine_learning|NOUN',
