@@ -60,10 +60,10 @@ def find_most_representative_topic(
             flag = i
             break
     else:
-        return max(map(
+        return unicode(max(map(
             lambda topic: (sense_vec_model[topic][0], topic),
             candidate_topics
-        ))[1]
+        ))[1])
 
     # Remove stopwords
     results = map(
