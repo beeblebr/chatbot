@@ -134,7 +134,6 @@ def generate_variants(topic, stop_words):
         unique_merged
     )
     return unique_merged
-    return variants
 
 
 def generate_variants_1(potential_variants):
