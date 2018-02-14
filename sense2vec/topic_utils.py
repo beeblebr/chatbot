@@ -2,7 +2,7 @@ from itertools import product
 
 import numpy as np
 
-from sense import sense_vec_model, get_stop_words_list
+from sense import sense_vec_model
 
 from sklearn.metrics.pairwise import cosine_similarity
 

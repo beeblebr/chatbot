@@ -21,9 +21,11 @@ Cluster = namedtuple(
 )
 
 
+stop_words = get_stop_words_list()
+
+
 def find_most_representative_topic(
         candidate_topics,
-        stop_words,
         generality_threshold=1000,
         patience=300
 ):
@@ -208,7 +210,6 @@ def find_optimal_cluster(
         ]
         return extractive_summary
     elif summary_type == 'abstractive_summary':
-        stop_words = get_stop_words_list()
         abstractive_summary = [
             (find_most_representative_topic(cluster, stop_words), cluster)
             for cluster in clusters

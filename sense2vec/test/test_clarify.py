@@ -9,12 +9,16 @@ def stop_words():
     return get_stop_words_list('words.txt')
 
 
-def test_find_most_representative_topic(stop_words):
+def test_find_most_representative_topic(tmpdir):
+    words_txt = open('words.txt', 'rb').read()
+    p = tmpdir.mkdir('code').join('words.txt')
+    p.write(words_txt)
+
     candidate_topics = [
         'machine_learning|NOUN',
         'natural_language_processing|NOUN'
     ]
-    representative_topic = clarify.find_most_representative_topic(candidate_topics, stop_words)
+    representative_topic = clarify.find_most_representative_topic(candidate_topics)
 
     # Must not be None
     assert representative_topic

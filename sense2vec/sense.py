@@ -10,3 +10,6 @@ def get_stop_words_list(path='code/words.txt'):
         open(path, 'rb').readlines()
     )
     return stopwords
+
+
+stop_words = get_stop_words_list()
