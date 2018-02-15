@@ -23,7 +23,7 @@ class CorpusSearch(BaseIntent):
         corpus_topics_map = [
             {
                 '_id': str(item['_id']),
-                'text': get_all_topics(
+                'topics': get_all_topics(
                     item['transformed_text'],
                     transformed=True
                 )
