@@ -3,10 +3,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 from rasa_core.actions.action import Action
 from rasa_core.events import SlotSet
 
@@ -16,6 +12,10 @@ from intents.corpus_clarification import CorpusClarification
 from intents.corpus_search import CorpusSearch
 from intents.query import Query
 from intents.query_clarification import QueryClarification
+
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class ActionSearchKnowledgeBase(Action):
@@ -40,10 +40,13 @@ class ActionSearchKnowledgeBase(Action):
             'CORPUS_SEARCH': CorpusSearch,
             'CORPUS_CLARIFICATION': CorpusClarification
         }
-        slot_set = intents[intent](tracker, user_id, query).run()
+        slot_set = intents[intent](tracker, user_id, query).handle_intent()
         # Wrap returned slots in response_metadata
-        response_metadata = dict()
-        for slot in slot_set:
-            response_metadata[slot.key] = slot.value
+        response_metadata = {
+            slot.key: slot.value for slot in slot_set
+        }
         logger.info(response_metadata)
+
+        # Revert tracker.slots object to original value
+        tracker.slots = slots_
         return [SlotSet('response_metadata', response_metadata)]

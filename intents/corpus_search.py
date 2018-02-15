@@ -1,4 +1,7 @@
 import json
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from rasa_core.events import SlotSet
 
@@ -17,7 +20,7 @@ class CorpusSearch(BaseIntent):
         BaseIntent.__init__(self, tracker, user_id, query)
 
 
-    def run(self):
+    def handle_intent(self):
         query_topics = {'topics': get_all_topics(self.query)}
         corpus = list(get_knowledge_corpus(exclude_user=self.user_id))
         corpus_topics_map = [
@@ -52,6 +55,7 @@ class CorpusSearch(BaseIntent):
             )
 
             if len(similarity_map) > 1:
+                logger.info('Corpus clarification needed')
                 return [
                     SlotSet('result', 'CORPUS_CLARIFICATION_NEEDED'),
                     SlotSet('intent', 'CORPUS_CLARIFICATION'),
@@ -59,6 +63,7 @@ class CorpusSearch(BaseIntent):
                     SlotSet('clusters', clusters)
                 ]
             else:
+                logger.info('Corpus result found')
                 return [
                     SlotSet('result', 'FOUND'),
                     SlotSet('similarity_map', similarity_map)

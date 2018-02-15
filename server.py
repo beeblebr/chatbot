@@ -1,15 +1,17 @@
 from functools import wraps
 from flask import *
 from datetime import datetime
-from pprint import pprint
-
-import requests
 
 from util.db_utils import *
 from util.sense_utils import get_closest_sense_items
 from util.topic_utils import prettify_topic, uglify_topic
 
 from bot_wrapper import handle_response, get_slots_of_user
+
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'super-secrfeet'
@@ -58,8 +60,8 @@ def taxonomy_builder():
 @app.route('/admin/taxonomy/related', methods=['POST'])
 @requires_auth
 def fetch_related_topics():
-    topic = request.form.get('topic')
-    related_topics = get_closest_sense_items(topic)
+    search_topic = request.form.get('topic')
+    related_topics = get_closest_sense_items(search_topic)
     return jsonify([{'name': topic['text'], 'similarity': (1)} for topic in
                     related_topics])
 
@@ -267,6 +269,7 @@ def query():
     )
 
     info = slots['response_metadata'].value
+    logger.info(info)
 
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
         pass
@@ -274,7 +277,7 @@ def query():
     elif info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
         cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
         return jsonify({
-            'type': info['type'],
+            'type': info['result'],
             'specify': cluster_heads
         })
 
@@ -282,7 +285,7 @@ def query():
         eight_id = info['similarity_map'][0]['eight_id']
         knowledge = info['similarity_map'][0]['text']
         return jsonify({
-            'type': info['type'],
+            'type': info['result'],
             'match': {
                 'user_id': eight_id,
                 'knowledge': knowledge
@@ -291,7 +294,7 @@ def query():
 
     elif info['result'] == 'NOTHING_FOUND':
         return jsonify({
-            'type': info['type'],
+            'type': info['result'],
             'before_message': 'Nothing found'
         })
 

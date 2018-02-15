@@ -10,7 +10,7 @@ class QueryClarification(BaseIntent):
         BaseIntent.__init__(self, tracker, user_id, query)
 
 
-    def run(self):
+    def handle_intent(self):
         pass
 
 

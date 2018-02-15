@@ -18,7 +18,7 @@ class Query(BaseIntent):
         BaseIntent.__init__(self, tracker, user_id, query)
 
 
-    def run(self):
+    def handle_intent(self):
         add_question_to_user_history(self.user_id, self.query)
         query_topics = {
             'topics': get_all_topics(self.query)
@@ -36,7 +36,7 @@ class Query(BaseIntent):
             ]
         elif response['result'] == 'QUERY_SUCCESS':
             logger.info('Query success')
-            return CorpusSearch(self.tracker, self.user_id, self.query).run()
+            return CorpusSearch(self.tracker, self.user_id, self.query).handle_intent()
 
 
     def send_query(self, query_topics):

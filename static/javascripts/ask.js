@@ -79,20 +79,21 @@ function AskChat (parseContentToHtml) {
     }
 
     this.handleUserInputApiSuccess = function (response) {
+        console.log(response.type)
         switch(response.type) {
         case 'compromise':
             console.log(response.before_message);
             chat.addBotMessage(response.before_message);
             that.getUserFromApi(response.match.user_id);
             break;
-        case 'found':
+        case 'FOUND':
             that.getUserFromApi(response.match.user_id, response.match.knowledge);
             console.log(response.match.user_id);
             break;
-        case 'nothing_found':
+        case 'NOTHING_FOUND':
             chat.addBotMessage(getDidNotFindText());
             break;
-        case 'clarify':
+        case 'CORPUS_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
             that.specifyRequest(response.specify, getClarifyQuestion)
         }

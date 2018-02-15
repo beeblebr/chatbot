@@ -18,7 +18,7 @@ class BaseIntent(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def run(self):
+    def handle_intent(self):
         raise NotImplementedError()
 
     @property
