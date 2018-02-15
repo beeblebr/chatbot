@@ -207,3 +207,7 @@ def process_corpus_search(params):
         'results': json.dumps(results),
         'clusters': json.dumps(clusters)
     })
+
+
+def process_corpus_clarification(params):
+    return json.dumps({})
