@@ -106,7 +106,7 @@ def remove_proper_subsets(subsets):
     return unique
 
 
-def generate_potential_variants(topic, stop_words):
+def generate_variants(topic, stop_words):
     """Generate topic variants.
 
     Args:
@@ -135,22 +135,22 @@ def generate_potential_variants(topic, stop_words):
     )
     return variants
 
-    # variants = map(split_tokens, variants)
-    # unique = remove_proper_subsets(variants)
-    # unique_merged = map(lambda x: merge_tokens, unique)
-    # return unique_merged
+    variants = map(split_tokens, variants)
+    unique = remove_proper_subsets(variants)
+    unique_merged = map(lambda x: merge_tokens, unique)
+    return unique_merged
 
 
-def generate_variants(topic, stop_words):
-    potential_variants = generate_potential_variants(topic, stop_words)
-    af = fit_affinity_propagation_model(potential_variants)
-    converged = af.n_iter_ != 200
-    if not converged:
-        pass
-    n_clusters = len(np.unique(af.labels_))
-    clusters = group_samples_by_label(potential_variants, af.labels_)
-    if n_clusters > 1:
-        options = set([find_most_representative_topic(topics) for topics in clusters])
+# def generate_variants(topic, stop_words):
+#     potential_variants = generate_potential_variants(topic, stop_words)
+#     af = fit_affinity_propagation_model(potential_variants)
+#     converged = af.n_iter_ != 200
+#     if not converged:
+#         pass
+#     n_clusters = len(np.unique(af.labels_))
+#     clusters = group_samples_by_label(potential_variants, af.labels_)
+#     if n_clusters > 1:
+#         options = set([find_most_representative_topic(topics) for topics in clusters] + [])
 
 
 def get_top_items(topic, n=1000):
