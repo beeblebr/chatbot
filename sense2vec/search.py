@@ -203,10 +203,18 @@ def process_corpus_search(params):
         results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
         results[i]['normalized_cosine_similarity'] = str(results[i]['normalized_cosine_similarity'])
 
-    return json.dumps({
-        'results': json.dumps(results),
-        'clusters': json.dumps(clusters)
-    })
+    if not clusters:
+        return json.dumps({
+            'result': 'FOUND',
+            'results': json.dumps(results),
+            'clusters': json.dumps(clusters)
+        })
+    else:
+        return json.dumps({
+            'result': 'CLARIFY_CORPUS',
+            'results': json.dumps(results),
+            'clusters': json.dumps(clusters)
+        })
 
 
 def process_corpus_clarification(params):
