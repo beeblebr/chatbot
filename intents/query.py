@@ -14,10 +14,6 @@ from intents.corpus_search import CorpusSearch
 class Query(BaseIntent):
 
 
-    def __init__(self, tracker, user_id, query):
-        BaseIntent.__init__(self, tracker, user_id, query)
-
-
     def handle_intent(self):
         add_question_to_user_history(self.user_id, self.query)
         query_topics = {

@@ -6,10 +6,6 @@ from intent import BaseIntent
 class QueryClarification(BaseIntent):
 
 
-    def __init__(self, tracker, user_id, query):
-        BaseIntent.__init__(self, tracker, user_id, query)
-
-
     def handle_intent(self):
         pass
 

@@ -16,10 +16,6 @@ from intent import BaseIntent
 class CorpusSearch(BaseIntent):
 
 
-    def __init__(self, tracker, user_id, query):
-        BaseIntent.__init__(self, tracker, user_id, query)
-
-
     def handle_intent(self):
         query_topics = {'topics': get_all_topics(self.query)}
         corpus = list(get_knowledge_corpus(exclude_user=self.user_id))

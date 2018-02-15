@@ -9,10 +9,6 @@ logger = logging.getLogger(__name__)
 class CorpusClarification(BaseIntent):
 
 
-    def __init__(self, tracker, user_id, query):
-        BaseIntent.__init__(self, tracker, user_id, query)
-
-
     def handle_intent(self):
         pass
 
