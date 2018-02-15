@@ -9,7 +9,7 @@ from util.db_utils import *
 from util.sense_utils import get_closest_sense_items
 from util.topic_utils import prettify_topic, uglify_topic
 
-from bot_wrapper import handle_message, get_slots_of_user
+from bot_wrapper import handle_response, get_slots_of_user
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'super-secrfeet'
@@ -210,13 +210,9 @@ def get_user_knowledge(eight_id):
 
 @app.route('/api/knowledges/', methods=['POST'])
 def add_to_k():
-    print(1)
     k = request.get_json()
-    print(2)
     k['timestamp'] = datetime.now()
-    print(3)
     insert_knowledge(k)
-    print(4)
     return jsonify({
         'success': True
     })
@@ -261,45 +257,41 @@ def query():
     q = request.args.get('text')
     user_id = request.args.get('user_id')
 
-    # Send message to bot, and retrieve response_metadata
-    response, slots = handle_message(user_id, unicode(q))
+    response, slots = handle_response(
+        user_id,
+        query=q,
+        intent='QUERY'
+    )
+
     info = slots['response_metadata'].value
 
-    try:
-        if info['type'] == 'compromise':
-            eight_id = info['similarity_map'][0]['eight_id']
-            return jsonify({
-                'type': info['type'],
-                'before_message': response[0],
-                'match': {'user_id': eight_id}
-            })
+    if slots['result'].value == 'QUERY_CLARIFICATION_NEEDED':
+        pass
 
-        elif info['type'] == 'found':
-            eight_id = info['similarity_map'][0]['eight_id']
-            knowledge = info['similarity_map'][0]['text']
-            return jsonify({
-                'type': info['type'],
-                'match': {
-                    'user_id': eight_id,
-                    'knowledge': knowledge
-                }
-            })
+    elif slots['result'].value == 'CORPUS_CLARIFICATION_NEEDED':
+        cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
+        return jsonify({
+            'type': info['type'],
+            'specify': cluster_heads
+        })
 
-        elif info['type'] == 'clarify':
-            cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
-            return jsonify({
-                'type': info['type'],
-                'specify': cluster_heads
-            })
+    elif slots['result'].value == 'FOUND':
+        eight_id = info['similarity_map'][0]['eight_id']
+        knowledge = info['similarity_map'][0]['text']
+        return jsonify({
+            'type': info['type'],
+            'match': {
+                'user_id': eight_id,
+                'knowledge': knowledge
+            }
+        })
 
-        elif info['type'] == 'nothing_found':
-            return jsonify({
-                'type': info['type'],
-                'before_message': 'Nothing found'
-            })
-    except Exception as e:
-        print(e)
-        print('===END EXCEPTION===')
+    elif slots['result'].value == 'NOTHING_FOUND':
+        return jsonify({
+            'type': info['type'],
+            'before_message': 'Nothing found'
+        })
+
 
     return jsonify({
         'type': 'unknown'

@@ -2,7 +2,8 @@
 
 import json
 
-from comparison import fetch_search_results
+from search import process_corpus_search, process_corpus_clarification
+from query import process_query, process_query_clarification
 
 from flask import Flask, request
 
@@ -14,21 +15,15 @@ def index():
     """Route to handle questions."""
     params = json.loads(request.data)
 
-    query_topics = params['query_topics']
-    print(query_topics)
-    corpus_topics_map = params['corpus_topics_map']
-    user_defined_taxonomy = params['user_defined_taxonomy']
+    intent_handlers = {
+        'QUERY': process_query,
+        'QUERY_CLARIFICATION': process_query_clarification,
+        'CORPUS_SEARCH': process_corpus_search,
+        'CORPUS_CLARIFICATION': process_corpus_clarification
+    }
 
-    results, clusters = fetch_search_results(
-        query_topics, corpus_topics_map, user_defined_taxonomy)
-    # Map float to string for JSON conversion
-    for i in range(len(results)):
-        results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
-        results[i]['normalized_cosine_similarity'] = str(results[i]['normalized_cosine_similarity'])
-    return json.dumps({
-        'results': json.dumps(results),
-        'clusters': json.dumps(clusters)
-    })
+    response = intent_handlers[params['intent']](params)
+    return response
 
 
 @app.route('/top_related_items', methods=['POST'])

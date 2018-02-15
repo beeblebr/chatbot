@@ -2,6 +2,7 @@ from itertools import product
 
 import numpy as np
 
+from clarify import find_most_representative_topic
 from cluster import Cluster, fit_affinity_propagation_model, group_samples_by_label
 from sense import sense_vec_model
 
@@ -105,7 +106,7 @@ def remove_proper_subsets(subsets):
     return unique
 
 
-def generate_variants(topic, stop_words):
+def generate_potential_variants(topic, stop_words):
     """Generate topic variants.
 
     Args:
@@ -116,6 +117,9 @@ def generate_variants(topic, stop_words):
     """
     if '|' not in topic:
         return []
+    if topic in sense_vec_model:
+        return [topic]
+
     tokens = split_tokens(topic)
 
     variants = []
@@ -125,32 +129,28 @@ def generate_variants(topic, stop_words):
 
     variants = map(lambda x: find_best_casing(merge_tokens(x)), variants)
     variants = filter(lambda x: x and x != '|NOUN', variants)
-
-    variants = map(split_tokens, variants)
-    unique = remove_proper_subsets(variants)
-    unique_merged = map(lambda x: merge_tokens, unique)
-    unique_merged = filter(
+    variants = filter(
         lambda x: prettify_topic(x) not in stop_words,
-        unique_merged
+        variants
     )
-    return unique_merged
+    return variants
+
+    # variants = map(split_tokens, variants)
+    # unique = remove_proper_subsets(variants)
+    # unique_merged = map(lambda x: merge_tokens, unique)
+    # return unique_merged
 
 
-def generate_variants_1(potential_variants):
-    """Remove outlier variants.
-
-    Some potential variants might be subsets of the original topic, but mean something completely different.
-    For example, if `generate_variants("cost_cutting_variants|NOUN")` returns `['cost_cutting|NOUN', 'cutting_variants|NOUN']`. """
-
-    # If    
-
+def generate_variants(topic, stop_words):
+    potential_variants = generate_potential_variants(topic, stop_words)
     af = fit_affinity_propagation_model(potential_variants)
     converged = af.n_iter_ != 200
     if not converged:
         pass
     n_clusters = len(np.unique(af.labels_))
+    clusters = group_samples_by_label(potential_variants, af.labels_)
     if n_clusters > 1:
-        pass
+        options = set([find_most_representative_topic(topics) for topics in clusters])
 
 
 def get_top_items(topic, n=1000):
@@ -158,7 +158,7 @@ def get_top_items(topic, n=1000):
     try:
         token = sense_vec_model[topic][1]
         related_items = sense_vec_model.most_similar(token, n)[0]
-    except Exception as e:
+    except Exception:
         return []
 
     for i in range(len(related_items)):

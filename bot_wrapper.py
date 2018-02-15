@@ -17,27 +17,6 @@ agent = Agent(TemplateDomain.load('domain.yml'),
               interpreter=RasaNLUInterpreter("models/default/current"))
 
 
-def handle_message(user_id, q):
-    """Calls `agent.handle_message` with the `user_id` populated into the slot and returns the
-    response.
-
-    Args:
-        user_id: Eight ID of user.
-        q: User query.
-
-    Returns:
-        tuple: Response and slots.
-    """
-    # Insert user_id to the bot's slots
-    tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    tracker.update(SlotSet('user_id', user_id))
-    agent.tracker_store.save(tracker)
-
-    response = agent.handle_message(unicode(q), sender_id=user_id)
-    tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    return response, tracker.slots
-
-
 def get_slots_of_user(user_id):
     """Returns the slot values for a user.
 
@@ -49,3 +28,75 @@ def get_slots_of_user(user_id):
     """
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
     return tracker.slots
+
+
+def handle_response(user_id, **kwargs):
+    tracker = agent.tracker_store.get_or_create_tracker(user_id)
+    for prop in kwargs:
+        tracker.update(SlotSet(prop, kwargs[prop]))
+    agent.tracker_store.save(tracker)
+
+    response = agent.handle_message('', sender_id=user_id)
+    tracker = agent.tracker_store.get_or_create_tracker(user_id)
+    return response, tracker.slots
+
+
+# def handle_query(user_id, q):
+#     """Calls `agent.handle_message` with the `user_id` populated into the slot and returns the
+#     response.
+
+#     Args:
+#         user_id: Eight ID of user.
+#         q: User query.
+
+#     Returns:
+#         tuple: Response and slots.
+#     """
+#     # Insert user_id to the bot's slots
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     tracker.update(SlotSet('user_id', user_id))
+#     tracker.update(SlotSet('query', q))
+#     tracker.update(SlotSet('intent', 'QUERY'))
+#     agent.tracker_store.save(tracker)
+
+#     response = agent.handle_message(None, sender_id=user_id)
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     return response, tracker.slots
+
+
+# def handle_query_clarification(
+#     user_id,
+#     query_clarification_option_selected
+# ):
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     tracker.update(SlotSet('query_clarification_option_selected', query_clarification_option_selected))
+#     tracker.update(SlotSet('intent', 'QUERY_CLARIFICATION'))
+#     agent.tracker_store.save(tracker)
+
+#     response = agent.handle_message(None, sender_id=user_id)
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     return response, tracker.slots
+
+
+# def handle_corpus_search(user_id):
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     tracker.update(SlotSet('intent', 'CORPUS_SEARCH'))
+#     agent.tracker_store.save(tracker)
+
+#     response = agent.handle_message(None, sender_id=user_id)
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     return response, tracker.slots
+
+
+# def handle_corpus_clarification(
+#     user_id,
+#     corpus_clarification_option_selected
+# ):
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     tracker.update(SlotSet('corpus_clarification_option_selected', corpus_clarification_option_selected))
+#     tracker.update(SlotSet('intent', 'CORPUS_CLARIFICATION'))
+#     agent.tracker_store.save(tracker)
+
+#     response = agent.handle_message(None, sender_id=user_id)
+#     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+#     return response, tracker.slots
