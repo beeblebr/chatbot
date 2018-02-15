@@ -14,16 +14,22 @@ class CorpusSearch(BaseIntent):
 
 
     def __init__(self, tracker, user_id, query):
-        BaseIntent.__init__(tracker, user_id, query)
+        BaseIntent.__init__(self, tracker, user_id, query)
 
 
     def run(self):
         query_topics = {'topics': get_all_topics(self.query)}
         corpus = list(get_knowledge_corpus(exclude_user=self.user_id))
-        corpus_topics_map = [{
-            '_id': str(item['_id']),
-            'text': get_all_topics(item['transformed_text'], transformed=True)
-        } for item in corpus]
+        corpus_topics_map = [
+            {
+                '_id': str(item['_id']),
+                'text': get_all_topics(
+                    item['transformed_text'],
+                    transformed=True
+                )
+            }
+            for item in corpus]
+
         user_defined_taxonomy = {
             prettify_topic(topic): get_relations(prettify_topic(topic))
             for topic in query_topics['topics']
@@ -46,28 +52,17 @@ class CorpusSearch(BaseIntent):
             )
 
             if len(similarity_map) > 1:
-                response = {
-                    'type': 'clarify',
-                    'similarity_map': similarity_map,
-                    'clusters': clusters
-                }
+                return [
+                    SlotSet('result', 'CORPUS_CLARIFICATION_NEEDED'),
+                    SlotSet('intent', 'CORPUS_CLARIFICATION'),
+                    SlotSet('similarity_map', similarity_map),
+                    SlotSet('clusters', clusters)
+                ]
             else:
-                response = {
-                    'type': 'found',
-                    'similarity_map': similarity_map
-                }
-
-        if len(response) > 1:
-            return [
-                SlotSet('result', 'CORPUS_CLARIFICATION_NEEDED'),
-                SlotSet('intent', 'CORPUS_CLARIFICATION'),
-                SlotSet('response_metadata', response)
-            ]
-        else:
-            return [
-                SlotSet('result', 'FOUND'),
-                SlotSet('response_metadata', response)
-            ]
+                return [
+                    SlotSet('result', 'FOUND'),
+                    SlotSet('similarity_map', similarity_map)
+                ]
 
 
     def send_corpus_search(self, params):

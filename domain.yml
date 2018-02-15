@@ -9,6 +9,8 @@ intents:
 
 
 slots:
+  request_metadata:
+    type: unfeaturized
   response_metadata:
     type: unfeaturized
   user_id:

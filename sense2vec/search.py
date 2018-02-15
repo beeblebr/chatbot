@@ -83,7 +83,7 @@ def topic_similarity_map(
     Returns:
         dict: Dict containing knowledge item and similarity score.
     """
-    topics_from_knowledge_item = knowledge_item['text']
+    topics_from_knowledge_item = knowledge_item['topics']
 
     topics_from_query = populate_with_variants(
         topics_from_query,
@@ -154,7 +154,7 @@ def fetch_search_results(
     all_results = []
     for knowledge_item in corpus_topics_map:
         similarity_map = topic_similarity_map(
-            query_topics['text'],
+            query_topics['topics'],
             knowledge_item,
             user_defined_taxonomy
         )
@@ -178,7 +178,7 @@ def fetch_search_results(
         return first_non_empty_bucket, []
     else:
         cluster = find_optimal_cluster(
-            query_topics['text'],
+            query_topics['topics'],
             map(lambda x: x['ki_topics'], first_non_empty_bucket),
             summary_type='abstractive_summary'
         )

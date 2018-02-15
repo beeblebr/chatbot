@@ -16,6 +16,9 @@ app.config['SECRET_KEY'] = 'super-secrfeet'
 
 """Admin routes"""
 
+# import os
+# os.system('./code/train_dialogue.sh')
+
 
 def check_auth(username, password):
     """This function is called to check if a username /
@@ -258,24 +261,24 @@ def query():
     user_id = request.args.get('user_id')
 
     response, slots = handle_response(
-        user_id,
+        user_id=user_id,
         query=q,
         intent='QUERY'
     )
 
     info = slots['response_metadata'].value
 
-    if slots['result'].value == 'QUERY_CLARIFICATION_NEEDED':
+    if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
         pass
 
-    elif slots['result'].value == 'CORPUS_CLARIFICATION_NEEDED':
+    elif info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
         cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
         return jsonify({
             'type': info['type'],
             'specify': cluster_heads
         })
 
-    elif slots['result'].value == 'FOUND':
+    elif info['result'] == 'FOUND':
         eight_id = info['similarity_map'][0]['eight_id']
         knowledge = info['similarity_map'][0]['text']
         return jsonify({
@@ -286,7 +289,7 @@ def query():
             }
         })
 
-    elif slots['result'].value == 'NOTHING_FOUND':
+    elif info['result'] == 'NOTHING_FOUND':
         return jsonify({
             'type': info['type'],
             'before_message': 'Nothing found'

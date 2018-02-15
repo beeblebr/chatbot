@@ -21,14 +21,15 @@ class BaseIntent(object):
     def run(self):
         raise NotImplementedError()
 
+    @property
     def endpoint(self):
         return '/'
 
     def _make_request(self, data):
         headers = {'content-type': 'application/json'}
-        data['intent'] = self.intent_name()
+        data['intent'] = self.intent_name
         response = requests.post(
-            conf.SENSE_SERVER_URL + self.endpoint(),
+            conf.SENSE_SERVER_URL + self.endpoint,
             data=json.dumps(data),
             headers=headers
         ).json()

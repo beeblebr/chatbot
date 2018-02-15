@@ -4,15 +4,20 @@ This module initializes the `Agent` and provides functions to abstract away conc
 the fetching of trackers and slots.
 
 """
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from rasa_core.interpreter import RasaNLUInterpreter
 from rasa_core.agent import Agent
 from rasa_core.domain import TemplateDomain
 from rasa_core.events import SlotSet
 
+from rasa_utils import TrackerWrapper
+
 from search_knowledge_policy import SearchKnowledgePolicy
 
-agent = Agent(TemplateDomain.load('domain.yml'),
+agent = Agent(TemplateDomain.load('code/domain.yml'),
               policies=[SearchKnowledgePolicy()],
               interpreter=RasaNLUInterpreter("models/default/current"))
 
@@ -30,14 +35,15 @@ def get_slots_of_user(user_id):
     return tracker.slots
 
 
-def handle_response(user_id, **kwargs):
+def handle_response(**request_metadata):
+    user_id = request_metadata['user_id']
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    for prop in kwargs:
-        tracker.update(SlotSet(prop, kwargs[prop]))
+    tracker.update(SlotSet('request_metadata', request_metadata))
     agent.tracker_store.save(tracker)
 
-    response = agent.handle_message('', sender_id=user_id)
+    response = agent.handle_message(u'Who works on machine learning?', sender_id=user_id)
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
+    logger.info(tracker.slots)
     return response, tracker.slots
 
 

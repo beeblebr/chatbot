@@ -7,7 +7,7 @@ class CorpusClarification(BaseIntent):
 
 
     def __init__(self, tracker, user_id, query):
-        BaseIntent.__init__(tracker, user_id, query)
+        BaseIntent.__init__(self, tracker, user_id, query)
 
 
     @property
