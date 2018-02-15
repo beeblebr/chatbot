@@ -56,13 +56,9 @@ function AskChat (parseContentToHtml) {
     }
 
     this.handleSpecifyOptionSelect = function () {
-        
         var lastMessageOptions = chat.chatContent.getLastMessage().options;
-
         lastMessageOptions.optionsList[$(this).index()].selected = !lastMessageOptions.optionsList[$(this).index()].selected;
-
         chat.updateHtmlState();
-
     }
 
     this.sendQueryToApi = function (message) {
@@ -81,11 +77,6 @@ function AskChat (parseContentToHtml) {
     this.handleUserInputApiSuccess = function (response) {
         console.log(response.type)
         switch(response.type) {
-        case 'compromise':
-            console.log(response.before_message);
-            chat.addBotMessage(response.before_message);
-            that.getUserFromApi(response.match.user_id);
-            break;
         case 'FOUND':
             that.getUserFromApi(response.match.user_id, response.match.knowledge);
             console.log(response.match.user_id);
@@ -95,7 +86,12 @@ function AskChat (parseContentToHtml) {
             break;
         case 'CORPUS_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
-            that.specifyRequest(response.specify, getClarifyQuestion)
+            that.specifyRequest(response.type, response.specify, getClarifyCorpusQuestion);
+            break;
+        case 'QUERY_CLARIFICATION_NEEDED':
+            ChatUI.disableChatInput();
+            that.specifyRequest(response.type, response.specify, getClarifyQueryQuestion);
+            break;
         }
     }
 
@@ -123,7 +119,7 @@ function AskChat (parseContentToHtml) {
         console.log('Failed to ask user data from server!', response)
     }
 
-    this.specifyRequest = function(specificationOptions, clarificationFn) {
+    this.specifyRequest = function(clarificationType, specificationOptions, clarificationFn) {
         if (areSpecificationOptionsProvidedFromResponse(specificationOptions)) {
             chat.addOptions(
                 clarificationFn(),
@@ -158,7 +154,13 @@ function getSpecifyQuestion () {
         'Could you give me more information?'])
 }
 
-function getClarifyQuestion() {
+function getClarifyCorpusQuestion() {
+    return getRandomText([
+        'In which context do you mean?\n Select all that apply and press "Done".'
+    ])
+}
+
+function getClarifyQueryQuestion() {
     return getRandomText([
         'In which context do you mean?\n Select all that apply and press "Done".'
     ])

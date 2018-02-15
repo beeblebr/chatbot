@@ -23,16 +23,7 @@ class CorpusSearch(BaseIntent):
     def handle_intent(self):
         query_topics = {'topics': get_all_topics(self.query)}
         corpus = list(get_knowledge_corpus(exclude_user=self.user_id))
-        corpus_topics_map = [
-            {
-                '_id': str(item['_id']),
-                'topics': get_all_topics(
-                    item['transformed_text'],
-                    transformed=True
-                )
-            }
-            for item in corpus]
-
+        corpus_topics_map = self.get_corpus_topics_map(corpus)
         user_defined_taxonomy = {
             prettify_topic(topic): get_relations(prettify_topic(topic))
             for topic in query_topics['topics']
@@ -47,27 +38,42 @@ class CorpusSearch(BaseIntent):
             return [
                 SlotSet('result', 'NOTHING_FOUND')
             ]
-        else:
-            similarity_map = pipeline.execute_pipeline(
-                similarity_map,
-                (transforms.ConvertSimilarityToFloat,),
-                (transforms.ZipWithCorpus, corpus)
-            )
 
-            if len(similarity_map) > 1:
-                logger.info('Corpus clarification needed')
-                return [
-                    SlotSet('result', 'CORPUS_CLARIFICATION_NEEDED'),
-                    SlotSet('intent', 'CORPUS_CLARIFICATION'),
-                    SlotSet('similarity_map', similarity_map),
-                    SlotSet('clusters', clusters)
-                ]
-            else:
-                logger.info('Corpus result found')
-                return [
-                    SlotSet('result', 'FOUND'),
-                    SlotSet('similarity_map', similarity_map)
-                ]
+        similarity_map = pipeline.execute_pipeline(
+            similarity_map,
+            (transforms.ConvertSimilarityToFloat,),
+            (transforms.ZipWithCorpus, corpus)
+        )
+        return self.get_slot_set(similarity_map, clusters)
+
+
+    def get_slot_set(self, similarity_map, clusters):
+        if len(similarity_map) > 1:
+            logger.info('Corpus clarification needed')
+            return [
+                SlotSet('result', 'CORPUS_CLARIFICATION_NEEDED'),
+                SlotSet('intent', 'CORPUS_CLARIFICATION'),
+                SlotSet('similarity_map', similarity_map),
+                SlotSet('clusters', clusters)
+            ]
+        else:
+            logger.info('Corpus result found')
+            return [
+                SlotSet('result', 'FOUND'),
+                SlotSet('similarity_map', similarity_map)
+            ]
+
+    def get_corpus_topics_map(self, corpus):
+        corpus_topics_map = []
+        for item in corpus:
+            corpus_topics_map.append({
+                '_id': str(item['_id']),
+                'topics': get_all_topics(
+                    item['transformed_text'],
+                    transformed=True
+                )
+            })
+        return corpus_topics_map
 
 
     def send_corpus_search(self, params):
