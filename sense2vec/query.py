@@ -67,8 +67,8 @@ def get_possible_meanings(topic):
     unique = remove_proper_subsets(variants)
     logger.info('Whaaa')
     logger.info(unique)
-    chains = map(lambda tokens: ' + '.join(tokens), unique)
-    options.extend(chains)
+    chains = map(lambda tokens: ' '.join(tokens), unique)
+    options.append(' + '.join(chains))    
     # Remove duplicates
     options = list(set(options))
     return options
