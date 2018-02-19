@@ -26,6 +26,7 @@ def process_query(params):
         len(split_tokens(topic)) > 1
     ]
     logger.info(multi_word_topics)
+    logger.info(len(stop_words))
     variants = generate_variants(multi_word_topics, stop_words)
     logger.info(variants)
     af = fit_affinity_propagation_model(variants)
