@@ -2,7 +2,7 @@ from itertools import product
 
 import numpy as np
 
-from nltk import pos_tag
+# from nltk import pos_tag
 
 from clarify import find_most_representative_topic
 from cluster import Cluster, fit_affinity_propagation_model, group_samples_by_label
@@ -138,13 +138,13 @@ def generate_variants(topic, stop_words):
         lambda x: prettify_topic(x) not in stop_words,
         variants
     )
-    adjectives_removed = []
-    # Remove only adjectives
-    for i in range(len(variants)):
-        if len(split_tokens(variants[i])) == 1 and 'JJ' in pos_tag(prettify_topic(variants[i]).split())[0][1]:
-            continue
-        adjectives_removed.append(variants[i])
-    variants = adjectives_removed
+    # adjectives_removed = []
+    # # Remove only adjectives
+    # for i in range(len(variants)):
+    #     if len(split_tokens(variants[i])) == 1 and 'JJ' in pos_tag(prettify_topic(variants[i]).split())[0][1]:
+    #         continue
+    #     adjectives_removed.append(variants[i])
+    # variants = adjectives_removed
     return variants
 
     variants = map(split_tokens, variants)
