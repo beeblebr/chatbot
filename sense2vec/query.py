@@ -17,6 +17,7 @@ from topic_utils import split_tokens
 
 def process_query(params):
     query_topics = params['topics']
+    logger.info(query_topics)
     # Find topics that do not have any casing-variant in the dictionary
     # and are multi-worded
     multi_word_topics = [
@@ -24,6 +25,7 @@ def process_query(params):
         if not find_best_casing(topic) and
         len(split_tokens(topic)) > 1
     ]
+    logger.info(multi_word_topics)
     variants = generate_variants(multi_word_topics, stop_words)
     logger.info(variants)
     af = fit_affinity_propagation_model(variants)
