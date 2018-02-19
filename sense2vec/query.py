@@ -1,4 +1,7 @@
 import json
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from clarify import find_most_representative_topic
 
@@ -22,6 +25,7 @@ def process_query(params):
         len(split_tokens(topic)) > 1
     ]
     variants = generate_variants(multi_word_topics, stop_words)
+    logger.info(variants)
     af = fit_affinity_propagation_model(variants)
     clusters = group_samples_by_label(variants, af.labels_)
     options = []
