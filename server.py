@@ -280,7 +280,7 @@ def query():
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
         query_clarifications = info['query_clarifications']
         query_clarifications = {
-            prettify_topic(topic): map(prettify_topic, options)
+            topic: options
             for topic, options in query_clarifications.iteritems()
         }
         leading_message = 'Before I begin looking for a match, I need you to clarify %d thing(s) for me.' % len(query_clarifications)

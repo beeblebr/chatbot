@@ -9,7 +9,7 @@ from topic_utils import find_best_casing
 from topic_utils import generate_variants
 from topic_utils import remove_proper_subsets
 from topic_utils import split_tokens
-from topic_utils import uglify_topic
+from topic_utils import prettify_topic
 
 import json
 import logging
@@ -32,7 +32,7 @@ def process_query(params):
         for topic in multi_word_topics
     }
     clarifications = {
-        topic: meanings
+        prettify_topic(topic): meanings
         for topic, meanings in clarifications.iteritems()
         if meanings
     }
@@ -62,10 +62,10 @@ def get_possible_meanings(topic):
     if af.n_iter_ == 200 or len(clusters) == len(variants):
         options.extend(variants)
     else:
-        options.extend([uglify_topic(find_most_representative_topic(cluster[1])) for cluster in clusters])
+        options.extend([find_most_representative_topic(cluster[1]) for cluster in clusters])
 
     # Add MRT of options to options
-    options.append(uglify_topic(find_most_representative_topic(options)))
+    options.append(find_most_representative_topic(options))
 
     # Add + chaining to options
     split_variants = map(split_tokens, variants)
@@ -75,6 +75,7 @@ def get_possible_meanings(topic):
 
     logger.info(options)
     # Remove duplicates
+    options = map(prettify_topic, options)
     options = list(set(options))
     logger.info(options)
 
