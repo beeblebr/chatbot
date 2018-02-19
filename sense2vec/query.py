@@ -9,6 +9,7 @@ from topic_utils import find_best_casing
 from topic_utils import generate_variants
 from topic_utils import remove_proper_subsets
 from topic_utils import split_tokens
+from topic_utils import uglify_topic
 
 import json
 import logging
@@ -61,7 +62,7 @@ def get_possible_meanings(topic):
     if af.n_iter_ == 200 or len(clusters) == len(variants):
         options.extend(variants)
     else:
-        options.extend([cluster[0] for cluster in clusters])
+        options.extend([uglify_topic(cluster[0]) for cluster in clusters])
 
     # Add MRT of options to options
     options.append(find_most_representative_topic(options))
