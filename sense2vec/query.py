@@ -64,6 +64,7 @@ def get_possible_meanings(topic):
     # Add + chaining to options
     variants = map(split_tokens, variants)
     unique = remove_proper_subsets(variants)
+    logger.info('Whaaa')
     logger.info(unique)
     chains = map(lambda tokens: ' + '.join(tokens), unique)
     options.extend(chains)
