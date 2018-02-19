@@ -38,6 +38,6 @@ def top_items():
 if __name__ == '__main__':
     import pip
     pip.main(['install', 'nltk'])
-    # import nltk
-    # nltk.download('averaged_perceptron_tagger')
+    import nltk
+    nltk.download('averaged_perceptron_tagger')
     app.run('0.0.0.0', port=8011, debug=True)
