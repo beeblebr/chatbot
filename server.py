@@ -272,7 +272,14 @@ def query():
     logger.info(info)
 
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
-        pass
+        query_clarification_options = map(
+            prettify_topic,
+            info['query_clarification_options']
+        )
+        return jsonify({
+            'type': info['result'],
+            'specify': query_clarification_options
+        })
 
     elif info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
         cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]

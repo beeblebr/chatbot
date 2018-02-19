@@ -3,6 +3,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from rasa_core.events import SlotSet
+
 from util.db_utils import add_question_to_user_history
 from util.topic_utils import get_all_topics
 

@@ -85,12 +85,12 @@ def find_best_casing(topic):
     tokens = split_tokens(topic)
     param_for_product = [[0, 1]] * len(tokens)
 
-    for casing_combination in product(*param_for_product):
-        casing = [
-            tokens[i].title() if casing_combination[i] else tokens[i].lower()
+    for binary_mask in product(*param_for_product):
+        casing_combination = [
+            tokens[i].title() if binary_mask[i] else tokens[i].lower()
             for i in range(len(tokens))
         ]
-        repr = merge_tokens(casing)
+        repr = merge_tokens(casing_combination)
         if repr in sense_vec_model:
             freqs.append((sense_vec_model[repr][0], repr))
     return max(freqs)[1] if freqs else None
