@@ -30,6 +30,11 @@ def process_query(params):
         topic: get_possible_meanings(topic)
         for topic in multi_word_topics
     }
+    clarifications = {
+        topic: meanings
+        for topic, meanings in clarifications.iteritems()
+        if meanings
+    }
 
     if clarifications:
         return json.dumps({
