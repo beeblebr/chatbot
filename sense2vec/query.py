@@ -44,6 +44,8 @@ def process_query(params):
 
 def get_possible_meanings(topic):
     variants = generate_variants(topic, stop_words)
+    if not variants:
+        return []
     af = fit_affinity_propagation_model(variants)
     clusters = group_samples_by_label(variants, af.labels_)
     options = []
