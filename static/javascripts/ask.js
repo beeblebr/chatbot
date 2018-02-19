@@ -89,7 +89,9 @@ function AskChat (parseContentToHtml) {
             break;
         case 'QUERY_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
-            that.specifyQueryRequest(response.specify, getClarifyQueryQuestion, response.ambiguousPhrase);
+            for (var clarification in response.queryClarifications) {
+                that.specifyQueryRequest(response.queryClarifications[clarification], getClarifyQueryQuestion, clarification);
+            }
             break;
         }
     }
@@ -102,7 +104,7 @@ function AskChat (parseContentToHtml) {
                     chat.addBotMessage(message);
                     setTimeout(function() {
                         resolve();
-                    }, 2000)
+                    }, 2300)
                 }));
             }
         }

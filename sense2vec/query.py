@@ -12,6 +12,7 @@ from sense import stop_words
 
 from topic_utils import find_best_casing
 from topic_utils import generate_variants
+from topic_utils import merge_tokens
 from topic_utils import split_tokens
 
 

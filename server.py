@@ -279,17 +279,15 @@ def query():
 
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
         query_clarifications = info['query_clarifications']
-        first_topic = query_clarifications.keys()[0]
-        first_clarification = map(
-            prettify_topic,
-            query_clarifications[first_topic]
-        )
-        leading_message = 'Before I begin looking for a match, I need you to clarify a few things for me.'
+        query_clarifications = {
+            prettify_topic(topic): map(prettify_topic, options)
+            for topic, options in query_clarifications.iteritems()
+        }
+        leading_message = 'Before I begin looking for a match, I need you to clarify %d thing(s) for me.' % len(query_clarifications)
         return jsonify({
             'type': info['result'],
-            'specify': first_clarification,
             'leadingMessages': [leading_message],
-            'ambiguousPhrase': prettify_topic(first_topic)
+            'queryClarifications': query_clarifications
         })
 
     elif info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
