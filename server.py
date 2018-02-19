@@ -272,13 +272,15 @@ def query():
     logger.info(info)
 
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
-        query_clarification_options = map(
+        query_clarifications = info['query_clarifications']
+        first_clarification = query_clarifications.keys()[0]
+        first_clarification = map(
             prettify_topic,
-            info['query_clarification_options']
+            query_clarifications[first_clarification]
         )
         return jsonify({
             'type': info['result'],
-            'specify': query_clarification_options
+            'specify': first_clarification
         })
 
     elif info['result'] == 'CORPUS_CLARIFICATION_NEEDED':

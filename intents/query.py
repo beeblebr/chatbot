@@ -28,8 +28,8 @@ class Query(BaseIntent):
                 SlotSet('result', 'QUERY_CLARIFICATION_NEEDED'),
                 SlotSet('intent', 'QUERY_CLARIFICATION'),
                 SlotSet(
-                    'query_clarification_options',
-                    response['query_clarification_options']
+                    'query_clarifications',
+                    response['query_clarifications']
                 )
             ]
         elif response['result'] == 'QUERY_SUCCESS':

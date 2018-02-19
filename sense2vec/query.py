@@ -25,14 +25,28 @@ def process_query(params):
         if not find_best_casing(topic) and
         len(split_tokens(topic)) > 1
     ]
-    logger.info(multi_word_topics)
-    logger.info(len(stop_words))
-    variants = generate_variants(multi_word_topics, stop_words)
-    logger.info(variants)
+    clarifications = {
+        topic: get_possible_meanings(topic)
+        for topic in multi_word_topics
+    }
+
+    if clarifications:
+        return json.dumps({
+            'result': 'QUERY_CLARIFICATION_NEEDED',
+            'query_clarifications': clarifications
+        })
+    else:
+        return json.dumps({
+            'result': 'QUERY_SUCCESS'
+        })
+
+
+def get_possible_meanings(topic):
+    variants = generate_variants(topic, stop_words)
     af = fit_affinity_propagation_model(variants)
     clusters = group_samples_by_label(variants, af.labels_)
     options = []
-    # Not converged or useless clusters
+    # Not converged or trivially clustered
     if af.n_iter_ == 200 or len(clusters) == len(variants):
         options = variants
     else:
@@ -41,16 +55,7 @@ def process_query(params):
     options.append(find_most_representative_topic(options))
     # Remove duplicates
     options = list(set(options))
-
-    if options:
-        return json.dumps({
-            'result': 'QUERY_CLARIFICATION_NEEDED',
-            'query_clarification_options': options
-        })
-    else:
-        return json.dumps({
-            'result': 'QUERY_SUCCESS'
-        })
+    return options
 
 
 def process_query_clarification():
