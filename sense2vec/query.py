@@ -52,27 +52,24 @@ def get_possible_meanings(topic):
     logger.info(variants)
     if not variants:
         return []
-
+    af = fit_affinity_propagation_model(variants)
+    clusters = group_samples_by_label(variants, af.labels_)
+    options = []
+    # Not converged or trivially clustered
+    if af.n_iter_ == 200 or len(clusters) == len(variants):
+        options.extend(variants)
+    else:
+        options.extend([cluster[0] for cluster in clusters])
     # Add + chaining to options
     options = []
     split_variants = map(split_tokens, variants)
     unique = remove_proper_subsets(split_variants)
     chains = map(lambda tokens: ' '.join(tokens), unique)
     options.append(' + '.join(chains))
-
-    af = fit_affinity_propagation_model(variants)
-    clusters = group_samples_by_label(variants, af.labels_)
-    # Not converged or trivially clustered
-    if af.n_iter_ == 200 or len(clusters) == len(variants):
-        options.extend(variants)
-    else:
-        options.extend([cluster[0] for cluster in clusters])
-
     # Add MRT of options to options
     options.append(find_most_representative_topic(options))
     # Remove duplicates
     options = list(set(options))
-
     return options
 
 
