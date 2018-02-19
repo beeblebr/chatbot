@@ -149,7 +149,7 @@ def generate_variants(topic, stop_words):
 
     variants = map(split_tokens, variants)
     unique = remove_proper_subsets(variants)
-    unique_merged = map(lambda x: merge_tokens, unique)
+    unique_merged = map(merge_tokens, unique)
     return unique_merged
 
 

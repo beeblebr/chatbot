@@ -1,8 +1,3 @@
-import json
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 from clarify import find_most_representative_topic
 
 from cluster import fit_affinity_propagation_model
@@ -12,8 +7,13 @@ from sense import stop_words
 
 from topic_utils import find_best_casing
 from topic_utils import generate_variants
-from topic_utils import merge_tokens
+from topic_utils import remove_proper_subsets
 from topic_utils import split_tokens
+
+import json
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def process_query(params):
@@ -61,6 +61,11 @@ def get_possible_meanings(topic):
         options = [cluster[0] for cluster in clusters]
     # Add MRT of options to options
     options.append(find_most_representative_topic(options))
+    # Add + chaining to options
+    variants = map(split_tokens, variants)
+    unique = remove_proper_subsets(variants)
+    chains = map(lambda tokens: ' + '.join(tokens), unique)
+    options.extend(chains)
     # Remove duplicates
     options = list(set(options))
     return options
