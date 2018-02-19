@@ -74,8 +74,7 @@ function AskChat (parseContentToHtml) {
         .catch(that.handleUserInputApiFailure);
     }
 
-    this.handleUserInputApiSuccess = function (response) {
-        console.log(response.type)
+    this.performAction = function(response) {
         switch(response.type) {
         case 'FOUND':
             that.getUserFromApi(response.match.user_id, response.match.knowledge);
@@ -86,13 +85,35 @@ function AskChat (parseContentToHtml) {
             break;
         case 'CORPUS_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
-            that.specifyRequest(response.type, response.specify, getClarifyCorpusQuestion);
+            that.specifyCorpusRequest(response.specify, getClarifyCorpusQuestion);
             break;
         case 'QUERY_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
-            that.specifyRequest(response.type, response.specify, getClarifyQueryQuestion);
+            that.specifyQueryRequest(response.specify, getClarifyQueryQuestion, response.ambiguousPhrase);
             break;
         }
+    }
+
+    this.showLeadingMessages = function(response) {
+        var promises = []
+        if (response.leadingMessages) {
+            for (var message of response.leadingMessages) {
+                promises.push(new Promise(function(resolve, reject) {
+                    chat.addBotMessage(message);
+                    setTimeout(function() {
+                        resolve();
+                    }, 2000)
+                }));
+            }
+        }
+        return Promise.all(promises)
+    }
+
+    this.handleUserInputApiSuccess = function (response) {
+        that.showLeadingMessages(response)
+        .then(function() {
+            that.performAction(response)
+        })
     }
 
     this.handleUserInputApiFailure = function (response) {
@@ -119,10 +140,23 @@ function AskChat (parseContentToHtml) {
         console.log('Failed to ask user data from server!', response)
     }
 
-    this.specifyRequest = function(clarificationType, specificationOptions, clarificationFn) {
+    this.specifyCorpusRequest = function(specificationOptions, clarificationFn) {
         if (areSpecificationOptionsProvidedFromResponse(specificationOptions)) {
             chat.addOptions(
                 clarificationFn(),
+                specificationOptions);            
+        } else {
+            chat.addBotMessage(
+                'No options provided'
+                //getDidNotFindText()
+            );
+        }
+    }
+
+    this.specifyQueryRequest = function(specificationOptions, clarificationFn, ambiguousPhrase) {
+        if (areSpecificationOptionsProvidedFromResponse(specificationOptions)) {
+            chat.addOptions(
+                clarificationFn(ambiguousPhrase),
                 specificationOptions);            
         } else {
             chat.addBotMessage(
@@ -156,13 +190,13 @@ function getSpecifyQuestion () {
 
 function getClarifyCorpusQuestion() {
     return getRandomText([
-        'In which context do you mean?\n Select all that apply and press "Done".'
+        'In which context do you mean?<br /> Select all that apply and press "Done".'
     ])
 }
 
-function getClarifyQueryQuestion() {
+function getClarifyQueryQuestion(ambiguousPhrase) {
     return getRandomText([
-        'In which context do you mean?\n Select all that apply and press "Done".'
+        'I\'m not sure what "' + ambiguousPhrase + '" means. Which of the following best describes it?<br />Select all that apply and press "Done".'
     ])
 }
 

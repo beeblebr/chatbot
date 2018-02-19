@@ -223,8 +223,8 @@ def add_to_k():
     })
 
 
-@app.route('/api/clarify')
-def clarify():
+@app.route('/api/clarify_corpus')
+def clarify_corpus():
     user_id = request.args.get('user_id')
     selected_options = request.args.get('options').split('|')
 
@@ -257,6 +257,12 @@ def clarify():
     })
 
 
+@app.route('/api/clarify_query')
+def clarify_query():
+    user_id = request.args.get('user_id')
+    selected_options = request.args.get('options').split('|')
+
+
 @app.route('/api/query')
 def query():
     q = request.args.get('text')
@@ -273,14 +279,17 @@ def query():
 
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
         query_clarifications = info['query_clarifications']
-        first_clarification = query_clarifications.keys()[0]
+        first_topic = query_clarifications.keys()[0]
         first_clarification = map(
             prettify_topic,
-            query_clarifications[first_clarification]
+            query_clarifications[first_topic]
         )
+        leading_message = 'Before I begin looking for a match, I need you to clarify a few things for me.'
         return jsonify({
             'type': info['result'],
-            'specify': first_clarification
+            'specify': first_clarification,
+            'leadingMessages': [leading_message],
+            'ambiguousPhrase': prettify_topic(first_topic)
         })
 
     elif info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
