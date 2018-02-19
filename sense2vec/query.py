@@ -72,8 +72,10 @@ def get_possible_meanings(topic):
     chains = map(lambda tokens: ' '.join(tokens), unique)
     options.append(' + '.join(chains))
 
+    logger.info(options)
     # Remove duplicates
     options = list(set(options))
+    logger.info(options)
 
     return options
 
