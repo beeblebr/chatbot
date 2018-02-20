@@ -2,7 +2,7 @@ from itertools import product
 
 import numpy as np
 
-from nltk import pos_tag
+# from nltk import pos_tag
 
 from clarify import find_most_representative_topic
 from cluster import Cluster, fit_affinity_propagation_model, group_samples_by_label
