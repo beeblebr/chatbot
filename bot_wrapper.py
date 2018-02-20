@@ -35,10 +35,10 @@ def get_slots_of_user(user_id):
     return tracker.slots
 
 
-def handle_response(**request_metadata):
-    user_id = request_metadata['user_id']
+def handle_response(**response_metadata):
+    user_id = response_metadata['user_id']
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    tracker.update(SlotSet('request_metadata', request_metadata))
+    tracker.update(SlotSet('response_metadata', response_metadata))
     agent.tracker_store.save(tracker)
 
     response = agent.handle_message(u'Who works on machine learning?', sender_id=user_id)

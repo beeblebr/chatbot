@@ -30,6 +30,10 @@ class Query(BaseIntent):
                 SlotSet(
                     'query_clarifications',
                     response['query_clarifications']
+                ),
+                SlotSet(
+                    'query_topics',
+                    response['query_topics']
                 )
             ]
         elif response['result'] == 'QUERY_SUCCESS':

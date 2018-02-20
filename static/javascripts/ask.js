@@ -89,7 +89,11 @@ function AskChat (parseContentToHtml) {
             break;
         case 'QUERY_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
+            var promises = [];
             for (var clarification in response.queryClarifications) {
+                promises.push(new Promise(function(resolve, reject) {
+                    
+                }));
                 that.specifyQueryRequest(response.queryClarifications[clarification], getClarifyQueryQuestion, clarification);
             }
             break;

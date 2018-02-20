@@ -249,7 +249,7 @@ def clarify_corpus():
             relevant_knowledge_items.append(knowledge_item)
 
     return jsonify({
-        'type': 'found',
+        'type': 'FOUND',
         'match': {
             'user_id': relevant_knowledge_items[0]['eight_id'],
             'knowledge': relevant_knowledge_items[0]['text']
@@ -260,7 +260,16 @@ def clarify_corpus():
 @app.route('/api/clarify_query')
 def clarify_query():
     user_id = request.args.get('user_id')
+    ambiguous_phrase = request.args.get('ambiguous_phrase')
     selected_options = request.args.get('options').split('|')
+    response, slots = handle_response(
+        user_id=user_id,
+        ambiguous_phrase=ambiguous_phrase,
+        selected_options=selected_options,
+        intent='QUERY_CLARIFICATION'
+    )
+    info = slots['response_metadata'].value
+    # if info['result'] == ''
 
 
 @app.route('/api/query')
