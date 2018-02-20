@@ -55,6 +55,7 @@ def get_possible_meanings(topic):
 
     af = fit_affinity_propagation_model(variants)
     clusters = group_samples_by_label(variants, af.labels_)
+    logger.log(clusters)
     options = []
     # Not converged or trivially clustered
     if af.n_iter_ == 200 or len(clusters) == len(variants):
