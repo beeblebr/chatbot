@@ -61,7 +61,7 @@ def get_possible_meanings(topic):
     if af.n_iter_ == 200 or len(clusters) == len(variants):
         options.extend(variants)
     else:
-        options.extend([find_most_representative_topic(cluster[1]) for cluster in clusters])
+        options.extend([find_most_representative_topic(cluster) for cluster in clusters])
     # Add MRT of options to options
     options.append(find_most_representative_topic(options))
 
