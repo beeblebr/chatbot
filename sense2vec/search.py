@@ -162,16 +162,6 @@ def fetch_search_results(
         )
         all_results.append(similarity_map)
 
-    max_similarity = sorted(
-        all_results,
-        key=lambda x: x['cosine_similarity'],
-        reverse=True
-    )
-    max_similarity = max_similarity[0]['cosine_similarity']
-    for i in range(len(all_results)):
-        all_results[i]['normalized_cosine_similarity'] = all_results[i]['cosine_similarity'] / min(1, max_similarity)
-    subjective_ranking = sorted(all_results, key=lambda x: x['normalized_cosine_similarity'], reverse=True)
-
     buckets = bucketize_into_similarity_intervals(all_results)
     non_empty_buckets = [bucket for bucket in buckets if bucket]
     if len(non_empty_buckets) == 0:
