@@ -26,11 +26,25 @@ Api.sendQuery = function (message, eightId) {
     });    
 }
 
-Api.sendSelectedOptions = function(options, eightId) {
+Api.sendSelectedOptionsCorpus = function(options, eightId) {
     var url = MAIN_URL + 'api/clarify_corpus?user_id=' + eightId + '&options=' + encodeURIComponent(options)
     return new Promise(function(resolve, reject) {
         $.ajax({
             type: 'GET',
+            url: url})
+        .done(resolve)
+        .fail(reject);
+    })
+}
+
+Api.sendSelectedOptionsQuery = function(queryClarificationChoices, eightId) {
+    var url = MAIN_URL + 'api/clarify_query'
+    queryClarificationChoices['user_id'] = eightId;
+    console.log(queryClarificationChoices)
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            type: 'POST',
+            data: queryClarificationChoices,
             url: url})
         .done(resolve)
         .fail(reject);

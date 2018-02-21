@@ -38,9 +38,13 @@ def get_slots_of_user(user_id):
 def handle_response(**response_metadata):
     user_id = response_metadata['user_id']
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
-    tracker.update(SlotSet('response_metadata', response_metadata))
+    if tracker.slots['response_metadata'].value:
+        old_response_metadata = tracker.slots['response_metadata'].value
+        old_response_metadata.update(response_metadata)
+        tracker.update(SlotSet('response_metadata', old_response_metadata))
+    else:
+        tracker.update(SlotSet('response_metadata', response_metadata))
     agent.tracker_store.save(tracker)
-
     response = agent.handle_message(u'Who works on machine learning?', sender_id=user_id)
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
     logger.info(tracker.slots)

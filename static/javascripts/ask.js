@@ -10,6 +10,12 @@ function AskChat (parseContentToHtml) {
         ChatUI.addOptionsHandler(that.handleSpecifyOptionSelect);
         ChatUI.addOptionsSubmitHandler(that.handleOptionsSubmit);
 
+        that.queryClarificationInProgress = false;
+        that.queryClarifications = null;
+        that.currentAmbiguousPhrase = null;
+        that.queryClarificationChoices = {};
+        that.currentResponse = null;
+
         that.startConversation();
     }
 
@@ -48,8 +54,7 @@ function AskChat (parseContentToHtml) {
             }
         }
         console.log(selected)
-        that.sendSelectedOptionsToApi(selected.join('|'))
-        // that.sendQueryToApi($(this).context.innerHTML);
+        that.sendSelectedOptionsToApi(selected.join('|'), that.clarificationType);
 
         lastMessageOptions.active = false;
         ChatUI.enableChatInput();
@@ -68,14 +73,31 @@ function AskChat (parseContentToHtml) {
         .catch(that.handleUserInputApiFailure);
     }
 
-    this.sendSelectedOptionsToApi = function(options) {
-        Api.sendSelectedOptions(options, User.getId())
-        .then(that.handleUserInputApiSuccess)
-        .catch(that.handleUserInputApiFailure);
+    this.sendSelectedOptionsToApi = function(options, clarificationType) {
+        if (clarificationType == 'CORPUS_CLARIFICATION_NEEDED') {
+            Api.sendSelectedOptionsCorpus(options, User.getId())
+            .then(that.handleUserInputApiSuccess)
+            .catch(that.handleUserInputApiFailure);
+        } else if (clarificationType == 'QUERY_CLARIFICATION_NEEDED') {
+            that.queryClarificationChoices[that.currentAmbiguousPhrase] = options;
+            that.currentResponse['leadingMessages'] = [];
+            that.handleUserInputApiSuccess(that.currentResponse);
+            console.log('entered here')
+            console.log(Object.keys(that.queryClarifications).length);
+            if (Object.keys(that.queryClarifications).length == 0) {
+                console.log('actually sending it now')
+                Api.sendSelectedOptionsQuery(that.queryClarificationChoices, User.getId())
+                .then(that.handleUserInputApiSuccess)
+                .catch(that.handleUserInputApiFailure);
+            }
+        }
     }
 
     this.performAction = function(response) {
-        switch(response.type) {
+        if (that.queryClarificationInProgress) {
+            response.type = 'QUERY_CLARIFICATION_NEEDED';
+        }
+        switch (response.type) {
         case 'FOUND':
             that.getUserFromApi(response.match.user_id, response.match.knowledge);
             console.log(response.match.user_id);
@@ -85,24 +107,36 @@ function AskChat (parseContentToHtml) {
             break;
         case 'CORPUS_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
+            that.clarificationType = response.type;
             that.specifyCorpusRequest(response.specify, getClarifyCorpusQuestion);
             break;
         case 'QUERY_CLARIFICATION_NEEDED':
             ChatUI.disableChatInput();
-            var promises = [];
-            for (var clarification in response.queryClarifications) {
-                promises.push(new Promise(function(resolve, reject) {
-                    
-                }));
-                that.specifyQueryRequest(response.queryClarifications[clarification], getClarifyQueryQuestion, clarification);
+            that.clarificationType = response.type;
+            var ambiguousPhrase = Object.keys(response.queryClarifications)[0]
+            if (ambiguousPhrase == undefined) {
+                that.queryClarificationInProgress = false;
+                that.currentAmbiguousPhrase = null;
+                that.queryClarifications = null;
+                that.currentResponse = null;
+            } else {
+                that.queryClarificationInProgress = true;
+                that.currentAmbiguousPhrase = ambiguousPhrase;
+                console.log('setting that.queryClarifications');
+                that.queryClarifications = response.queryClarifications;
+                that.currentResponse = response;
             }
+            that.specifyQueryRequest(response.queryClarifications[ambiguousPhrase], getClarifyQueryQuestion, ambiguousPhrase);
+            delete response.queryClarifications[ambiguousPhrase];
+            console.log(response.queryClarifications)
             break;
         }
     }
 
     this.showLeadingMessages = function(response) {
         var promises = []
-        if (response.leadingMessages) {
+        console.log(response)
+        if ('leadingMessages' in response) {
             for (var message of response.leadingMessages) {
                 promises.push(new Promise(function(resolve, reject) {
                     chat.addBotMessage(message);

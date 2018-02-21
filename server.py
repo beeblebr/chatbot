@@ -257,20 +257,37 @@ def clarify_corpus():
     })
 
 
-@app.route('/api/clarify_query')
+@app.route('/api/clarify_query', methods=['POST'])
 def clarify_query():
-    user_id = request.args.get('user_id')
-    ambiguous_phrase = request.args.get('ambiguous_phrase')
-    selected_options = request.args.get('options').split('|')
+    query_clarifications = dict(request.form)
+    user_id = query_clarifications.pop('user_id')[0]
+    logger.info('user_id: %s', user_id)
     response, slots = handle_response(
         user_id=user_id,
-        ambiguous_phrase=ambiguous_phrase,
-        selected_options=selected_options,
+        query_clarifications=query_clarifications,
+        query=None,
         intent='QUERY_CLARIFICATION'
     )
     info = slots['response_metadata'].value
-    # if info['result'] == ''
-
+    if info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
+        cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
+        return jsonify({
+            'type': info['result'],
+            'specify': cluster_heads
+        })
+    elif info['result'] == 'FOUND':
+        eight_id = info['similarity_map'][0]['eight_id']
+        knowledge = info['similarity_map'][0]['text']
+        return jsonify({
+            'type': info['result'],
+            'match': {
+                'user_id': eight_id,
+                'knowledge': knowledge
+            }
+        })
+    return jsonify({
+        'type': 'UNKNOWN'
+    })
 
 @app.route('/api/query')
 def query():
@@ -284,7 +301,7 @@ def query():
     )
 
     info = slots['response_metadata'].value
-    logger.info(info)
+    logger.info(info.keys())
 
     if info['result'] == 'QUERY_CLARIFICATION_NEEDED':
         query_clarifications = info['query_clarifications']
@@ -325,7 +342,7 @@ def query():
 
 
     return jsonify({
-        'type': 'unknown'
+        'type': 'UNKNOWN'
     })
 
 
