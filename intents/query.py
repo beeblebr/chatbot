@@ -9,7 +9,6 @@ from util.db_utils import add_question_to_user_history
 from util.topic_utils import get_all_topics
 
 from intent import BaseIntent
-
 from intents.corpus_search import CorpusSearch
 
 

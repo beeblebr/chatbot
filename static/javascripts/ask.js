@@ -81,14 +81,13 @@ function AskChat (parseContentToHtml) {
         } else if (clarificationType == 'QUERY_CLARIFICATION_NEEDED') {
             that.queryClarificationChoices[that.currentAmbiguousPhrase] = options;
             that.currentResponse['leadingMessages'] = [];
-            that.handleUserInputApiSuccess(that.currentResponse);
-            console.log('entered here')
-            console.log(Object.keys(that.queryClarifications).length);
             if (Object.keys(that.queryClarifications).length == 0) {
                 console.log('actually sending it now')
                 Api.sendSelectedOptionsQuery(that.queryClarificationChoices, User.getId())
                 .then(that.handleUserInputApiSuccess)
                 .catch(that.handleUserInputApiFailure);
+            } else {
+                that.handleUserInputApiSuccess(that.currentResponse);
             }
         }
     }
@@ -142,7 +141,7 @@ function AskChat (parseContentToHtml) {
                     chat.addBotMessage(message);
                     setTimeout(function() {
                         resolve();
-                    }, 2300)
+                    }, 1000)
                 }));
             }
         }

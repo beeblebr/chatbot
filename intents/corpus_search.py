@@ -17,12 +17,12 @@ class CorpusSearch(BaseIntent):
 
 
     def handle_intent(self):
-        query_topics = {'topics': get_all_topics(self.tracker.slots['query'])}
+        query_topics = {'topics': self.tracker.slots['query_topics']}
         corpus = list(get_knowledge_corpus(exclude_user=self.user_id))
         corpus_topics_map = self.get_corpus_topics_map(corpus)
         user_defined_taxonomy = {
             prettify_topic(topic): get_relations(prettify_topic(topic))
-            for topic in query_topics['topics']
+            for topic in query_topics
         }
 
         similarity_map, clusters = self.send_corpus_search({

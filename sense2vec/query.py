@@ -78,5 +78,19 @@ def get_possible_meanings(topic):
     return options
 
 
-def process_query_clarification():
-    pass
+def process_query_clarification(params):
+    query_topics = params['query_topics']
+    query_clarifications = params['query_clarifications']
+
+    # Assemble final list of topics from these
+    search_topics = []
+    for topic in query_topics:
+        if topic in query_clarifications:
+            search_topics.extend(query_clarifications[topic])
+        else:
+            search_topics.append(topic)
+
+    return json.dumps({
+        'result': 'QUERY_SUCCESS',
+        'query_topics': query_topics
+    })

@@ -28,7 +28,6 @@ class ActionSearchKnowledgeBase(Action):
     @staticmethod
     def run(dispatcher, tracker, domain):
         slots_ = tracker.slots
-        logger.info('sluts: %s', tracker.slots)
         tracker.slots = TrackerWrapper(slots_)
 
         user_id = tracker.slots['user_id']
@@ -46,12 +45,10 @@ class ActionSearchKnowledgeBase(Action):
         new_response_metadata = {
             slot.key: slot.value for slot in slot_set
         }
-        logger.info('new_response_metadata: %s', new_response_metadata)
         # Revert tracker.slots object to original value
         tracker.slots = slots_
         # Update the response_metadata in slots
         response_metadata = tracker.slots['response_metadata'].value
-        logger.info('old_response_metadata: %s', response_metadata)
         response_metadata.update(new_response_metadata)
         logger.info('updated_response_metadata: %s', response_metadata)
         return [SlotSet('response_metadata', response_metadata)]

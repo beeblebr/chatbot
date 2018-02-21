@@ -30,7 +30,7 @@ def fit_affinity_propagation_model(candidates):
     candidates = filter(lambda x: x in sense_vec_model, candidates)
     embeddings = map(lambda token: sense_vec_model[token][1], candidates)
 
-    af = AffinityPropagation(verbose=True).fit(embeddings)
+    af = AffinityPropagation().fit(embeddings)
     return af
 
 
