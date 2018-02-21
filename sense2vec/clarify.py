@@ -113,7 +113,6 @@ def get_possible_clusterings(search_results_topics):
             af_model=af,
             topic_combination=comb
         ))
-    pprint(clusters)
     return clusters
 
 
@@ -150,7 +149,6 @@ def find_optimal_cluster(
     cluster_score, af, samples = optimal_cluster
 
     clusters = group_samples_by_label(samples, af.labels_)
-    pprint(clusters)
 
     if summary_type == 'extractive_summary':
         extractive_summary = [

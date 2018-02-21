@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 def process_query(params):
     query_topics = params['topics']
-    logger.info(query_topics)
     # Find topics that do not have any casing-variant in the dictionary
     # and are multi-worded
     multi_word_topics = [
@@ -49,13 +48,11 @@ def process_query(params):
 
 def get_possible_meanings(topic):
     variants = generate_variants(topic, stop_words)
-    logger.info(variants)
     if not variants:
         return []
 
     af = fit_affinity_propagation_model(variants)
     clusters = group_samples_by_label(variants, af.labels_)
-    logger.info(clusters)
     options = []
     # Not converged or trivially clustered
     if af.n_iter_ == 200 or len(clusters) == len(variants):

@@ -2,6 +2,10 @@ from pprint import pprint
 
 import json
 import numpy as np
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 from topic_utils import generate_variants, prettify_topic, vector_cosine_similarity, weighted_vector_sum
 from clarify import find_optimal_cluster
@@ -110,8 +114,7 @@ def topic_similarity_map(
         lambda x: x['in_vocab'],
         topics_from_knowledge_item
     )
-    print(topics_from_query)
-    print(topics_from_knowledge_item)
+    
     if topics_from_query and topics_from_knowledge_item:
         model_similarity = vector_cosine_similarity(
             weighted_vector_sum(topics_from_query),
@@ -171,7 +174,6 @@ def fetch_search_results(
     subjective_ranking = sorted(all_results, key=lambda x: x['normalized_cosine_similarity'], reverse=True)
 
     buckets = bucketize_into_similarity_intervals(all_results)
-    pprint(buckets)
     non_empty_buckets = [bucket for bucket in buckets if bucket]
     if len(non_empty_buckets) == 0:
         return [], []
@@ -191,6 +193,9 @@ def fetch_search_results(
 
 
 def process_corpus_search(params):
+
+    logger.info('Searching corpus')
+
     query_topics = params['query_topics']
     corpus_topics_map = params['corpus_topics_map']
     user_defined_taxonomy = params['user_defined_taxonomy']
@@ -201,17 +206,22 @@ def process_corpus_search(params):
         user_defined_taxonomy
     )
 
+    logger.info(results)
+    logger.info(clusters)
+
     for i in range(len(results)):
         results[i]['cosine_similarity'] = str(results[i]['cosine_similarity'])
         results[i]['normalized_cosine_similarity'] = str(results[i]['normalized_cosine_similarity'])
 
     if not clusters:
+        logger.info('found')
         return json.dumps({
             'result': 'FOUND',
             'results': json.dumps(results),
             'clusters': json.dumps(clusters)
         })
     else:
+        logger.info('clarifying')
         return json.dumps({
             'result': 'CLARIFY_CORPUS',
             'results': json.dumps(results),

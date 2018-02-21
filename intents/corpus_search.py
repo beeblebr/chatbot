@@ -18,6 +18,7 @@ class CorpusSearch(BaseIntent):
 
     def handle_intent(self):
         query_topics = {'topics': self.tracker.slots['query_topics']}
+        logger.info(query_topics)
         corpus = list(get_knowledge_corpus(exclude_user=self.user_id))
         corpus_topics_map = self.get_corpus_topics_map(corpus)
         user_defined_taxonomy = {

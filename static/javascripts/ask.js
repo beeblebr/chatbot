@@ -149,6 +149,7 @@ function AskChat (parseContentToHtml) {
     }
 
     this.handleUserInputApiSuccess = function (response) {
+        console.log(response.type);
         that.showLeadingMessages(response)
         .then(function() {
             that.performAction(response)

@@ -1,4 +1,5 @@
 from functools import wraps
+import pprint
 from flask import *
 from datetime import datetime
 
@@ -8,10 +9,10 @@ from util.topic_utils import prettify_topic, uglify_topic
 
 from bot_wrapper import handle_response, get_slots_of_user
 
+import sys
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'super-secrfeet'
@@ -225,6 +226,7 @@ def add_to_k():
 
 @app.route('/api/clarify_corpus')
 def clarify_corpus():
+    logger.info('clarify_corpus')
     user_id = request.args.get('user_id')
     selected_options = request.args.get('options').split('|')
 
@@ -270,12 +272,14 @@ def clarify_query():
     )
     info = slots['response_metadata'].value
     if info['result'] == 'CORPUS_CLARIFICATION_NEEDED':
+        logger.info('CORPUS_CLARIFICATION_NEEDED')
         cluster_heads = [prettify_topic(x[0]) for x in info['clusters']]
         return jsonify({
             'type': info['result'],
             'specify': cluster_heads
         })
     elif info['result'] == 'FOUND':
+        logger.info('FOUND')
         eight_id = info['similarity_map'][0]['eight_id']
         knowledge = info['similarity_map'][0]['text']
         return jsonify({
