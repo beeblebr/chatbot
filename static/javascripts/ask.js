@@ -82,6 +82,7 @@ function AskChat (parseContentToHtml) {
             that.queryClarificationChoices[that.currentAmbiguousPhrase] = options;
             that.currentResponse['leadingMessages'] = [];
             if (Object.keys(that.queryClarifications).length == 0) {
+                that.queryClarificationInProgress = false;
                 console.log('actually sending it now')
                 Api.sendSelectedOptionsQuery(that.queryClarificationChoices, User.getId())
                 .then(that.handleUserInputApiSuccess)

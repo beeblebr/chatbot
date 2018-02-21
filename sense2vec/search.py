@@ -114,7 +114,7 @@ def topic_similarity_map(
         lambda x: x['in_vocab'],
         topics_from_knowledge_item
     )
-    
+
     if topics_from_query and topics_from_knowledge_item:
         model_similarity = vector_cosine_similarity(
             weighted_vector_sum(topics_from_query),
@@ -136,7 +136,6 @@ def bucketize_into_similarity_intervals(
     min_score=0.75,
     interval_size=0.05
 ):
-
     # Divide (min_score, 1) into intervals of interval_size (in reverse order
     intervals = reversed(np.arange(min_score, 1.0, interval_size))
     buckets = []
