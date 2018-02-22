@@ -81,7 +81,8 @@ def get_possible_clusterings(search_results_topics):
     """
     topic_combinations = list(product(*search_results_topics))
     clusters = []
-    for comb in topic_combinations:
+    for i, comb in enumerate(topic_combinations):
+        print('Processing: %d of %d' % (i, len(topic_combinations)))
         comb = map(lambda x: unicode(x['topic']), comb)
         af = fit_affinity_propagation_model(comb)
         converged = af.n_iter_ != 200
