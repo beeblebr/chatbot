@@ -46,7 +46,8 @@ def find_most_representative_topic(
     total = sum(embeddings)
     total /= np.linalg.norm(total)
     common_topics = sense_vec_model.most_similar(total, 600)[0]
-    common_topics = filter(lambda x: '|' in x and x.split('|')[1] == 'NOUN', common_topics)
+    common_topics = filter(lambda x: '|' in x and x.split('|')[
+                           1] == 'NOUN', common_topics)
 
     for i in range(min(len(common_topics), patience)):
         if common_topics[i] in candidate_topics:
@@ -80,29 +81,13 @@ def get_possible_clusterings(search_results_topics):
     Returns:
         clusters: Possible clusterings.
     """
-    topic_combinations = list(product(*search_results_topics))
     p = Pool()
+    topic_combinations = list(product(*search_results_topics))
     clusters = p.map(cluster_combination, topic_combinations)
     return clusters
 
 
-def parochial_summary(clusters):
-    abstractive_summary = []
-    for cluster in clusters:
-        if len(cluster) == 1:
-            abstractive_summary.append((cluster[0], [cluster[0]]))
-        else:
-            abstractive_summary.append(
-                (
-                    find_most_representative_topic(cluster, stop_words),
-                    cluster
-                )
-            )
-    return abstractive_summary
-
-
 def find_optimal_cluster(
-    query_topics,
     search_results_topics,
     summary_type='abstractive_summary'
 ):
@@ -114,8 +99,6 @@ def find_optimal_cluster(
     to calculate `silhouette_score`.
 
     Args:
-        query_topics: list
-            Topics from query text.
         search_result_topics: list of lists
             Each sublist contains topics from a single knowledge item.
         summary_type: str
@@ -135,8 +118,8 @@ def find_optimal_cluster(
         key=lambda x: x.silhouette_score,
         reverse=True
     )[0]
-    cluster_score, af, samples = optimal_cluster
 
+    cluster_score, af, samples = optimal_cluster
     clusters = group_samples_by_label(samples, af.labels_)
 
     if summary_type == 'extractive_summary':
@@ -146,5 +129,8 @@ def find_optimal_cluster(
         ]
         return extractive_summary
     elif summary_type == 'abstractive_summary':
-        abstractive_summary = parochial_summary(clusters)
+        abstractive_summary = [
+            find_most_representative_topic(cluster, stop_words)
+            for cluster in clusters
+        ]
         return abstractive_summary

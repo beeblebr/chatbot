@@ -12,12 +12,11 @@ logger = logging.getLogger(__name__)
 
 class QueryClarification(BaseIntent):
 
-
     def handle_intent(self):
         query_topics = self.tracker.slots['query_topics']
         query_clarifications = self.tracker.slots['query_clarifications']
         query_clarifications = self.uglify_clarifications(query_clarifications)
-        query_topics = self.merge_query_topics_with_clarifications(
+        query_topics = self.update_query_topics_with_clarifications(
             query_topics,
             query_clarifications
         )
@@ -25,7 +24,7 @@ class QueryClarification(BaseIntent):
         logger.info(query_topics)
         return CorpusSearch(self.tracker, self.user_id, None).handle_intent()
 
-    def merge_query_topics_with_clarifications(self, query_topics, query_clarifications):
+    def update_query_topics_with_clarifications(self, query_topics, query_clarifications):
         search_topics = []
         for topic in query_topics:
             if topic in query_clarifications:

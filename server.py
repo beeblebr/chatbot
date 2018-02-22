@@ -9,7 +9,6 @@ from util.topic_utils import prettify_topic, uglify_topic
 
 from bot_wrapper import handle_response, get_slots_of_user
 
-import sys
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -250,6 +249,13 @@ def clarify_corpus():
         if (set(topics) & set(relevant_topics)):
             relevant_knowledge_items.append(knowledge_item)
 
+    response, slots = handle_response(
+        user_id=user_id,
+        query=None,
+        relevant_knowledge_items=relevant_knowledge_items,
+        intent='CORPUS_CLARIFICATION'
+    )
+
     return jsonify({
         'type': 'FOUND',
         'match': {
@@ -293,6 +299,7 @@ def clarify_query():
         'type': 'UNKNOWN'
     })
 
+
 @app.route('/api/query')
 def query():
     q = request.args.get('text')
@@ -313,7 +320,8 @@ def query():
             topic: options
             for topic, options in query_clarifications.iteritems()
         }
-        leading_message = 'Before I begin looking for a match, I need you to clarify %d thing(s) for me.' % len(query_clarifications)
+        leading_message = 'Before I begin looking for a match, I need you to clarify %d thing(s) for me.' % len(
+            query_clarifications)
         return jsonify({
             'type': info['result'],
             'leadingMessages': [leading_message],
@@ -343,7 +351,6 @@ def query():
             'type': info['result'],
             'before_message': 'Nothing found'
         })
-
 
     return jsonify({
         'type': 'UNKNOWN'

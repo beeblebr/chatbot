@@ -14,7 +14,8 @@ def test_find_most_representative_topic(stop_words):
         u'machine_learning|NOUN',
         u'natural_language_processing|NOUN'
     ]
-    representative_topic = clarify.find_most_representative_topic(candidate_topics)
+    representative_topic = clarify.find_most_representative_topic(
+        candidate_topics)
 
     # Must not be None
     assert representative_topic

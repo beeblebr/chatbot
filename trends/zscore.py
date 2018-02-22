@@ -5,10 +5,10 @@ from math import sqrt
 
 class zscore:
     """
-	Just pass the history count list and the current count for a topic (per hour) and 
-	get a z score. You can choose to use additional functions like update and stuff,
-	if you dont want to redo some operations that span the entire history list
-	"""
+        Just pass the history count list and the current count for a topic (per hour) and 
+        get a z score. You can choose to use additional functions like update and stuff,
+        if you dont want to redo some operations that span the entire history list
+        """
 
     def __init__(self, history=[]):
         self.history = history

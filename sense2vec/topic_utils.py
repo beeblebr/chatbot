@@ -58,7 +58,8 @@ def weighted_vector_sum(topics):
         Vector sum of embeddings.
     """
     topics = map(lambda x: x['topic'], topics)
-    weight_term = lambda topic: sense_vec_model[topic][1]
+
+    def weight_term(topic): return sense_vec_model[topic][1]
     result = sum(map(weight_term, topics))
     norm = np.linalg.norm(result)
     if norm != 0:
@@ -174,7 +175,8 @@ def get_top_items(topic, n=1000):
         return []
 
     for i in range(len(related_items)):
-        related_items[i] = {'text': prettify_topic(related_items[i]), 'similarity': sense_vec_model_similarity(topic, related_items[i]).similarity}
+        related_items[i] = {'text': prettify_topic(
+            related_items[i]), 'similarity': sense_vec_model_similarity(topic, related_items[i]).similarity}
         if related_items[i]['similarity'] < 0.6:
             break
 

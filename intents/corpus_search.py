@@ -15,7 +15,6 @@ from intent import BaseIntent
 
 class CorpusSearch(BaseIntent):
 
-
     def handle_intent(self):
         query_topics = {'topics': self.tracker.slots['query_topics']}
         logger.info(query_topics)
@@ -42,7 +41,6 @@ class CorpusSearch(BaseIntent):
             (transforms.ZipWithCorpus, corpus)
         )
         return self.get_slot_set(similarity_map, clusters)
-
 
     def get_slot_set(self, similarity_map, clusters):
         if len(similarity_map) > 1:
@@ -72,13 +70,11 @@ class CorpusSearch(BaseIntent):
             })
         return corpus_topics_map
 
-
     def send_corpus_search(self, params):
         response = self._make_request(params)
         search_results = json.loads(response['results'])
         clusters = json.loads(response['clusters'])
         return search_results, clusters
-
 
     @property
     def intent_name(self):

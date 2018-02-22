@@ -45,7 +45,8 @@ def handle_response(**response_metadata):
     else:
         tracker.update(SlotSet('response_metadata', response_metadata))
     agent.tracker_store.save(tracker)
-    response = agent.handle_message(u'Who works on machine learning?', sender_id=user_id)
+    response = agent.handle_message(
+        u'Who works on machine learning?', sender_id=user_id)
     tracker = agent.tracker_store.get_or_create_tracker(user_id)
     logger.info(tracker.slots)
     return response, tracker.slots

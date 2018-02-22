@@ -2,6 +2,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class TrackerWrapper:
     def __init__(self, slots):
         self.slots = slots
