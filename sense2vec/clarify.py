@@ -118,6 +118,7 @@ def get_possible_clusterings(search_results_topics):
         ))
         if cluster_score > max_score:
             max_score = cluster_score
+        print('Current score: %f' % cluster_score)
         print('Max score: %f' % max_score)
         if max_score > 0.99:
             return clusters
