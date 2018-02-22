@@ -130,7 +130,7 @@ def find_optimal_cluster(
         return extractive_summary
     elif summary_type == 'abstractive_summary':
         abstractive_summary = [
-            find_most_representative_topic(cluster, stop_words)
+            (find_most_representative_topic(cluster, stop_words), cluster)
             for cluster in clusters
         ]
         return abstractive_summary
