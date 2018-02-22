@@ -68,7 +68,7 @@ def order_knowledge_items_map(knowledge_items_map):
         )
         # Return a single element array if AF did not converge
         if not clusters:
-            return [first_non_empty_bucket[0]], clusters
+            return [first_non_empty_bucket[0]], []
         return first_non_empty_bucket, clusters
 
 

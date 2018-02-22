@@ -1,6 +1,5 @@
 from flask import *
 
-
 user_pages = Blueprint('user_pages', 'user_pages')
 
 
@@ -35,4 +34,3 @@ def ask():
 @user_pages.route('/share')
 def share():
     return render_template('share.html', action='share')
-

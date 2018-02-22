@@ -67,12 +67,12 @@ def clarify_corpus():
         if (set(topics) & set(relevant_topics)):
             relevant_knowledge_items.append(knowledge_item)
 
-    response, slots = handle_response(
-        user_id=user_id,
-        query=None,
-        relevant_knowledge_items=relevant_knowledge_items,
-        intent='CORPUS_CLARIFICATION'
-    )
+    # response, slots = handle_response(
+    #     user_id=user_id,
+    #     query=None,
+    #     relevant_knowledge_items=relevant_knowledge_items,
+    #     intent='CORPUS_CLARIFICATION'
+    # )
 
     return jsonify({
         'type': 'FOUND',

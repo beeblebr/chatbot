@@ -4,10 +4,6 @@ This module initializes the `Agent` and provides functions to abstract away conc
 the fetching of trackers and slots.
 
 """
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 from rasa_core.interpreter import RasaNLUInterpreter
 from rasa_core.agent import Agent
 from rasa_core.domain import TemplateDomain
@@ -16,6 +12,10 @@ from rasa_core.events import SlotSet
 from rasa_utils import TrackerWrapper
 
 from search_knowledge_policy import SearchKnowledgePolicy
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 agent = Agent(TemplateDomain.load('code/domain.yml'),
               policies=[SearchKnowledgePolicy()],

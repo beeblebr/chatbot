@@ -30,6 +30,7 @@ class CorpusSearch(BaseIntent):
             'corpus_topics_map': corpus_topics_map,
             'user_defined_taxonomy': user_defined_taxonomy
         })
+        logger.info(clusters)
         if not similarity_map:
             return [
                 SlotSet('result', 'NOTHING_FOUND')
