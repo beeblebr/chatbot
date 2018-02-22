@@ -65,7 +65,9 @@ def cluster_topic_combination(comb):
     converged = af.n_iter_ != 200
     if not converged:
         return Cluster(
-            silhouette_score=-1
+            silhouette_score=-1,
+            af_model=af,
+            topic_combination=comb
         )
     n_clusters = len(np.unique(af.labels_))
     # Cannot calculate silhouette score
