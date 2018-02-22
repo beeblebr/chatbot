@@ -2,14 +2,14 @@
 
 This modules helps the user narrow down the target by clustering the initial search results into similar topics.
 """
-
+from multiprocessing import Pool
 from itertools import product
 from pprint import pprint
 import random
 
 import numpy as np
 
-from cluster import Cluster, cluster_topic_combination, group_samples_by_label
+from cluster import Cluster, cluster_combination, group_samples_by_label
 from sense import sense_vec_model, get_stop_words_list
 
 
@@ -46,7 +46,8 @@ def find_most_representative_topic(
     total = sum(embeddings)
     total /= np.linalg.norm(total)
     candidate_topics = sense_vec_model.most_similar(total, 600)[0]
-    candidate_topics = filter(lambda x: '|' in x and x.split('|')[1] == 'NOUN', candidate_topics)
+    candidate_topics = filter(lambda x: '|' in x and x.split('|')[
+                              1] == 'NOUN', candidate_topics)
 
     for i in range(min(len(candidate_topics), patience)):
         if sense_vec_model[candidate_topics[i]][0] > generality_threshold:
@@ -78,14 +79,13 @@ def get_possible_clusterings(search_results_topics):
         clusters: Possible clusterings.
     """
     topic_combinations = list(product(*search_results_topics))
-    random.shuffle(topic_combinations)
-    max_score = -1
-    clusters = []
-    from multiprocessing import Pool
     p = Pool()
-    clusters = p.map(cluster_topic_combination, topic_combinations)
-    return sorted(clusters, key=lambda x: x.silhouette_score, reverse=True)[0]
-    return clusters
+    clusters = p.map(cluster_combination, topic_combinations)
+    return sorted(
+        clusters,
+        key=lambda x: x.silhouette_score,
+        reverse=True
+    )[0]
 
 
 def parochial_summary(clusters):

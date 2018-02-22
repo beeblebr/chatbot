@@ -182,7 +182,7 @@ def fetch_search_results(
     else:
         cluster = find_optimal_cluster(
             query_topics['topics'],
-            map(lambda x: x['ki_topics'], first_non_empty_bucket[:10]),
+            map(lambda x: x['ki_topics'], first_non_empty_bucket[:7]),
             summary_type='abstractive_summary'
         )
         # Return a single element array if AF did not converge

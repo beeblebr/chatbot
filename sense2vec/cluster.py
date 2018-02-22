@@ -59,7 +59,7 @@ def group_samples_by_label(samples, labels):
     return clusters
 
 
-def cluster_topic_combination(comb):
+def cluster_combination(comb):
     comb = map(lambda x: unicode(x['topic']), comb)
     af = fit_affinity_propagation_model(comb)
     converged = af.n_iter_ != 200
