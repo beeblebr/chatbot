@@ -21,6 +21,7 @@ class Query(BaseIntent):
             'topics': get_all_topics(self.query)
         }
         response = self.send_query(query_topics)
+        self.tracker.slots['query_topics'] = response['query_topics']
         if response['result'] == 'QUERY_CLARIFICATION_NEEDED':
             logger.info('Query clarification needed')
             return [
@@ -29,10 +30,6 @@ class Query(BaseIntent):
                 SlotSet(
                     'query_clarifications',
                     response['query_clarifications']
-                ),
-                SlotSet(
-                    'query_topics',
-                    response['query_topics']
                 )
             ]
         elif response['result'] == 'QUERY_SUCCESS':
