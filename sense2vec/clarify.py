@@ -81,11 +81,7 @@ def get_possible_clusterings(search_results_topics):
     topic_combinations = list(product(*search_results_topics))
     p = Pool()
     clusters = p.map(cluster_combination, topic_combinations)
-    return sorted(
-        clusters,
-        key=lambda x: x.silhouette_score,
-        reverse=True
-    )[0]
+    return clusters
 
 
 def parochial_summary(clusters):
@@ -132,7 +128,11 @@ def find_optimal_cluster(
         return None
 
     # Choose cluster with the highest score
-    optimal_cluster = sorted(possible_clusterings, reverse=True)[0]
+    optimal_cluster = sorted(
+        possible_clusterings,
+        key=lambda x: x.silhouette_score,
+        reverse=True
+    )[0]
     cluster_score, af, samples = optimal_cluster
 
     clusters = group_samples_by_label(samples, af.labels_)
