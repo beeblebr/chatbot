@@ -1,8 +1,3 @@
-import json
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 from rasa_core.events import SlotSet
 
 from util.db_utils import get_knowledge_corpus, get_relations
@@ -11,6 +6,11 @@ from util.topic_utils import get_all_topics, prettify_topic
 from processing import pipeline, transforms
 
 from intent import BaseIntent
+
+import json
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class CorpusSearch(BaseIntent):

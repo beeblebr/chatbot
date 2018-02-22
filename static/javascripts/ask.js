@@ -237,7 +237,7 @@ function getClarifyCorpusQuestion() {
 
 function getClarifyQueryQuestion(ambiguousPhrase) {
     return getRandomText([
-        'I\'m not sure what "' + ambiguousPhrase + '" means. Which of the following best describes it?<br />Select all that apply and press "Done".'
+        'I\'m not sure what "' + ambiguousPhrase + '" means. Which of the following best describes it?<br />Select ONLY ONE option and press "Done".'
     ])
 }
 
