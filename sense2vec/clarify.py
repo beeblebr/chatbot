@@ -90,7 +90,7 @@ def parochial_summary(clusters):
     abstractive_summary = []
     for cluster in clusters:
         if len(cluster) == 1:
-            abstractive_summary.append((cluster[0], cluster[0]))
+            abstractive_summary.append((cluster[0], [cluster[0]]))
         else:
             abstractive_summary.append(
                 (
