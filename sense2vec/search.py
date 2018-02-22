@@ -141,7 +141,7 @@ def bucketize_into_similarity_intervals(
     buckets = []
     for lower_bound in intervals:
         bucket = [
-            ki for ki in results if ki['cosine_similarity'] > lower_bound
+            ki for ki in results if ki['normalized_cosine_similarity'] > lower_bound
         ]
         buckets.append(bucket)
         results = [ki for ki in results if ki not in bucket]
