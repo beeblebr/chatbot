@@ -80,6 +80,7 @@ def get_possible_clusterings(search_results_topics):
         clusters: Possible clusterings.
     """
     topic_combinations = list(product(*search_results_topics))
+    random.shuffle(topic_combinations)
     max_score = -1
     clusters = []
     for i, comb in enumerate(topic_combinations):
@@ -120,7 +121,7 @@ def get_possible_clusterings(search_results_topics):
             max_score = cluster_score
         print('Current score: %f' % cluster_score)
         print('Max score: %f' % max_score)
-        if max_score > 0.99:
+        if max_score > 0.70:
             return clusters
     return clusters
 
