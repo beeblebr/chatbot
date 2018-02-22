@@ -48,11 +48,13 @@ def process_query(params):
 
 def get_possible_meanings(topic):
     variants = generate_variants(topic, stop_words)
+    logger.info('variants: %s', variants)
     if not variants:
         return []
 
     af = fit_affinity_propagation_model(variants)
     clusters = group_samples_by_label(variants, af.labels_)
+    logger.info('clusters: %s', clusters)
     options = []
     # Not converged or trivially clustered
     if af.n_iter_ == 200 or len(clusters) == len(variants):
@@ -62,7 +64,7 @@ def get_possible_meanings(topic):
                         for cluster in clusters])
     # Add MRT of options to options
     options.append(find_most_representative_topic(options))
-
+    logger.info('options: %s', options)
     # Add + chaining to options
     split_variants = map(split_tokens, variants)
     unique = remove_proper_subsets(split_variants)
