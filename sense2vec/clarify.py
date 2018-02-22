@@ -80,7 +80,6 @@ def get_possible_clusterings(search_results_topics):
         clusters: Possible clusterings.
     """
     topic_combinations = list(product(*search_results_topics))
-    topic_combinations = random.sample(topic_combinations, min(len(topic_combinations), 20))
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
