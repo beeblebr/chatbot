@@ -118,6 +118,21 @@ def get_possible_clusterings(search_results_topics):
     return clusters
 
 
+def parochial_summary(clusters):
+    abstractive_summary = []
+    for cluster in clusters:
+        if len(cluster) == 1:
+            abstractive_summary.append((cluster[0], cluster[0]))
+        else:
+            abstractive_summary.append(
+                (
+                    find_most_representative_topic(cluster, stop_words),
+                    cluster
+                )
+            )
+    return abstractive_summary
+
+
 def find_optimal_cluster(
     query_topics,
     search_results_topics,
@@ -159,8 +174,5 @@ def find_optimal_cluster(
         ]
         return extractive_summary
     elif summary_type == 'abstractive_summary':
-        abstractive_summary = [
-            (find_most_representative_topic(cluster, stop_words), cluster)
-            for cluster in clusters
-        ]
+        abstractive_summary = parochial_summary(clusters)
         return abstractive_summary
