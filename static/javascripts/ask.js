@@ -83,7 +83,7 @@ function AskChat (parseContentToHtml) {
             that.currentResponse['leadingMessages'] = [];
             if (Object.keys(that.queryClarifications).length == 0) {
                 that.queryClarificationInProgress = false;
-                chat.addBotMessage('Great! Give me a minute while I find you the best match.');
+                chat.addBotMessage('Great! Give me a minute while I find you the right match.');
                 Api.sendSelectedOptionsQuery(that.queryClarificationChoices, User.getId())
                 .then(that.handleUserInputApiSuccess)
                 .catch(that.handleUserInputApiFailure);
