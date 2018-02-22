@@ -88,7 +88,7 @@ def get_possible_clusterings(search_results_topics):
         if not converged:
             print('Did not converge')
             continue
-
+        print('Converged')
         # If only one cluster, then silhouette_score cannot be calculated,
         # so just use -1 for now. Ideally should be calculated using
         # intra-cluster distance.
