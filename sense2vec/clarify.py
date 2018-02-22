@@ -9,10 +9,8 @@ import random
 
 import numpy as np
 
-from cluster import Cluster, fit_affinity_propagation_model, group_samples_by_label
+from cluster import Cluster, cluster_topic_combination, group_samples_by_label
 from sense import sense_vec_model, get_stop_words_list
-
-from sklearn.metrics import silhouette_score
 
 
 stop_words = get_stop_words_list()
@@ -85,41 +83,13 @@ def get_possible_clusterings(search_results_topics):
     clusters = []
     for i, comb in enumerate(topic_combinations):
         print('Processing: %d of %d' % (i, len(topic_combinations)))
-        comb = map(lambda x: unicode(x['topic']), comb)
-        af = fit_affinity_propagation_model(comb)
-        converged = af.n_iter_ != 200
-        if not converged:
-            print('Did not converge')
+        cluster = cluster_topic_combination(comb)
+        if not cluster:  # Did not converge
             continue
-        print('Converged')
-        # If only one cluster, then silhouette_score cannot be calculated,
-        # so just use -1 for now. Ideally should be calculated using
-        # intra-cluster distance.
-        #
-        # Order of precedence of situations is as follows:
-        # Silhouette score calculatable > Number of clusters same as samples
-        # > One cluster
-        n_clusters = len(np.unique(af.labels_))
-        if not 1 < n_clusters < len(comb):
-            if n_clusters > 1:
-                cluster_score = 1
-            else:
-                cluster_score = -1
-        else:
-            embeddings = map(lambda x: sense_vec_model[x][1], comb)
-            cluster_score = silhouette_score(
-                embeddings,
-                af.labels_,
-                metric='cosine'
-            )
-        clusters.append(Cluster(
-            silhouette_score=cluster_score,
-            af_model=af,
-            topic_combination=comb
-        ))
-        if cluster_score > max_score:
-            max_score = cluster_score
-        print('Current score: %f' % cluster_score)
+        clusters.append(cluster)
+        if cluster.silhouette_score > max_score:
+            max_score = cluster.silhouette_score
+        print('Current score: %f' % cluster.silhouette_score)
         print('Max score: %f' % max_score)
         if max_score > 0.70:
             return clusters

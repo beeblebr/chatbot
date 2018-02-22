@@ -3,6 +3,7 @@ from collections import namedtuple
 import numpy as np
 
 from sklearn.cluster import AffinityPropagation
+from sklearn.metrics import silhouette_score
 
 from sense import sense_vec_model
 
@@ -56,3 +57,27 @@ def group_samples_by_label(samples, labels):
         ]
         clusters.append(cluster)
     return clusters
+
+
+def cluster_topic_combination(comb):
+    comb = map(lambda x: unicode(x['topic']), comb)
+    af = fit_affinity_propagation_model(comb)
+    converged = af.n_iter_ != 200
+    if not converged:
+        return None
+    n_clusters = len(np.unique(af.labels_))
+    # Cannot calculate silhouette score
+    if not 1 < n_clusters < len(comb):
+        cluster_score = 1 if n_clusters > 1 else -1
+    else:
+        embeddings = map(lambda x: sense_vec_model[x][1], comb)
+        cluster_score = silhouette_score(
+            embeddings,
+            af.labels_,
+            metric='cosine'
+        )
+    return Cluster(
+        silhouette_score=cluster_score,
+        af_model=af,
+        topic_combination=comb
+    )
