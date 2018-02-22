@@ -5,6 +5,7 @@ This modules helps the user narrow down the target by clustering the initial sea
 
 from itertools import product
 from pprint import pprint
+import random
 
 import numpy as np
 
@@ -78,7 +79,8 @@ def get_possible_clusterings(search_results_topics):
     Returns:
         clusters: Possible clusterings.
     """
-    topic_combinations = product(*search_results_topics)
+    topic_combinations = list(product(*search_results_topics))
+    topic_combinations = random.sample(topic_combinations, min(len(topic_combinations), 20))
     clusters = []
     for comb in topic_combinations:
         comb = map(lambda x: unicode(x['topic']), comb)
