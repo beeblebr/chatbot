@@ -81,18 +81,10 @@ def get_possible_clusterings(search_results_topics):
     random.shuffle(topic_combinations)
     max_score = -1
     clusters = []
-    for i, comb in enumerate(topic_combinations):
-        print('Processing: %d of %d' % (i, len(topic_combinations)))
-        cluster = cluster_topic_combination(comb)
-        if not cluster:  # Did not converge
-            continue
-        clusters.append(cluster)
-        if cluster.silhouette_score > max_score:
-            max_score = cluster.silhouette_score
-        print('Current score: %f' % cluster.silhouette_score)
-        print('Max score: %f' % max_score)
-        if max_score > 0.70:
-            return clusters
+    from multiprocessing import Pool
+    p = Pool()
+    clusters = p.map(cluster_topic_combination, topic_combinations)
+    return sorted(clusters, key=lambda x: x.silhouette_score, reverse=True)[0]
     return clusters
 
 
