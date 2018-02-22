@@ -33,7 +33,7 @@ def process_query(params):
         if meanings:
             clarifications[prettify_topic(topic)] = meanings
 
-    if clarifications:
+    if clarifications and len(clarifications) > 1:
         return json.dumps({
             'result': 'QUERY_CLARIFICATION_NEEDED',
             'query_topics': query_topics,
