@@ -30,10 +30,10 @@ def process_query(params):
     clarifications = dict()
     for topic in multi_word_topics:
         meanings = get_possible_meanings(topic)
-        if meanings:
+        if meanings and len(meanings) > 1:
             clarifications[prettify_topic(topic)] = meanings
 
-    if clarifications and len(clarifications) > 1:
+    if clarifications:
         return json.dumps({
             'result': 'QUERY_CLARIFICATION_NEEDED',
             'query_topics': query_topics,
