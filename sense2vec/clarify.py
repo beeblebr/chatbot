@@ -9,7 +9,7 @@ import random
 
 import numpy as np
 
-from cluster import Cluster, cluster_combination, group_samples_by_label
+from cluster import cluster_combination, group_samples_by_label
 from sense import sense_vec_model, get_stop_words_list
 
 
@@ -45,23 +45,25 @@ def find_most_representative_topic(
     )
     total = sum(embeddings)
     total /= np.linalg.norm(total)
-    candidate_topics = sense_vec_model.most_similar(total, 600)[0]
-    candidate_topics = filter(lambda x: '|' in x and x.split('|')[
-                              1] == 'NOUN', candidate_topics)
+    common_topics = sense_vec_model.most_similar(total, 600)[0]
+    common_topics = filter(lambda x: '|' in x and x.split('|')[1] == 'NOUN', common_topics)
 
-    for i in range(min(len(candidate_topics), patience)):
-        if sense_vec_model[candidate_topics[i]][0] > generality_threshold:
+    for i in range(min(len(common_topics), patience)):
+        if common_topics[i] in candidate_topics:
+            flag = i
+            break
+        if sense_vec_model[common_topics[i]][0] > generality_threshold:
             flag = i
             break
     else:
         return max(map(
             lambda topic: (sense_vec_model[topic][0], topic),
-            candidate_topics
+            common_topics
         ))[1]
 
     results = map(
         lambda topic: (sense_vec_model[topic][0], topic),
-        candidate_topics[:max(40, flag)]
+        common_topics[:max(40, flag)]
     )
     # Remove stopwords
     results = filter(lambda x: x[1] not in stop_words, results)
