@@ -64,7 +64,9 @@ def cluster_topic_combination(comb):
     af = fit_affinity_propagation_model(comb)
     converged = af.n_iter_ != 200
     if not converged:
-        return None
+        return Cluster(
+            silhouette_score=-1
+        )
     n_clusters = len(np.unique(af.labels_))
     # Cannot calculate silhouette score
     if not 1 < n_clusters < len(comb):
