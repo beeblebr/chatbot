@@ -51,8 +51,7 @@ def find_most_representative_topic(
 
     for i in range(min(len(common_topics), patience)):
         if common_topics[i] in candidate_topics:
-            flag = i
-            break
+            return common_topics[i]
         if sense_vec_model[common_topics[i]][0] > generality_threshold:
             flag = i
             break

@@ -68,6 +68,7 @@ function AskChat (parseContentToHtml) {
 
     this.sendQueryToApi = function (message) {
         ChatUtils.validateUserInput(message);
+        chat.addBotMessage('Give me a minute while I find you the right match.');
         Api.sendQuery(message, User.getId())
         .then(that.handleUserInputApiSuccess)
         .catch(that.handleUserInputApiFailure);
