@@ -37,7 +37,8 @@ def fetch_search_results(
             query_topics['topics'],
             knowledge_item,
             user_defined_taxonomy
-        )
+        ),
+        corpus_topics_map
     )
     max_similarity_score = sorted(
         knowledge_items_map,
