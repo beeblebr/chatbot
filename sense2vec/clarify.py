@@ -80,6 +80,7 @@ def get_possible_clusterings(search_results_topics):
         clusters: Possible clusterings.
     """
     topic_combinations = list(product(*search_results_topics))
+    max_score = -1
     clusters = []
     for i, comb in enumerate(topic_combinations):
         print('Processing: %d of %d' % (i, len(topic_combinations)))
@@ -115,6 +116,10 @@ def get_possible_clusterings(search_results_topics):
             af_model=af,
             topic_combination=comb
         ))
+        if cluster_score > max_score:
+            max_score = cluster_score
+        if max_score > 0.99:
+            return clusters
     return clusters
 
 
