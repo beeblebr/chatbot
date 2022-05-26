@@ -73,7 +73,7 @@ toolz==0.8.2
 tqdm==4.19.5
 Twisted==17.9.0
 typing==3.6.2
-ujson==1.35
+ujson==5.2.0
 Unidecode==0.4.21
 urllib3==1.22
 uWSGI==2.0.15
